@@ -7,6 +7,8 @@ import {
   Globe2,
   Scale,
   Printer,
+  FileDown,
+  Layers,
   Search,
   TrendingUp,
   AlertTriangle,
@@ -611,80 +613,146 @@ function SourceBadge({ source }: { source: SourceBadgeType }) {
 }
 
 /**
- * Emblema Cívico Urbano-Orgânico da Bandeira do Brasil
+ * Brasão / Ícone Arquitetônico Cívico Urbano-Orgânico da República (Bandeira + Telemetria de Dados)
  */
 function BandeiraBrasilUrbanEmblem({
-  className = "w-11 h-8 sm:w-14 sm:h-10",
+  className = "w-11 h-9 sm:w-14 sm:h-11",
 }: {
   className?: string;
 }) {
   return (
     <div
-      className={`relative rounded-xl overflow-hidden bg-white border-2 border-zinc-900 shadow-[2px_2px_0px_#18181b] sm:shadow-[3px_3px_0px_#18181b] shrink-0 ${className}`}
-      title="República Federativa do Brasil • Observatório Quantitativo Urbano"
+      className={`relative rounded-xl overflow-hidden bg-zinc-950 border-2 border-zinc-900 shadow-[2px_2px_0px_#18181b] sm:shadow-[3px_3px_0px_#18181b] shrink-0 group ${className}`}
+      title="República Federativa do Brasil • Observatório Quantitativo Urbano (2003–2026)"
     >
       <svg
-        viewBox="0 0 60 42"
+        viewBox="0 0 64 48"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full"
       >
-        <rect width="60" height="42" fill="#059669" />
-        <path d="M0 0H60V42H0V0Z" fill="url(#urbanGreenLight)" />
-        <line
-          x1="0"
-          y1="21"
-          x2="60"
-          y2="21"
-          stroke="#ffffff"
-          strokeOpacity="0.15"
-          strokeWidth="0.5"
-        />
-        <line
-          x1="30"
-          y1="0"
-          x2="30"
-          y2="42"
-          stroke="#ffffff"
-          strokeOpacity="0.15"
-          strokeWidth="0.5"
-        />
+        {/* Fundo Esmeralda Arquitetônico */}
+        <rect width="64" height="48" fill="url(#urbanGreenCrest)" />
+
+        {/* Malha Cartográfica de Precisão */}
         <path
-          d="M30 4L55 21L30 38L5 21L30 4Z"
-          fill="#FACC15"
-          stroke="#18181B"
-          strokeWidth="1.2"
-        />
-        <circle
-          cx="30"
-          cy="21"
-          r="10.2"
-          fill="#1D4ED8"
-          stroke="#18181B"
-          strokeWidth="1"
-        />
-        <path
-          d="M20.2 19.2C24.8 16.8 35.2 18.2 39.8 22.8"
+          d="M0 12H64M0 24H64M0 36H64M16 0V48M32 0V48M48 0V48"
           stroke="#FFFFFF"
-          strokeWidth="2.4"
+          strokeOpacity="0.14"
+          strokeWidth="0.6"
+        />
+
+        {/* Cantoneiras Técnicas Urbanas em Ouro */}
+        <path
+          d="M4 10V4H10"
+          stroke="#FACC15"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M60 10V4H54"
+          stroke="#FACC15"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M4 38V44H10"
+          stroke="#FACC15"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M60 38V44H54"
+          stroke="#FACC15"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+
+        {/* Losango Ouro Canário com Contorno Duplo */}
+        <path
+          d="M32 3.5L58.5 24L32 44.5L5.5 24L32 3.5Z"
+          fill="url(#urbanGoldDiamond)"
+          stroke="#18181B"
+          strokeWidth="1.8"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M32 6.5L54.5 24L32 41.5L9.5 24L32 6.5Z"
+          stroke="#92400E"
+          strokeOpacity="0.35"
+          strokeWidth="0.7"
+        />
+
+        {/* Esfera Celestial Azul República */}
+        <circle
+          cx="32"
+          cy="24"
+          r="11.8"
+          fill="url(#urbanBlueSphere)"
+          stroke="#18181B"
+          strokeWidth="1.5"
+        />
+
+        {/* Colunas Quantitativas Internas (Símbolo do Observatório de Dados) */}
+        <rect x="25" y="26.5" width="2.3" height="5" rx="0.8" fill="#34D399" />
+        <rect x="28.6" y="23.8" width="2.3" height="7.7" rx="0.8" fill="#FACC15" />
+        <rect x="32.2" y="21.2" width="2.3" height="10.3" rx="0.8" fill="#FFFFFF" />
+        <rect x="35.8" y="18.5" width="2.3" height="13" rx="0.8" fill="#34D399" />
+
+        {/* Faixa Equatorial Orgânica Branca */}
+        <path
+          d="M20.6 21.8C25.5 18.5 38.5 19.8 43.4 25.4"
+          stroke="#FFFFFF"
+          strokeWidth="2.6"
           strokeLinecap="round"
         />
-        <circle cx="30" cy="24.5" r="0.9" fill="#FACC15" />
-        <circle cx="30" cy="28" r="0.8" fill="#FFFFFF" />
-        <circle cx="27.5" cy="26" r="0.7" fill="#FFFFFF" />
-        <circle cx="32.5" cy="25.8" r="0.7" fill="#FFFFFF" />
-        <circle cx="33.5" cy="17" r="0.75" fill="#FFFFFF" />
+
+        {/* Cruzeiro do Sul + Estrela Espiga */}
+        <circle cx="35.5" cy="16.5" r="1.05" fill="#FACC15" />
+        <circle cx="32" cy="29.5" r="0.85" fill="#FACC15" />
+        <circle cx="32" cy="33" r="0.75" fill="#FFFFFF" />
+        <circle cx="29.5" cy="31" r="0.7" fill="#FFFFFF" />
+        <circle cx="34.5" cy="30.8" r="0.7" fill="#FFFFFF" />
+
         <defs>
           <linearGradient
-            id="urbanGreenLight"
+            id="urbanGreenCrest"
             x1="0"
             y1="0"
-            x2="60"
-            y2="42"
+            x2="64"
+            y2="48"
             gradientUnits="userSpaceOnUse"
           >
             <stop stopColor="#10B981" />
-            <stop offset="1" stopColor="#047857" />
+            <stop offset="0.55" stopColor="#059669" />
+            <stop offset="1" stopColor="#065F46" />
+          </linearGradient>
+          <linearGradient
+            id="urbanGoldDiamond"
+            x1="6"
+            y1="4"
+            x2="58"
+            y2="44"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#FEF08A" />
+            <stop offset="0.45" stopColor="#FACC15" />
+            <stop offset="1" stopColor="#EAB308" />
+          </linearGradient>
+          <linearGradient
+            id="urbanBlueSphere"
+            x1="20"
+            y1="12"
+            x2="44"
+            y2="36"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#2563EB" />
+            <stop offset="1" stopColor="#1E3A8A" />
           </linearGradient>
         </defs>
       </svg>
@@ -787,8 +855,13 @@ export default function ObservatorioRepublicaPage() {
   };
 
   const handlePrintDossier = () => {
+    setActiveTab("todos");
+    setDossierFilter("todos");
+    setSearchQuery("");
     if (typeof window !== "undefined") {
-      window.print();
+      setTimeout(() => {
+        window.print();
+      }, 60);
     }
   };
 
@@ -874,13 +947,13 @@ export default function ObservatorioRepublicaPage() {
       </div>
 
       {/* FAIXA DE SINALIZAÇÃO TRICOLOR (VERDE, AMARELO VIÁRIO E AZUL) */}
-      <div className="h-1.5 sm:h-2 w-full bg-gradient-to-r from-emerald-600 via-yellow-400 to-blue-700" />
+      <div className="h-1.5 sm:h-2 w-full bg-gradient-to-r from-emerald-600 via-yellow-400 to-blue-700 print:hidden" />
 
       {/* =====================================================================
-          HEADER COMPACTO NO CELULAR & COMPLETO NO DESKTOP
+          HEADER COMPACTO NO CELULAR & COMPLETO NO DESKTOP (OCULTO NO PDF)
       ===================================================================== */}
-      <header className="sticky top-0 z-40 border-b-2 border-zinc-900 bg-white/95 backdrop-blur-xl shadow-sm">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 flex items-center justify-between gap-2.5 sm:gap-4">
+      <header className="sticky top-0 z-40 border-b-2 border-zinc-900 bg-white/95 backdrop-blur-xl shadow-sm print:hidden">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2.5 sm:gap-4">
           <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
             <BandeiraBrasilUrbanEmblem />
             <div className="min-w-0">
@@ -893,7 +966,7 @@ export default function ObservatorioRepublicaPage() {
                 </span>
               </div>
               <h1 className="text-sm sm:text-xl md:text-2xl font-display font-bold tracking-tight text-zinc-950 uppercase leading-tight truncate sm:whitespace-normal">
-                Observatório da República{" "}
+                Observatório Quantitativo da República{" "}
                 <span className="text-emerald-700 underline decoration-yellow-400 decoration-2 sm:decoration-4 underline-offset-2 sm:underline-offset-4">
                   (2003–2026)
                 </span>
@@ -904,17 +977,19 @@ export default function ObservatorioRepublicaPage() {
             </div>
           </div>
 
-          <div className="flex items-center shrink-0 print:hidden">
+          <div className="flex items-center shrink-0">
             <button
               onClick={handlePrintDossier}
-              title="Baixar Dossiê Completo em PDF"
+              title="Baixar Dossiê Completo em PDF (Formato A4 Organizado)"
               className="inline-flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-display font-bold text-xs sm:text-sm uppercase tracking-wider border-2 border-zinc-900 shadow-[2px_2px_0px_#18181b] sm:shadow-[4px_4px_0px_#18181b] active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer"
             >
-              <Printer className="w-4 h-4 stroke-[2.5] shrink-0" />
+              <FileDown className="w-4 h-4 stroke-[2.5] shrink-0" />
               <span className="hidden sm:inline">
                 Baixar Dossiê Completo em PDF
               </span>
-              <span className="sm:hidden font-mono">PDF</span>
+              <span className="sm:hidden font-mono font-extrabold">
+                BAIXAR PDF
+              </span>
             </button>
           </div>
         </div>
@@ -923,18 +998,64 @@ export default function ObservatorioRepublicaPage() {
       {/* =====================================================================
           CONTEÚDO PRINCIPAL
       ===================================================================== */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-8 sm:space-y-12">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 print:py-0 print:px-0 space-y-6 sm:space-y-10 print:space-y-5">
+        {/* ===================================================================
+            CABEÇALHO EDITORIAL EXCLUSIVO PARA O PDF (CAPA OFICIAL A4)
+        =================================================================== */}
+        <section className="hidden print:block border-2 border-zinc-900 rounded-2xl p-4 bg-white print-avoid-break">
+          <div className="h-2 w-full bg-gradient-to-r from-emerald-600 via-yellow-400 to-blue-700 rounded-full mb-3" />
+          <div className="flex items-center justify-between gap-4 border-b border-zinc-300 pb-3">
+            <div className="flex items-center gap-3">
+              <BandeiraBrasilUrbanEmblem className="w-14 h-11" />
+              <div>
+                <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-800">
+                  REPÚBLICA FEDERATIVA DO BRASIL • RELATÓRIO TÉCNICO INTEGRAL AUDITADO
+                </div>
+                <h1 className="text-xl font-display font-bold text-zinc-950 uppercase leading-tight">
+                  Observatório Quantitativo da República (2003–2026)
+                </h1>
+                <p className="text-[11px] font-mono text-zinc-600">
+                  Comparação Empírica: Luiz Inácio Lula da Silva (2003–2010 / 2023–2026) vs. Jair Bolsonaro / Flávio Bolsonaro (2019–2022 / Plano 2026)
+                </p>
+              </div>
+            </div>
+            <div className="text-right font-mono text-[10px] text-zinc-700 shrink-0 bg-zinc-50 border border-zinc-300 rounded-xl px-3 py-2">
+              <div className="font-bold text-zinc-950">DOC // BR-2003-2026</div>
+              <div>EDIÇÃO INTEGRAL A4</div>
+              <div className="text-emerald-800 font-bold">4 MÓDULOS + LAB FISCAL</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-4 gap-2 pt-2.5 text-[10px] font-mono">
+            <div className="bg-emerald-50 border border-emerald-300 rounded-lg p-2">
+              <strong className="text-emerald-900 block">MÓDULO 01 // SOCIEDADE</strong>
+              PIB, Trabalho, Gini, Salário Mínimo e PRODES/Amazônia
+            </div>
+            <div className="bg-amber-50 border border-amber-300 rounded-lg p-2">
+              <strong className="text-amber-900 block">MÓDULO 02 // RISCOS & DÍVIDA</strong>
+              Dominância Fiscal (r &gt; g) vs. Ruptura Institucional + Equação DBGG
+            </div>
+            <div className="bg-blue-50 border border-blue-300 rounded-lg p-2">
+              <strong className="text-blue-900 block">MÓDULO 03 // SOBERANIA</strong>
+              Petrobras/PPI, Semicondutores/FNDCT e Diplomacia Comercial
+            </div>
+            <div className="bg-rose-50 border border-rose-300 rounded-lg p-2">
+              <strong className="text-rose-900 block">MÓDULO 04 // PL & STF</strong>
+              Orçamento Público Eleitoral, 5 Dossiês do PL e Nota Metodológica
+            </div>
+          </div>
+        </section>
+
         {/* ===================================================================
             HERO SECTION URBANA EM TEMA BRANCO (CALÇADÃO ORGÂNICO + 4 KPIs)
         =================================================================== */}
         <section className="space-y-4 sm:space-y-6 print-avoid-break">
-          <div className="rounded-2xl sm:rounded-3xl bg-white border-2 border-zinc-900 shadow-[4px_4px_0px_#18181b] sm:shadow-[6px_6px_0px_#18181b] p-4 sm:p-9 relative overflow-hidden">
+          <div className="rounded-2xl sm:rounded-3xl bg-white border-2 border-zinc-900 shadow-[4px_4px_0px_#18181b] sm:shadow-[6px_6px_0px_#18181b] p-4 sm:p-8 print:p-4 relative overflow-hidden">
             {/* Barra lateral esquerda tricolor estilo pilastra de concreto urbano */}
             <div className="absolute left-0 top-0 bottom-0 w-2 sm:w-2.5 bg-gradient-to-b from-emerald-600 via-yellow-400 to-blue-700" />
 
             {/* Arte Vetorial Urbana + Ondas Orgânicas do Calçadão Brasileiro no fundo */}
             <svg
-              className="hidden sm:block absolute right-0 top-0 w-[520px] h-full opacity-[0.08] pointer-events-none"
+              className="hidden sm:block print:hidden absolute right-0 top-0 w-[520px] h-full opacity-[0.08] pointer-events-none"
               viewBox="0 0 500 360"
               fill="none"
             >
@@ -964,7 +1085,7 @@ export default function ObservatorioRepublicaPage() {
               />
             </svg>
 
-            <div className="relative z-10 max-w-4xl space-y-3 sm:space-y-4 pl-2">
+            <div className="relative z-10 max-w-4xl space-y-2.5 sm:space-y-3.5 pl-2 print:hidden">
               <div className="inline-flex flex-wrap items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-zinc-950 bg-emerald-400 px-2.5 sm:px-3 py-1 rounded-md border border-zinc-900 shadow-[2px_2px_0px_#facc15]">
                 <Terminal className="w-3.5 h-3.5 shrink-0" />
                 <span>
@@ -972,7 +1093,7 @@ export default function ObservatorioRepublicaPage() {
                 </span>
               </div>
 
-              <h2 className="text-xl sm:text-3xl md:text-4xl font-display font-bold text-zinc-950 tracking-tight leading-snug sm:leading-tight uppercase">
+              <h2 className="text-lg sm:text-3xl md:text-4xl font-display font-bold text-zinc-950 tracking-tight leading-snug sm:leading-tight uppercase">
                 Comparação Empírica de Governos, Riscos Sistêmicos, Soberania
                 Nacional e Responsabilização Judicial
               </h2>
@@ -992,7 +1113,7 @@ export default function ObservatorioRepublicaPage() {
             </div>
 
             {/* 4 KPIs de Impacto Rápido Estilo Painel Urbano Claro */}
-            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-5 sm:mt-8 pl-2">
+            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 print-cols-4 gap-3 sm:gap-4 mt-4 sm:mt-7 print:mt-0 pl-2">
               {HERO_KPIS.map((kpi) => {
                 const cardStyle =
                   kpi.tendencia === "positivo"
@@ -1018,9 +1139,9 @@ export default function ObservatorioRepublicaPage() {
                 return (
                   <div
                     key={kpi.id}
-                    className={`rounded-2xl border ${cardStyle} p-3.5 sm:p-4 flex flex-col justify-between transition-all duration-200 shadow-sm`}
+                    className={`rounded-2xl border ${cardStyle} p-3.5 sm:p-4 print:p-2.5 flex flex-col justify-between transition-all duration-200 shadow-sm`}
                   >
-                    <div className="space-y-1.5 sm:space-y-2">
+                    <div className="space-y-1.5 sm:space-y-2 print:space-y-1">
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-500">
                           {kpi.codigo}
@@ -1033,15 +1154,15 @@ export default function ObservatorioRepublicaPage() {
                         {kpi.titulo}
                       </div>
                       <div
-                        className={`text-lg sm:text-xl font-extrabold font-mono ${valueColor}`}
+                        className={`text-lg sm:text-xl print:text-sm font-extrabold font-mono ${valueColor}`}
                       >
                         {kpi.valorPrincipal}
                       </div>
-                      <p className="text-xs text-zinc-700 leading-relaxed">
+                      <p className="text-xs print:text-[10px] text-zinc-700 leading-relaxed">
                         {kpi.subtitulo}
                       </p>
                     </div>
-                    <div className="flex flex-wrap gap-1.5 mt-3 pt-2.5 border-t border-zinc-200/80">
+                    <div className="flex flex-wrap gap-1.5 mt-3 print:mt-2 pt-2.5 print:pt-1.5 border-t border-zinc-200/80">
                       {kpi.fontes.map((f) => (
                         <SourceBadge key={f} source={f} />
                       ))}
@@ -1169,7 +1290,7 @@ export default function ObservatorioRepublicaPage() {
             </div>
 
             {/* Gráfico Visual de Barras Proporcionais para o PIB */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 print-cols-2 gap-4 sm:gap-6">
               {GDP_DATA.map((item) => {
                 const widthAcum = Math.min(
                   100,
@@ -1183,7 +1304,7 @@ export default function ObservatorioRepublicaPage() {
                 return (
                   <div
                     key={item.id}
-                    className={`rounded-2xl bg-zinc-50 border border-zinc-200 ${item.bordaLateral} p-4 sm:p-5 space-y-3.5 sm:space-y-4`}
+                    className={`rounded-2xl bg-zinc-50 border border-zinc-200 ${item.bordaLateral} p-4 sm:p-5 print:p-3.5 space-y-3.5 sm:space-y-4 print:space-y-2`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>
@@ -1413,7 +1534,7 @@ export default function ObservatorioRepublicaPage() {
             </div>
 
             {/* Barras Visuais Comparativas: Desemprego e Salário Mínimo */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 pt-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 print-cols-2 gap-4 sm:gap-6 pt-1">
               {/* Gráfico Desemprego */}
               <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4 sm:p-5 space-y-4">
                 <div className="flex items-center justify-between gap-2">
@@ -1563,7 +1684,7 @@ export default function ObservatorioRepublicaPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-3 print-cols-3 gap-4 sm:gap-5">
               {ENVIRONMENT_DATA.map((env) => {
                 const isPositivo = env.status === "positivo";
                 const cardBorder = isPositivo
@@ -1671,7 +1792,7 @@ export default function ObservatorioRepublicaPage() {
           </div>
 
           {/* Comparação Lado a Lado dos Dois Perigos Opostos */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 print-cols-2 gap-5 sm:gap-6">
             {/* COLUNA 1: O PERIGO DO MODELO LULA (DOMINÂNCIA FISCAL) */}
             <div className="rounded-2xl sm:rounded-3xl urban-card-yellow overflow-hidden flex flex-col justify-between print-avoid-break">
               <div className="h-3 sm:h-3.5 w-full urban-Caution-stripe border-b border-amber-300" />
@@ -2037,8 +2158,8 @@ export default function ObservatorioRepublicaPage() {
 
             {/* Controles Sliders + Resultado Analítico */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center">
-              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
-                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4 space-y-2">
+              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 print-cols-2 gap-3.5 sm:gap-4">
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4 print:p-2.5 space-y-2">
                   <div className="flex justify-between items-center">
                     <label className="text-xs font-mono font-semibold text-zinc-700">
                       Estoque Inicial (d<sub>t-1</sub>)
@@ -2054,14 +2175,14 @@ export default function ObservatorioRepublicaPage() {
                     step={0.1}
                     value={simDebtPrev}
                     onChange={(e) => setSimDebtPrev(parseFloat(e.target.value))}
-                    className="w-full accent-emerald-600 cursor-pointer"
+                    className="w-full accent-emerald-600 cursor-pointer print:hidden"
                   />
                   <div className="text-[11px] text-zinc-500 font-mono">
                     Ref: 71,7% (2022) → 78,7% (2025)
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4 space-y-2">
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4 print:p-2.5 space-y-2">
                   <div className="flex justify-between items-center">
                     <label className="text-xs font-mono font-semibold text-zinc-700">
                       Juro Real Implícito (r)
@@ -2077,14 +2198,14 @@ export default function ObservatorioRepublicaPage() {
                     step={0.1}
                     value={simRealRate}
                     onChange={(e) => setSimRealRate(parseFloat(e.target.value))}
-                    className="w-full accent-amber-500 cursor-pointer"
+                    className="w-full accent-amber-500 cursor-pointer print:hidden"
                   />
                   <div className="text-[11px] text-zinc-500 font-mono">
                     Ref Lula III (2025): r ≈ 7,0% a.a.
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4 space-y-2">
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4 print:p-2.5 space-y-2">
                   <div className="flex justify-between items-center">
                     <label className="text-xs font-mono font-semibold text-zinc-700">
                       Crescimento Real PIB (g)
@@ -2100,14 +2221,14 @@ export default function ObservatorioRepublicaPage() {
                     step={0.1}
                     value={simGdpGrowth}
                     onChange={(e) => setSimGdpGrowth(parseFloat(e.target.value))}
-                    className="w-full accent-emerald-600 cursor-pointer"
+                    className="w-full accent-emerald-600 cursor-pointer print:hidden"
                   />
                   <div className="text-[11px] text-zinc-500 font-mono">
                     Ref: +4,0% (03–10) | +1,4% (19–22) | +3,0% (23–25)
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4 space-y-2">
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4 print:p-2.5 space-y-2">
                   <div className="flex justify-between items-center">
                     <label className="text-xs font-mono font-semibold text-zinc-700">
                       Resultado Primário (p<sub>t</sub>)
@@ -2132,7 +2253,7 @@ export default function ObservatorioRepublicaPage() {
                     onChange={(e) =>
                       setSimPrimaryBalance(parseFloat(e.target.value))
                     }
-                    className="w-full accent-blue-600 cursor-pointer"
+                    className="w-full accent-blue-600 cursor-pointer print:hidden"
                   />
                   <div className="text-[11px] text-zinc-500 font-mono">
                     Ref: +3,16% (03–10) | -2,29% (23) | -0,43% (25)
@@ -2141,7 +2262,7 @@ export default function ObservatorioRepublicaPage() {
               </div>
 
               {/* Painel de Resultado da Equação */}
-              <div className="lg:col-span-5 rounded-2xl bg-zinc-50 border-2 border-zinc-900 p-4 sm:p-5 space-y-4">
+              <div className="lg:col-span-5 rounded-2xl bg-zinc-50 border-2 border-zinc-900 p-4 sm:p-5 print:p-3.5 space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 pb-3">
                   <span className="text-xs font-mono font-bold uppercase text-zinc-600">
                     Resultado Simulado (Δd<sub>t</sub>)
@@ -2226,6 +2347,77 @@ export default function ObservatorioRepublicaPage() {
                 </div>
               </div>
             </div>
+
+            {/* Quadro Comparativo dos 4 Cenários Fiscais (Visível na Tela e no PDF) */}
+            <div className="pt-3 border-t border-zinc-200 space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs font-mono font-bold uppercase text-zinc-700 flex items-center gap-1.5">
+                  <Layers className="w-4 h-4 text-emerald-700 shrink-0" />
+                  Comparativo Direto dos 4 Regimes Fiscais na Equação da Dívida
+                </span>
+                <span className="text-[10px] font-mono text-zinc-500 hidden sm:inline">
+                  Clique em qualquer card para carregar no simulador
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 print-cols-4 gap-3 text-xs font-mono">
+                <div
+                  onClick={() => applyPreset("lula1_2")}
+                  className="rounded-xl bg-emerald-50/70 border border-emerald-300 p-3 cursor-pointer hover:bg-emerald-100/70 transition"
+                >
+                  <div className="font-bold text-emerald-900 uppercase">
+                    1. Lula I e II (2003–2010)
+                  </div>
+                  <div className="text-[11px] text-zinc-600 mt-1">
+                    r=6,5% | g=+4,0% | p=+3,16%
+                  </div>
+                  <div className="text-emerald-800 font-extrabold mt-1.5">
+                    DBGG: -11,9 p.p. no ciclo
+                  </div>
+                </div>
+                <div
+                  onClick={() => applyPreset("bolsonaro")}
+                  className="rounded-xl bg-zinc-50 border border-zinc-300 p-3 cursor-pointer hover:bg-zinc-100 transition"
+                >
+                  <div className="font-bold text-zinc-900 uppercase">
+                    2. Bolsonaro (2019–2022)
+                  </div>
+                  <div className="text-[11px] text-zinc-600 mt-1">
+                    r=3,2% | g=+1,4% | choque 2020
+                  </div>
+                  <div className="text-zinc-800 font-extrabold mt-1.5">
+                    Fechou 2022 em 71,7% PIB
+                  </div>
+                </div>
+                <div
+                  onClick={() => applyPreset("lula3")}
+                  className="rounded-xl bg-amber-50/70 border border-amber-300 p-3 cursor-pointer hover:bg-amber-100/70 transition"
+                >
+                  <div className="font-bold text-amber-900 uppercase">
+                    3. Lula III (2023–2025)
+                  </div>
+                  <div className="text-[11px] text-zinc-600 mt-1">
+                    r≈7,0% | g=+3,0% | p=-0,43%
+                  </div>
+                  <div className="text-amber-800 font-extrabold mt-1.5">
+                    DBGG: 78,7% (+7,0 p.p.)
+                  </div>
+                </div>
+                <div
+                  onClick={() => applyPreset("ajuste2027")}
+                  className="rounded-xl bg-blue-50/70 border border-blue-300 p-3 cursor-pointer hover:bg-blue-100/70 transition"
+                >
+                  <div className="font-bold text-blue-900 uppercase">
+                    4. Meta Estabilização 2027
+                  </div>
+                  <div className="text-[11px] text-zinc-600 mt-1">
+                    r=4,5% | g=+3,0% | p=+1,50%
+                  </div>
+                  <div className="text-blue-800 font-extrabold mt-1.5">
+                    Δd ≈ -0,36 p.p./ano (Queda)
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -2295,7 +2487,7 @@ export default function ObservatorioRepublicaPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 print-cols-2 gap-4 sm:gap-6">
                     {/* Lado Subordinação Passiva (2019-2022) */}
                     <div className="rounded-2xl bg-rose-50/40 border-l-4 border-l-rose-600 border border-rose-200 p-4 sm:p-5 flex flex-col justify-between space-y-4">
                       <div className="space-y-3">
@@ -2422,7 +2614,7 @@ export default function ObservatorioRepublicaPage() {
               provas:
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 print-cols-4 gap-3 sm:gap-4">
               <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4">
                 <div className="text-xs font-mono text-zinc-500">
                   Bancada Câmara (Out/2026)
@@ -2517,9 +2709,12 @@ export default function ObservatorioRepublicaPage() {
             </div>
           </div>
 
-          {/* Cards Detalhados das Fichas Jurídicas Individuais */}
-          <div className="grid grid-cols-1 gap-5 sm:gap-6">
-            {filteredDossiers.map((dossier, index) => {
+          {/* Cards Detalhados das Fichas Jurídicas Individuais (Sempre exibe todos os 6 no PDF) */}
+          <div className="grid grid-cols-1 gap-5 sm:gap-6 print:gap-3.5">
+            {JUDICIAL_DOSSIERS.map((dossier, index) => {
+              const isVisibleOnScreen = filteredDossiers.some(
+                (item) => item.id === dossier.id
+              );
               const isMetodologico = dossier.severidade === "metodologico";
               const borderCard = isMetodologico
                 ? "border-l-4 border-l-blue-600 border-zinc-300 bg-white"
@@ -2528,7 +2723,9 @@ export default function ObservatorioRepublicaPage() {
               return (
                 <div
                   key={dossier.id}
-                  className={`rounded-2xl sm:rounded-3xl border ${borderCard} p-4 sm:p-7 space-y-4 print-avoid-break transition-all duration-200 shadow-md`}
+                  className={`${
+                    isVisibleOnScreen ? "block" : "hidden"
+                  } print:block rounded-2xl sm:rounded-3xl border ${borderCard} p-4 sm:p-7 print:p-4 space-y-4 print:space-y-2.5 print-avoid-break transition-all duration-200 shadow-md`}
                 >
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-zinc-200 pb-3.5 sm:pb-4">
                     <div className="space-y-1">
@@ -2675,7 +2872,7 @@ export default function ObservatorioRepublicaPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 text-xs text-zinc-600 leading-relaxed">
+          <div className="grid grid-cols-1 md:grid-cols-3 print-cols-3 gap-5 sm:gap-6 text-xs text-zinc-600 leading-relaxed">
             <div className="space-y-2">
               <h4 className="text-emerald-800 font-bold font-mono flex items-center gap-1.5 uppercase">
                 <Info className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -2732,14 +2929,20 @@ export default function ObservatorioRepublicaPage() {
             </div>
           </div>
 
-          <div className="pt-4 border-t border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono text-zinc-500 text-center sm:text-left">
+          <div className="pt-4 border-t border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-zinc-500 text-center sm:text-left">
             <span>
               Observatório Quantitativo da República (2003–2026) • Arquitetura
-              Urbana Cívica Brasileira (Mobile-First & Desktop)
+              Urbana Cívica Brasileira (Mobile-First, Desktop & PDF A4)
             </span>
-            <span>
-              Documento formatado para exportação integral via @media print
-              (PDF)
+            <button
+              onClick={handlePrintDossier}
+              className="print:hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-yellow-300 font-mono font-bold text-xs uppercase tracking-wider border border-zinc-950 cursor-pointer transition"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              Exportar Relatório Integral (PDF A4)
+            </button>
+            <span className="hidden print:inline font-bold text-zinc-800">
+              Dossiê Oficial Impresso Integralmente • Fontes Auditadas: IBGE • BCB • TN • INPE • STF • STJ • TSE
             </span>
           </div>
         </div>

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Fundo Arquitetônico Verde Esmeralda Imperial -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bgEmerald)" stroke="#18181B" stroke-width="3"/>
+  
+  <!-- Malha Técnica Urbana Sutil -->
+  <path d="M2 22H62M2 42H62M22 2V62M42 2V62" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="1"/>
+  
+  <!-- Cantoneiras de Precisão Técnica -->
+  <path d="M8 14V8H14" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M56 14V8H50" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M8 50V56H14" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M56 50V56H50" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Losango Ouro Canário da Bandeira -->
+  <path d="M32 9L56 32L32 55L8 32L32 9Z" fill="url(#goldDiamond)" stroke="#18181B" stroke-width="2.4" stroke-linejoin="round"/>
+
+  <!-- Esfera Celestial Azul República -->
+  <circle cx="32" cy="32" r="13.5" fill="url(#blueSphere)" stroke="#18181B" stroke-width="2"/>
+
+  <!-- Barras Quantitativas Internas (Símbolo do Observatório de Dados) -->
+  <rect x="24.5" y="34.5" width="2.6" height="5.5" rx="1" fill="#34D399"/>
+  <rect x="28.5" y="31.5" width="2.6" height="8.5" rx="1" fill="#FACC15"/>
+  <rect x="32.5" y="28.5" width="2.6" height="11.5" rx="1" fill="#FFFFFF"/>
+  <rect x="36.5" y="25.5" width="2.6" height="14.5" rx="1" fill="#34D399"/>
+
+  <!-- Faixa Equatorial Orgânica Branca -->
+  <path d="M19.2 29.5C24.5 25.8 39.5 27.2 44.8 33.2" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Estrela Espiga (Acima da Faixa) -->
+  <circle cx="36" cy="23.5" r="1.3" fill="#FACC15"/>
+
+  <defs>
+    <linearGradient id="bgEmerald" x1="2" y1="2" x2="62" y2="62" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10B981"/>
+      <stop offset="0.5" stop-color="#059669"/>
+      <stop offset="1" stop-color="#065F46"/>
+    </linearGradient>
+    <linearGradient id="goldDiamond" x1="8" y1="9" x2="56" y2="55" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEF08A"/>
+      <stop offset="0.45" stop-color="#FACC15"/>
+      <stop offset="1" stop-color="#EAB308"/>
+    </linearGradient>
+    <linearGradient id="blueSphere" x1="18" y1="18" x2="46" y2="46" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#1E3A8A"/>
+    </linearGradient>
+  </defs>
+</svg>
+
