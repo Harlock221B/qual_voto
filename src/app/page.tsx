@@ -603,7 +603,7 @@ function SourceBadge({ source }: { source: SourceBadgeType }) {
   return (
     <span
       title={`Fonte Oficial: ${style.nomeCompleto}`}
-      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold tracking-wider border ${style.bg} ${style.text} ${style.border}`}
+      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-bold tracking-wider border ${style.bg} ${style.text} ${style.border}`}
     >
       [{source}]
     </span>
@@ -614,13 +614,13 @@ function SourceBadge({ source }: { source: SourceBadgeType }) {
  * Emblema Cívico Urbano-Orgânico da Bandeira do Brasil
  */
 function BandeiraBrasilUrbanEmblem({
-  className = "w-14 h-10",
+  className = "w-11 h-8 sm:w-14 sm:h-10",
 }: {
   className?: string;
 }) {
   return (
     <div
-      className={`relative rounded-xl overflow-hidden bg-white border-2 border-zinc-900 shadow-[3px_3px_0px_#18181b] shrink-0 ${className}`}
+      className={`relative rounded-xl overflow-hidden bg-white border-2 border-zinc-900 shadow-[2px_2px_0px_#18181b] sm:shadow-[3px_3px_0px_#18181b] shrink-0 ${className}`}
       title="República Federativa do Brasil • Observatório Quantitativo Urbano"
     >
       <svg
@@ -629,11 +629,8 @@ function BandeiraBrasilUrbanEmblem({
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full"
       >
-        {/* Base Verde Bandeira Urbano */}
         <rect width="60" height="42" fill="#059669" />
         <path d="M0 0H60V42H0V0Z" fill="url(#urbanGreenLight)" />
-
-        {/* Grid técnico sutil sobre o verde */}
         <line
           x1="0"
           y1="21"
@@ -652,16 +649,12 @@ function BandeiraBrasilUrbanEmblem({
           strokeOpacity="0.15"
           strokeWidth="0.5"
         />
-
-        {/* Losango Amarelo Sinalização Urbana */}
         <path
           d="M30 4L55 21L30 38L5 21L30 4Z"
           fill="#FACC15"
           stroke="#18181B"
           strokeWidth="1.2"
         />
-
-        {/* Esfera Azul República */}
         <circle
           cx="30"
           cy="21"
@@ -670,22 +663,17 @@ function BandeiraBrasilUrbanEmblem({
           stroke="#18181B"
           strokeWidth="1"
         />
-
-        {/* Faixa Orgânica Equatorial */}
         <path
           d="M20.2 19.2C24.8 16.8 35.2 18.2 39.8 22.8"
           stroke="#FFFFFF"
           strokeWidth="2.4"
           strokeLinecap="round"
         />
-
-        {/* Estrelas do Cruzeiro do Sul */}
         <circle cx="30" cy="24.5" r="0.9" fill="#FACC15" />
         <circle cx="30" cy="28" r="0.8" fill="#FFFFFF" />
         <circle cx="27.5" cy="26" r="0.7" fill="#FFFFFF" />
         <circle cx="32.5" cy="25.8" r="0.7" fill="#FFFFFF" />
         <circle cx="33.5" cy="17" r="0.75" fill="#FFFFFF" />
-
         <defs>
           <linearGradient
             id="urbanGreenLight"
@@ -804,20 +792,59 @@ export default function ObservatorioRepublicaPage() {
     }
   };
 
+  const NAV_ITEMS = [
+    {
+      id: "todos" as TabId,
+      label: "00 // VISÃO COMPLETA",
+      shortLabel: "Tudo",
+      icon: FileText,
+    },
+    {
+      id: "modulo1" as TabId,
+      label: "01 // SOCIEDADE & ECONOMIA",
+      shortLabel: "Sociedade",
+      icon: BarChart3,
+    },
+    {
+      id: "modulo2" as TabId,
+      label: "02 // MATRIZ DE RISCOS",
+      shortLabel: "Riscos",
+      icon: ShieldAlert,
+    },
+    {
+      id: "simulador" as TabId,
+      label: "LAB // EQUAÇÃO DA DÍVIDA",
+      shortLabel: "Dívida",
+      icon: Calculator,
+    },
+    {
+      id: "modulo3" as TabId,
+      label: "03 // SOBERANIA VS. VIRALATISMO",
+      shortLabel: "Soberania",
+      icon: Globe2,
+    },
+    {
+      id: "modulo4" as TabId,
+      label: "04 // RAIO-X DO PL & STF",
+      shortLabel: "PL / STF",
+      icon: Scale,
+    },
+  ];
+
   return (
-    <div className="min-h-screen text-zinc-900 flex flex-col urban-concrete-bg">
+    <div className="min-h-screen text-zinc-900 flex flex-col urban-concrete-bg pb-20 md:pb-0">
       {/* =====================================================================
-          BARRA DE TELEMETRIA URBANA SUPERIOR (PAINEL DE METRÓPOLE)
+          BARRA DE TELEMETRIA URBANA SUPERIOR (DESLIZÁVEL NO CELULAR)
       ===================================================================== */}
-      <div className="bg-zinc-900 text-zinc-200 border-b border-zinc-800 px-4 py-1.5 text-[11px] font-mono print:hidden">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
+      <div className="bg-zinc-900 text-zinc-200 border-b border-zinc-800 px-3 sm:px-4 py-1.5 text-[11px] font-mono print:hidden">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 overflow-x-auto no-scrollbar whitespace-nowrap">
+          <div className="flex items-center gap-2 shrink-0">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-white font-bold tracking-wider">
-              BR-REPÚBLICA // TELEMETRIA OFICIAL 2003–2026
+              BR-REPÚBLICA // 2003–2026
             </span>
           </div>
-          <div className="hidden md:flex items-center gap-4 text-xs">
+          <div className="flex items-center gap-3 text-[11px] shrink-0">
             <span>
               PIB 03–10:{" "}
               <strong className="text-emerald-400">+37,3%</strong>
@@ -825,7 +852,7 @@ export default function ObservatorioRepublicaPage() {
             <span className="text-zinc-600">|</span>
             <span>
               DESEMPREGO 2025:{" "}
-              <strong className="text-emerald-400">5,6% (MÍN.)</strong>
+              <strong className="text-emerald-400">5,6%</strong>
             </span>
             <span className="text-zinc-600">|</span>
             <span>
@@ -840,24 +867,24 @@ export default function ObservatorioRepublicaPage() {
             <span className="text-zinc-600">|</span>
             <span>
               STF 2025:{" "}
-              <strong className="text-rose-400">27A 3M (FECHADO)</strong>
+              <strong className="text-rose-400">27A 3M</strong>
             </span>
           </div>
         </div>
       </div>
 
       {/* FAIXA DE SINALIZAÇÃO TRICOLOR (VERDE, AMARELO VIÁRIO E AZUL) */}
-      <div className="h-2 w-full bg-gradient-to-r from-emerald-600 via-yellow-400 to-blue-700" />
+      <div className="h-1.5 sm:h-2 w-full bg-gradient-to-r from-emerald-600 via-yellow-400 to-blue-700" />
 
       {/* =====================================================================
-          HEADER URBANO BRANCO BRUTALISTA & ORGÂNICO + EXPORTAÇÃO PDF
+          HEADER COMPACTO NO CELULAR & COMPLETO NO DESKTOP
       ===================================================================== */}
-      <header className="sticky top-0 z-50 border-b-2 border-zinc-900 bg-white/95 backdrop-blur-xl shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-start sm:items-center gap-4">
+      <header className="sticky top-0 z-40 border-b-2 border-zinc-900 bg-white/95 backdrop-blur-xl shadow-sm">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 flex items-center justify-between gap-2.5 sm:gap-4">
+          <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
             <BandeiraBrasilUrbanEmblem />
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
+            <div className="min-w-0">
+              <div className="hidden sm:flex flex-wrap items-center gap-2">
                 <span className="text-[11px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded bg-zinc-900 text-yellow-300">
                   DOC // BR-2003-2026
                 </span>
@@ -865,22 +892,29 @@ export default function ObservatorioRepublicaPage() {
                   • ARQUITETURA DE DADOS PÚBLICOS
                 </span>
               </div>
-              <h1 className="text-lg sm:text-xl md:text-2xl font-display font-bold tracking-tight text-zinc-950 mt-0.5 uppercase">
-                Observatório Quantitativo da República{" "}
-                <span className="text-emerald-700 underline decoration-yellow-400 decoration-4 underline-offset-4">
+              <h1 className="text-sm sm:text-xl md:text-2xl font-display font-bold tracking-tight text-zinc-950 uppercase leading-tight truncate sm:whitespace-normal">
+                Observatório da República{" "}
+                <span className="text-emerald-700 underline decoration-yellow-400 decoration-2 sm:decoration-4 underline-offset-2 sm:underline-offset-4">
                   (2003–2026)
                 </span>
               </h1>
+              <div className="sm:hidden text-[10px] font-mono text-zinc-500 truncate">
+                Dossiê Oficial Auditado • IBGE • BCB • STF • INPE
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 self-start md:self-auto print:hidden">
+          <div className="flex items-center shrink-0 print:hidden">
             <button
               onClick={handlePrintDossier}
-              className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-display font-bold text-xs sm:text-sm uppercase tracking-wider border-2 border-zinc-900 shadow-[4px_4px_0px_#18181b] hover:shadow-[2px_2px_0px_#18181b] hover:translate-x-[2px] hover:translate-y-[2px] transition-all cursor-pointer"
+              title="Baixar Dossiê Completo em PDF"
+              className="inline-flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-display font-bold text-xs sm:text-sm uppercase tracking-wider border-2 border-zinc-900 shadow-[2px_2px_0px_#18181b] sm:shadow-[4px_4px_0px_#18181b] active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer"
             >
-              <Printer className="w-4 h-4 stroke-[2.5]" />
-              <span>Baixar Dossiê Completo em PDF</span>
+              <Printer className="w-4 h-4 stroke-[2.5] shrink-0" />
+              <span className="hidden sm:inline">
+                Baixar Dossiê Completo em PDF
+              </span>
+              <span className="sm:hidden font-mono">PDF</span>
             </button>
           </div>
         </div>
@@ -889,22 +923,21 @@ export default function ObservatorioRepublicaPage() {
       {/* =====================================================================
           CONTEÚDO PRINCIPAL
       ===================================================================== */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-8 sm:space-y-12">
         {/* ===================================================================
             HERO SECTION URBANA EM TEMA BRANCO (CALÇADÃO ORGÂNICO + 4 KPIs)
         =================================================================== */}
-        <section className="space-y-6 print-avoid-break">
-          <div className="rounded-3xl bg-white border-2 border-zinc-900 shadow-[6px_6px_0px_#18181b] p-6 sm:p-9 relative overflow-hidden">
+        <section className="space-y-4 sm:space-y-6 print-avoid-break">
+          <div className="rounded-2xl sm:rounded-3xl bg-white border-2 border-zinc-900 shadow-[4px_4px_0px_#18181b] sm:shadow-[6px_6px_0px_#18181b] p-4 sm:p-9 relative overflow-hidden">
             {/* Barra lateral esquerda tricolor estilo pilastra de concreto urbano */}
-            <div className="absolute left-0 top-0 bottom-0 w-2.5 bg-gradient-to-b from-emerald-600 via-yellow-400 to-blue-700" />
+            <div className="absolute left-0 top-0 bottom-0 w-2 sm:w-2.5 bg-gradient-to-b from-emerald-600 via-yellow-400 to-blue-700" />
 
             {/* Arte Vetorial Urbana + Ondas Orgânicas do Calçadão Brasileiro no fundo */}
             <svg
-              className="absolute right-0 top-0 w-[520px] h-full opacity-[0.08] pointer-events-none"
+              className="hidden sm:block absolute right-0 top-0 w-[520px] h-full opacity-[0.08] pointer-events-none"
               viewBox="0 0 500 360"
               fill="none"
             >
-              {/* Ondas Orgânicas do Calçadão Brasileiro */}
               <path
                 d="M0 280C80 230 160 330 240 280C320 230 400 330 480 280"
                 stroke="#047857"
@@ -917,7 +950,6 @@ export default function ObservatorioRepublicaPage() {
                 strokeWidth="14"
                 strokeLinecap="round"
               />
-              {/* Geometria da Bandeira em Traço Arquitetônico */}
               <path
                 d="M330 20L470 130L330 240L190 130L330 20Z"
                 stroke="#18181B"
@@ -932,28 +964,27 @@ export default function ObservatorioRepublicaPage() {
               />
             </svg>
 
-            <div className="relative z-10 max-w-4xl space-y-4 pl-2">
-              <div className="inline-flex flex-wrap items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-zinc-950 bg-emerald-400 px-3 py-1 rounded-md border border-zinc-900 shadow-[3px_3px_0px_#facc15]">
-                <Terminal className="w-3.5 h-3.5" />
+            <div className="relative z-10 max-w-4xl space-y-3 sm:space-y-4 pl-2">
+              <div className="inline-flex flex-wrap items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-zinc-950 bg-emerald-400 px-2.5 sm:px-3 py-1 rounded-md border border-zinc-900 shadow-[2px_2px_0px_#facc15]">
+                <Terminal className="w-3.5 h-3.5 shrink-0" />
                 <span>
-                  AUDITORIA EMPÍRICA: IBGE • BCB • TESOURO NACIONAL • INPE •
-                  STF • STJ • TSE
+                  FONTES: IBGE • BCB • TESOURO • INPE • STF • STJ • TSE
                 </span>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-zinc-950 tracking-tight leading-tight uppercase">
+              <h2 className="text-xl sm:text-3xl md:text-4xl font-display font-bold text-zinc-950 tracking-tight leading-snug sm:leading-tight uppercase">
                 Comparação Empírica de Governos, Riscos Sistêmicos, Soberania
                 Nacional e Responsabilização Judicial
               </h2>
 
-              <p className="text-zinc-700 text-sm sm:text-base leading-relaxed">
+              <p className="text-zinc-700 text-xs sm:text-base leading-relaxed">
                 Dossiê urbano de transparência pública que contrasta, sem
                 cortes ou omissões, os dados oficiais entre os governos de{" "}
-                <strong className="text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
+                <strong className="text-emerald-800 font-bold bg-emerald-100 px-1.5 py-0.5 rounded border border-emerald-300 inline-block my-0.5">
                   Luiz Inácio Lula da Silva (2003–2010 e 2023–2026)
                 </strong>{" "}
                 e{" "}
-                <strong className="text-amber-900 font-bold bg-yellow-100 px-2 py-0.5 rounded border border-yellow-400">
+                <strong className="text-amber-900 font-bold bg-yellow-100 px-1.5 py-0.5 rounded border border-yellow-400 inline-block my-0.5">
                   Jair Bolsonaro / Flávio Bolsonaro (2019–2022 e Plano 2026)
                 </strong>
                 .
@@ -961,7 +992,7 @@ export default function ObservatorioRepublicaPage() {
             </div>
 
             {/* 4 KPIs de Impacto Rápido Estilo Painel Urbano Claro */}
-            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pl-2">
+            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-5 sm:mt-8 pl-2">
               {HERO_KPIS.map((kpi) => {
                 const cardStyle =
                   kpi.tendencia === "positivo"
@@ -987,9 +1018,9 @@ export default function ObservatorioRepublicaPage() {
                 return (
                   <div
                     key={kpi.id}
-                    className={`rounded-2xl border ${cardStyle} p-4 flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 shadow-sm`}
+                    className={`rounded-2xl border ${cardStyle} p-3.5 sm:p-4 flex flex-col justify-between transition-all duration-200 shadow-sm`}
                   >
-                    <div className="space-y-2">
+                    <div className="space-y-1.5 sm:space-y-2">
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-500">
                           {kpi.codigo}
@@ -1002,7 +1033,7 @@ export default function ObservatorioRepublicaPage() {
                         {kpi.titulo}
                       </div>
                       <div
-                        className={`text-xl font-extrabold font-mono ${valueColor}`}
+                        className={`text-lg sm:text-xl font-extrabold font-mono ${valueColor}`}
                       >
                         {kpi.valorPrincipal}
                       </div>
@@ -1010,7 +1041,7 @@ export default function ObservatorioRepublicaPage() {
                         {kpi.subtitulo}
                       </p>
                     </div>
-                    <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-zinc-200/80">
+                    <div className="flex flex-wrap gap-1.5 mt-3 pt-2.5 border-t border-zinc-200/80">
                       {kpi.fontes.map((f) => (
                         <SourceBadge key={f} source={f} />
                       ))}
@@ -1023,59 +1054,29 @@ export default function ObservatorioRepublicaPage() {
         </section>
 
         {/* ===================================================================
-            BARRA DE NAVEGAÇÃO POR ABAS + FILTRO DE BUSCA RÁPIDA (ESTILO METRÔ/VIÁRIO)
+            BARRA DE NAVEGAÇÃO POR ABAS + FILTRO DE BUSCA RÁPIDA (SWIPE NO CELULAR)
         =================================================================== */}
-        <section className="print:hidden space-y-4">
-          <div className="rounded-2xl bg-white border-2 border-zinc-900 p-3.5 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 shadow-[4px_4px_0px_#18181b]">
+        <section className="print:hidden space-y-3">
+          <div className="rounded-2xl bg-white border-2 border-zinc-900 p-3 sm:p-3.5 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 shadow-[3px_3px_0px_#18181b] sm:shadow-[4px_4px_0px_#18181b]">
+            {/* Abas com Swipe Horizontal Suave no Celular */}
             <nav
               aria-label="Navegação por Setores"
-              className="flex flex-wrap items-center gap-2"
+              className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0 sm:flex-wrap snap-x"
             >
-              {[
-                {
-                  id: "todos" as TabId,
-                  label: "00 // VISÃO COMPLETA",
-                  icon: FileText,
-                },
-                {
-                  id: "modulo1" as TabId,
-                  label: "01 // SOCIEDADE & ECONOMIA",
-                  icon: BarChart3,
-                },
-                {
-                  id: "modulo2" as TabId,
-                  label: "02 // MATRIZ DE RISCOS",
-                  icon: ShieldAlert,
-                },
-                {
-                  id: "simulador" as TabId,
-                  label: "LAB // EQUAÇÃO DA DÍVIDA",
-                  icon: Calculator,
-                },
-                {
-                  id: "modulo3" as TabId,
-                  label: "03 // SOBERANIA VS. VIRALATISMO",
-                  icon: Globe2,
-                },
-                {
-                  id: "modulo4" as TabId,
-                  label: "04 // RAIO-X DO PL & STF",
-                  icon: Scale,
-                },
-              ].map((tab) => {
+              {NAV_ITEMS.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 cursor-pointer ${
+                    className={`shrink-0 snap-start inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 cursor-pointer ${
                       isActive
-                        ? "bg-emerald-500 text-zinc-950 border-2 border-zinc-900 shadow-[3px_3px_0px_#facc15]"
+                        ? "bg-emerald-500 text-zinc-950 border-2 border-zinc-900 shadow-[2px_2px_0px_#facc15]"
                         : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 hover:text-zinc-950 border border-zinc-300"
                     }`}
                   >
-                    <Icon className="w-3.5 h-3.5" />
+                    <Icon className="w-3.5 h-3.5 shrink-0" />
                     <span>{tab.label}</span>
                   </button>
                 );
@@ -1083,14 +1084,14 @@ export default function ObservatorioRepublicaPage() {
             </nav>
 
             {/* Filtro de Busca Rápida */}
-            <div className="relative min-w-[260px] sm:min-w-[320px]">
+            <div className="relative w-full lg:w-80 shrink-0">
               <Search className="w-4 h-4 text-emerald-700 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Filtrar indicador, processo, artigo, valor..."
-                className="w-full pl-10 pr-8 py-2 rounded-xl bg-zinc-50 border-2 border-zinc-300 text-sm font-mono text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-900"
+                placeholder="Filtrar indicador, processo, valor..."
+                className="w-full pl-10 pr-8 py-2 rounded-xl bg-zinc-50 border-2 border-zinc-300 text-xs sm:text-sm font-mono text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-900"
               />
               {searchQuery && (
                 <button
@@ -1112,25 +1113,25 @@ export default function ObservatorioRepublicaPage() {
           id="modulo-1"
           className={`${
             isSectionVisible("modulo1") ? "block" : "hidden"
-          } print:block space-y-6`}
+          } print:block space-y-5 sm:space-y-6`}
         >
           {/* Cabeçalho Urbano de Setor */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-zinc-900 pb-4">
-            <div className="flex items-center gap-3.5">
-              <div className="px-3 py-2 rounded-xl bg-emerald-500 text-zinc-950 border-2 border-zinc-900 font-mono font-extrabold text-sm shadow-[3px_3px_0px_#facc15]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b-2 border-zinc-900 pb-3 sm:pb-4">
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-emerald-500 text-zinc-950 border-2 border-zinc-900 font-mono font-extrabold text-xs sm:text-sm shadow-[2px_2px_0px_#facc15] shrink-0">
                 SETOR 01
               </div>
               <div>
-                <span className="text-xs font-mono font-bold uppercase tracking-widest text-emerald-700 block">
+                <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-widest text-emerald-700 block">
                   Indicadores Empíricos Oficiais • Economia Real & Amazônia
                 </span>
-                <h2 className="text-xl sm:text-2xl font-display font-bold text-zinc-950 uppercase">
+                <h2 className="text-lg sm:text-2xl font-display font-bold text-zinc-950 uppercase leading-snug">
                   Quem Beneficiou Mais a Sociedade? (Dados Macroeconômicos,
                   Sociais e Ambientais)
                 </h2>
               </div>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
               <SourceBadge source="IBGE" />
               <SourceBadge source="DIEESE" />
               <SourceBadge source="INPE" />
@@ -1138,35 +1139,37 @@ export default function ObservatorioRepublicaPage() {
           </div>
 
           {/* 1.1 PIB Real Acumulado e Média Anual (IBGE) */}
-          <div className="rounded-3xl urban-card p-6 sm:p-7 space-y-6 print-avoid-break">
+          <div className="rounded-2xl sm:rounded-3xl urban-card p-4 sm:p-7 space-y-5 sm:space-y-6 print-avoid-break">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-lg font-display font-bold text-zinc-950 uppercase flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-emerald-700" />
+                <h3 className="text-base sm:text-lg font-display font-bold text-zinc-950 uppercase flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-emerald-700 shrink-0" />
                   <span>
                     PIB Real Acumulado, Média Anual e PIB per Capita (IBGE)
                   </span>
                 </h3>
-                <p className="text-xs sm:text-sm text-zinc-600 mt-1">
+                <p className="text-xs sm:text-sm text-zinc-600 mt-1 leading-relaxed">
                   Total combinado Lula I e II (2003–2010):{" "}
                   <strong className="text-emerald-700 font-mono">
-                    +37,3% acumulado (+4,0% a.a.)
+                    +37,3% acum. (+4,0% a.a.)
                   </strong>{" "}
                   | Bolsonaro (2019–2022):{" "}
                   <strong className="text-amber-700 font-mono">
-                    +5,6% acumulado (+1,4% a.a.)
+                    +5,6% acum. (+1,4% a.a.)
                   </strong>{" "}
                   | Lula III (2023–2025):{" "}
                   <strong className="text-emerald-700 font-mono">
-                    +9,2% acumulado no triênio (+3,0% a.a.)
+                    +9,2% no triênio (+3,0% a.a.)
                   </strong>
                 </p>
               </div>
-              <SourceBadge source="IBGE" />
+              <div className="self-start sm:self-auto">
+                <SourceBadge source="IBGE" />
+              </div>
             </div>
 
             {/* Gráfico Visual de Barras Proporcionais para o PIB */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               {GDP_DATA.map((item) => {
                 const widthAcum = Math.min(
                   100,
@@ -1180,23 +1183,23 @@ export default function ObservatorioRepublicaPage() {
                 return (
                   <div
                     key={item.id}
-                    className={`rounded-2xl bg-zinc-50 border border-zinc-200 ${item.bordaLateral} p-5 space-y-4 hover:border-zinc-400 transition-all`}
+                    className={`rounded-2xl bg-zinc-50 border border-zinc-200 ${item.bordaLateral} p-4 sm:p-5 space-y-3.5 sm:space-y-4`}
                   >
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-start justify-between gap-2">
                       <div>
-                        <span className="text-[11px] font-mono font-bold text-zinc-500 uppercase tracking-wider">
+                        <span className="text-[10px] sm:text-[11px] font-mono font-bold text-zinc-500 uppercase tracking-wider block">
                           {item.codigoUrbano}
                         </span>
-                        <h4 className="text-lg font-display font-bold text-zinc-950 uppercase">
+                        <h4 className="text-base sm:text-lg font-display font-bold text-zinc-950 uppercase">
                           {item.governo}{" "}
-                          <span className="text-xs font-mono text-zinc-500 font-normal">
+                          <span className="text-xs font-mono text-zinc-500 font-normal block sm:inline">
                             ({item.periodo})
                           </span>
                         </h4>
                       </div>
-                      <div className="text-right">
+                      <div className="text-right shrink-0">
                         <span
-                          className={`text-lg font-mono font-extrabold ${item.corTexto}`}
+                          className={`text-base sm:text-lg font-mono font-extrabold ${item.corTexto}`}
                         >
                           {item.pibAcumuladoLabel}
                         </span>
@@ -1208,12 +1211,12 @@ export default function ObservatorioRepublicaPage() {
 
                     {/* Barra PIB Acumulado */}
                     <div className="space-y-1.5">
-                      <div className="flex justify-between text-xs">
+                      <div className="flex justify-between text-xs gap-2">
                         <span className="text-zinc-700 font-mono">
-                          Crescimento do PIB Real Acumulado
+                          PIB Real Acumulado
                         </span>
                         <span
-                          className={`font-mono font-bold ${item.corTexto}`}
+                          className={`font-mono font-bold shrink-0 ${item.corTexto}`}
                         >
                           {item.pibAcumuladoLabel} ({item.mediaAnualLabel})
                         </span>
@@ -1228,11 +1231,11 @@ export default function ObservatorioRepublicaPage() {
 
                     {/* Barra PIB per Capita */}
                     <div className="space-y-1.5">
-                      <div className="flex justify-between text-xs">
+                      <div className="flex justify-between text-xs gap-2">
                         <span className="text-zinc-700 font-mono">
-                          Evolução do PIB per Capita
+                          PIB per Capita
                         </span>
-                        <span className="font-mono font-bold text-blue-700">
+                        <span className="font-mono font-bold text-blue-700 shrink-0">
                           {item.pibPerCapitaLabel}
                         </span>
                       </div>
@@ -1253,13 +1256,13 @@ export default function ObservatorioRepublicaPage() {
             </div>
 
             {/* Faixa de Síntese Acumulada */}
-            <div className="rounded-2xl bg-emerald-50/70 border-l-4 border-l-emerald-600 border border-emerald-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="rounded-2xl bg-emerald-50/70 border-l-4 border-l-emerald-600 border border-emerald-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="space-y-1">
-                <div className="text-xs font-mono uppercase text-emerald-800 font-bold">
+                <div className="text-[11px] sm:text-xs font-mono uppercase text-emerald-800 font-bold">
                   // SÍNTESE HISTÓRICA ACUMULADA (2003–2010 vs. 2019–2022 vs.
                   2023–2025)
                 </div>
-                <p className="text-sm text-zinc-800">
+                <p className="text-xs sm:text-sm text-zinc-800 leading-relaxed">
                   No consolidado dos dois primeiros mandatos de Lula (2003–2010),
                   o PIB Real cresceu{" "}
                   <strong className="text-emerald-800 font-mono">
@@ -1280,16 +1283,18 @@ export default function ObservatorioRepublicaPage() {
                   em Lula III.
                 </p>
               </div>
-              <SourceBadge source="IBGE" />
+              <div className="self-start sm:self-auto">
+                <SourceBadge source="IBGE" />
+              </div>
             </div>
           </div>
 
           {/* 1.2 Mercado de Trabalho e Renda (IBGE / DIEESE) */}
-          <div className="rounded-3xl urban-card p-6 sm:p-7 space-y-6 print-avoid-break">
+          <div className="rounded-2xl sm:rounded-3xl urban-card p-4 sm:p-7 space-y-5 sm:space-y-6 print-avoid-break">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-lg font-display font-bold text-zinc-950 uppercase flex items-center gap-2">
-                  <Users className="w-5 h-5 text-blue-700" />
+                <h3 className="text-base sm:text-lg font-display font-bold text-zinc-950 uppercase flex items-center gap-2">
+                  <Users className="w-5 h-5 text-blue-700 shrink-0" />
                   <span>
                     Mercado de Trabalho, Desigualdade (Gini) e Salário Mínimo
                     (IBGE / DIEESE)
@@ -1300,14 +1305,65 @@ export default function ObservatorioRepublicaPage() {
                   renda domiciliar e valorização real do salário mínimo.
                 </p>
               </div>
-              <div className="flex gap-1.5">
+              <div className="flex gap-1.5 self-start sm:self-auto">
                 <SourceBadge source="IBGE" />
                 <SourceBadge source="DIEESE" />
               </div>
             </div>
 
-            {/* Tabela Comparativa Completa */}
-            <div className="overflow-x-auto rounded-2xl border border-zinc-300">
+            {/* VERSÃO CELULAR (CARDS EMPILHADOS SEM ROLAGEM HORIZONTAL) */}
+            <div className="grid grid-cols-1 gap-4 md:hidden print:hidden">
+              {LABOR_INCOME_DATA.map((row) => (
+                <div
+                  key={row.indicador}
+                  className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4 space-y-3"
+                >
+                  <div className="flex items-start justify-between gap-2 border-b border-zinc-200 pb-2.5">
+                    <div>
+                      <h4 className="text-sm font-display font-bold text-zinc-950 uppercase">
+                        {row.indicador}
+                      </h4>
+                      <div className="text-[11px] text-emerald-700 font-mono font-semibold mt-0.5">
+                        ★ {row.destaque}
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-1 shrink-0">
+                      {row.fontes.map((f) => (
+                        <SourceBadge key={f} source={f} />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 text-xs">
+                    <div className="p-2.5 rounded-xl bg-white border-l-4 border-l-emerald-600 border border-zinc-200">
+                      <span className="font-mono font-bold text-emerald-800 block uppercase text-[10px]">
+                        Lula I e II (2003–2010)
+                      </span>
+                      <span className="text-zinc-800">{row.lula1e2}</span>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-white border-l-4 border-l-amber-500 border border-zinc-200">
+                      <span className="font-mono font-bold text-amber-800 block uppercase text-[10px]">
+                        Bolsonaro (2019–2022)
+                      </span>
+                      <span className="text-zinc-800">{row.bolsonaro}</span>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-emerald-50/60 border-l-4 border-l-emerald-600 border border-emerald-200">
+                      <span className="font-mono font-bold text-emerald-800 block uppercase text-[10px]">
+                        Lula III (2023–2026)
+                      </span>
+                      <span className="text-emerald-950 font-semibold">
+                        {row.lula3}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* VERSÃO DESKTOP & IMPRESSÃO PDF (TABELA COMPLETA) */}
+            <div className="hidden md:block print:block overflow-x-auto rounded-2xl border border-zinc-300">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-zinc-900 text-white text-xs font-mono uppercase border-b border-zinc-300">
@@ -1357,11 +1413,11 @@ export default function ObservatorioRepublicaPage() {
             </div>
 
             {/* Barras Visuais Comparativas: Desemprego e Salário Mínimo */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 pt-1">
               {/* Gráfico Desemprego */}
-              <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-5 space-y-4">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-zinc-900 uppercase font-mono">
+              <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4 sm:p-5 space-y-4">
+                <div className="flex items-center justify-between gap-2">
+                  <h4 className="text-xs sm:text-sm font-bold text-zinc-900 uppercase font-mono">
                     Taxa de Desemprego (Menor = Melhor)
                   </h4>
                   <SourceBadge source="IBGE" />
@@ -1369,12 +1425,12 @@ export default function ObservatorioRepublicaPage() {
 
                 <div className="space-y-3">
                   <div>
-                    <div className="flex justify-between text-xs mb-1">
+                    <div className="flex justify-between text-xs mb-1 gap-2">
                       <span className="text-zinc-700">
-                        Lula I e II (Queda de 12,3% para 6,7% PME)
+                        Lula I/II (12,3% → 6,7% PME)
                       </span>
-                      <span className="font-mono text-emerald-700 font-bold">
-                        6,7% (Final 2010)
+                      <span className="font-mono text-emerald-700 font-bold shrink-0">
+                        6,7% (2010)
                       </span>
                     </div>
                     <div className="w-full h-3 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
@@ -1386,12 +1442,12 @@ export default function ObservatorioRepublicaPage() {
                   </div>
 
                   <div>
-                    <div className="flex justify-between text-xs mb-1">
+                    <div className="flex justify-between text-xs mb-1 gap-2">
                       <span className="text-zinc-700">
-                        Bolsonaro (Média de 12,1% | Fechou 2022 em 9,3% PNAD-C)
+                        Bolsonaro (Média 12,1% | Fim 9,3%)
                       </span>
-                      <span className="font-mono text-amber-700 font-bold">
-                        12,1% média (9,3% fim)
+                      <span className="font-mono text-amber-700 font-bold shrink-0">
+                        12,1% média
                       </span>
                     </div>
                     <div className="w-full h-3 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
@@ -1403,12 +1459,12 @@ export default function ObservatorioRepublicaPage() {
                   </div>
 
                   <div>
-                    <div className="flex justify-between text-xs mb-1">
+                    <div className="flex justify-between text-xs mb-1 gap-2">
                       <span className="text-zinc-700">
-                        Lula III (Média de 6,7% | Mínima Histórica em 2025)
+                        Lula III (Média 6,7% | Mínima 2025)
                       </span>
-                      <span className="font-mono text-emerald-700 font-bold">
-                        5,6% (Mínima 2025)
+                      <span className="font-mono text-emerald-700 font-bold shrink-0">
+                        5,6% (Mín.)
                       </span>
                     </div>
                     <div className="w-full h-3 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
@@ -1422,9 +1478,9 @@ export default function ObservatorioRepublicaPage() {
               </div>
 
               {/* Gráfico Valorização Real do Salário Mínimo */}
-              <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-5 space-y-4">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-zinc-900 uppercase font-mono">
+              <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4 sm:p-5 space-y-4">
+                <div className="flex items-center justify-between gap-2">
+                  <h4 className="text-xs sm:text-sm font-bold text-zinc-900 uppercase font-mono">
                     Valorização Real do Salário Mínimo
                   </h4>
                   <SourceBadge source="DIEESE" />
@@ -1487,11 +1543,11 @@ export default function ObservatorioRepublicaPage() {
           </div>
 
           {/* 1.3 Meio Ambiente e Desmatamento na Amazônia (INPE / PRODES) */}
-          <div className="rounded-3xl urban-card p-6 sm:p-7 space-y-6 print-avoid-break">
+          <div className="rounded-2xl sm:rounded-3xl urban-card p-4 sm:p-7 space-y-5 sm:space-y-6 print-avoid-break">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-lg font-display font-bold text-zinc-950 uppercase flex items-center gap-2">
-                  <Trees className="w-5 h-5 text-emerald-700" />
+                <h3 className="text-base sm:text-lg font-display font-bold text-zinc-950 uppercase flex items-center gap-2">
+                  <Trees className="w-5 h-5 text-emerald-700 shrink-0" />
                   <span>
                     Meio Ambiente e Desmatamento na Amazônia Legal (INPE /
                     PRODES)
@@ -1502,10 +1558,12 @@ export default function ObservatorioRepublicaPage() {
                   ambiental e fiscalização do Ibama.
                 </p>
               </div>
-              <SourceBadge source="INPE" />
+              <div className="self-start sm:self-auto">
+                <SourceBadge source="INPE" />
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
               {ENVIRONMENT_DATA.map((env) => {
                 const isPositivo = env.status === "positivo";
                 const cardBorder = isPositivo
@@ -1525,7 +1583,7 @@ export default function ObservatorioRepublicaPage() {
                 return (
                   <div
                     key={env.id}
-                    className={`rounded-2xl border ${cardBorder} p-5 flex flex-col justify-between space-y-4`}
+                    className={`rounded-2xl border ${cardBorder} p-4 sm:p-5 flex flex-col justify-between space-y-4`}
                   >
                     <div className="space-y-3">
                       <div className="flex items-center justify-between gap-2">
@@ -1538,7 +1596,7 @@ export default function ObservatorioRepublicaPage() {
                           </span>
                         </div>
                         <span
-                          className={`text-xs font-mono font-bold px-2.5 py-1 rounded-md border ${badgeColor}`}
+                          className={`text-xs font-mono font-bold px-2.5 py-1 rounded-md border shrink-0 ${badgeColor}`}
                         >
                           {env.variacao}
                         </span>
@@ -1548,10 +1606,9 @@ export default function ObservatorioRepublicaPage() {
                         {env.taxaReferencia}
                       </div>
 
-                      {/* Barra Visual Proporcional da Taxa Final/Pico */}
                       <div className="space-y-1">
                         <div className="flex justify-between text-[11px] text-zinc-600 font-mono">
-                          <span>Patamar de Desmatamento Anual</span>
+                          <span>Patamar Anual</span>
                           <span>
                             {env.kmAnoNumerico.toLocaleString("pt-BR")} km²/ano
                           </span>
@@ -1589,23 +1646,23 @@ export default function ObservatorioRepublicaPage() {
           id="modulo-2"
           className={`${
             isSectionVisible("modulo2") ? "block" : "hidden"
-          } print:block space-y-6 print-page-break`}
+          } print:block space-y-5 sm:space-y-6 print-page-break`}
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-zinc-900 pb-4">
-            <div className="flex items-center gap-3.5">
-              <div className="px-3 py-2 rounded-xl bg-yellow-400 text-zinc-950 border-2 border-zinc-900 font-mono font-extrabold text-sm shadow-[3px_3px_0px_#f43f5e]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b-2 border-zinc-900 pb-3 sm:pb-4">
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-yellow-400 text-zinc-950 border-2 border-zinc-900 font-mono font-extrabold text-xs sm:text-sm shadow-[2px_2px_0px_#f43f5e] shrink-0">
                 SETOR 02
               </div>
               <div>
-                <span className="text-xs font-mono font-bold uppercase tracking-widest text-amber-700 block">
+                <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-widest text-amber-700 block">
                   Diagnóstico Estrutural de Vulnerabilidades
                 </span>
-                <h2 className="text-xl sm:text-2xl font-display font-bold text-zinc-950 uppercase">
+                <h2 className="text-lg sm:text-2xl font-display font-bold text-zinc-950 uppercase leading-snug">
                   Qual é o Mais Perigoso? (Matriz Fria de Riscos Sistêmicos)
                 </h2>
               </div>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
               <SourceBadge source="BCB" />
               <SourceBadge source="TN" />
               <SourceBadge source="STF" />
@@ -1614,21 +1671,20 @@ export default function ObservatorioRepublicaPage() {
           </div>
 
           {/* Comparação Lado a Lado dos Dois Perigos Opostos */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
             {/* COLUNA 1: O PERIGO DO MODELO LULA (DOMINÂNCIA FISCAL) */}
-            <div className="rounded-3xl urban-card-yellow overflow-hidden flex flex-col justify-between print-avoid-break">
-              {/* Faixa de Alerta Urbano (Caution Stripe) */}
-              <div className="h-3.5 w-full urban-Caution-stripe border-b border-amber-300" />
+            <div className="rounded-2xl sm:rounded-3xl urban-card-yellow overflow-hidden flex flex-col justify-between print-avoid-break">
+              <div className="h-3 sm:h-3.5 w-full urban-Caution-stripe border-b border-amber-300" />
 
-              <div className="p-6 sm:p-7 space-y-5 flex-1 flex flex-col justify-between">
-                <div className="space-y-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1">
-                      <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase px-2.5 py-1 rounded bg-yellow-400 text-zinc-950 border border-zinc-900">
-                        <Flame className="w-3.5 h-3.5" />
+              <div className="p-4 sm:p-7 space-y-4 sm:space-y-5 flex-1 flex flex-col justify-between">
+                <div className="space-y-4 sm:space-y-5">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5">
+                    <div className="space-y-1.5">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded bg-yellow-400 text-zinc-950 border border-zinc-900">
+                        <Flame className="w-3.5 h-3.5 shrink-0" />
                         VETOR 01 // RISCO MACRO-FISCAL
                       </span>
-                      <h3 className="text-xl font-display font-bold text-zinc-950 pt-1 uppercase">
+                      <h3 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-1 uppercase leading-snug">
                         1. O Perigo do Modelo Lula: Risco de Dominância Fiscal e
                         &ldquo;Bola de Neve&rdquo;
                       </h3>
@@ -1640,7 +1696,7 @@ export default function ObservatorioRepublicaPage() {
                   </div>
 
                   {/* Contraste Histórico Fiscal 2003-2010 vs 2023-2025 */}
-                  <div className="rounded-2xl bg-amber-50/50 border border-amber-200 p-4 space-y-3">
+                  <div className="rounded-2xl bg-amber-50/50 border border-amber-200 p-3.5 sm:p-4 space-y-3">
                     <div className="text-xs font-mono uppercase text-amber-900 font-bold">
                       // Inversão do Regime Fiscal: Lula I/II vs. Lula III
                     </div>
@@ -1661,28 +1717,28 @@ export default function ObservatorioRepublicaPage() {
                       </strong>{" "}
                       houve déficits primários consecutivos:
                     </p>
-                    <div className="grid grid-cols-3 gap-2 pt-1">
-                      <div className="rounded-xl bg-white border border-amber-300 p-2.5 text-center">
-                        <div className="text-[11px] font-mono text-zinc-500">
-                          Primário 2023
+                    <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-1">
+                      <div className="rounded-xl bg-white border border-amber-300 p-2 sm:p-2.5 text-center">
+                        <div className="text-[10px] sm:text-[11px] font-mono text-zinc-500">
+                          Primário 23
                         </div>
-                        <div className="text-base font-mono font-bold text-amber-800">
+                        <div className="text-xs sm:text-base font-mono font-bold text-amber-800">
                           -2,29% PIB
                         </div>
                       </div>
-                      <div className="rounded-xl bg-white border border-amber-300 p-2.5 text-center">
-                        <div className="text-[11px] font-mono text-zinc-500">
-                          Primário 2024
+                      <div className="rounded-xl bg-white border border-amber-300 p-2 sm:p-2.5 text-center">
+                        <div className="text-[10px] sm:text-[11px] font-mono text-zinc-500">
+                          Primário 24
                         </div>
-                        <div className="text-base font-mono font-bold text-amber-800">
+                        <div className="text-xs sm:text-base font-mono font-bold text-amber-800">
                           -0,40% PIB
                         </div>
                       </div>
-                      <div className="rounded-xl bg-white border border-amber-300 p-2.5 text-center">
-                        <div className="text-[11px] font-mono text-zinc-500">
-                          Primário 2025
+                      <div className="rounded-xl bg-white border border-amber-300 p-2 sm:p-2.5 text-center">
+                        <div className="text-[10px] sm:text-[11px] font-mono text-zinc-500">
+                          Primário 25
                         </div>
-                        <div className="text-base font-mono font-bold text-amber-800">
+                        <div className="text-xs sm:text-base font-mono font-bold text-amber-800">
                           -0,43% PIB
                         </div>
                       </div>
@@ -1690,7 +1746,7 @@ export default function ObservatorioRepublicaPage() {
                   </div>
 
                   {/* Dinâmica da Dívida Bruta e Carga Tributária */}
-                  <div className="rounded-2xl bg-amber-50/50 border border-amber-200 p-4 space-y-3">
+                  <div className="rounded-2xl bg-amber-50/50 border border-amber-200 p-3.5 sm:p-4 space-y-3">
                     <div className="text-xs font-mono uppercase text-amber-900 font-bold">
                       // Dinâmica Explosiva (r &gt; g) e Carga Tributária Recorde
                     </div>
@@ -1738,7 +1794,7 @@ export default function ObservatorioRepublicaPage() {
                       <div>
                         <div className="flex justify-between text-xs font-mono mb-1">
                           <span className="text-amber-900">
-                            DBGG em 2025 (+7,0 p.p. em 3 anos)
+                            DBGG em 2025 (+7,0 p.p.)
                           </span>
                           <span className="text-amber-800 font-bold">
                             78,7% do PIB
@@ -1756,7 +1812,7 @@ export default function ObservatorioRepublicaPage() {
                 </div>
 
                 {/* Alerta de Risco Crítico 2027 */}
-                <div className="rounded-2xl bg-amber-100/80 border-l-4 border-l-amber-600 border border-amber-300 p-4 flex items-start gap-3">
+                <div className="rounded-2xl bg-amber-100/80 border-l-4 border-l-amber-600 border border-amber-300 p-3.5 sm:p-4 flex items-start gap-2.5 sm:gap-3">
                   <AlertTriangle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
                   <div className="text-xs sm:text-sm text-zinc-800 leading-relaxed">
                     <strong className="text-amber-900 uppercase font-mono block mb-0.5">
@@ -1774,19 +1830,18 @@ export default function ObservatorioRepublicaPage() {
             </div>
 
             {/* COLUNA 2: O PERIGO DO MODELO BOLSONARO / FLÁVIO BOLSONARO */}
-            <div className="rounded-3xl urban-card-rose overflow-hidden flex flex-col justify-between print-avoid-break">
-              {/* Faixa de Perigo Urbano (Danger Stripe) */}
-              <div className="h-3.5 w-full urban-danger-stripe border-b border-rose-300" />
+            <div className="rounded-2xl sm:rounded-3xl urban-card-rose overflow-hidden flex flex-col justify-between print-avoid-break">
+              <div className="h-3 sm:h-3.5 w-full urban-danger-stripe border-b border-rose-300" />
 
-              <div className="p-6 sm:p-7 space-y-5 flex-1 flex flex-col justify-between">
-                <div className="space-y-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1">
-                      <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase px-2.5 py-1 rounded bg-rose-600 text-white border border-zinc-900">
-                        <Gavel className="w-3.5 h-3.5" />
+              <div className="p-4 sm:p-7 space-y-4 sm:space-y-5 flex-1 flex flex-col justify-between">
+                <div className="space-y-4 sm:space-y-5">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5">
+                    <div className="space-y-1.5">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded bg-rose-600 text-white border border-zinc-900">
+                        <Gavel className="w-3.5 h-3.5 shrink-0" />
                         VETOR 02 // RISCO DEMOCRÁTICO & PENAL
                       </span>
-                      <h3 className="text-xl font-display font-bold text-zinc-950 pt-1 uppercase">
+                      <h3 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-1 uppercase leading-snug">
                         2. O Perigo do Modelo Bolsonaro / Flávio Bolsonaro:
                         Ruptura Democrática, Paralisia Institucional e Isolamento
                       </h3>
@@ -1798,7 +1853,7 @@ export default function ObservatorioRepublicaPage() {
                   </div>
 
                   {/* Condenação Criminal de Jair Bolsonaro */}
-                  <div className="rounded-2xl bg-rose-50/50 border border-rose-200 p-4 space-y-2.5">
+                  <div className="rounded-2xl bg-rose-50/50 border border-rose-200 p-3.5 sm:p-4 space-y-2.5">
                     <div className="text-xs font-mono uppercase text-rose-800 font-bold">
                       // Condenação Criminal por Tentativa de Golpe de Estado
                       (STF)
@@ -1828,7 +1883,7 @@ export default function ObservatorioRepublicaPage() {
                   </div>
 
                   {/* Risco Flávio Bolsonaro (Plano 2026) */}
-                  <div className="rounded-2xl bg-rose-50/50 border border-rose-200 p-4 space-y-2.5">
+                  <div className="rounded-2xl bg-rose-50/50 border border-rose-200 p-3.5 sm:p-4 space-y-2.5">
                     <div className="text-xs font-mono uppercase text-rose-800 font-bold">
                       // Risco Flávio Bolsonaro (Plano 2026) & Baixa
                       Produtividade Legislativa
@@ -1850,7 +1905,7 @@ export default function ObservatorioRepublicaPage() {
                   </div>
 
                   {/* Institucionalização do Orçamento Secreto */}
-                  <div className="rounded-2xl bg-rose-50/50 border border-rose-200 p-4 space-y-2.5">
+                  <div className="rounded-2xl bg-rose-50/50 border border-rose-200 p-3.5 sm:p-4 space-y-2.5">
                     <div className="text-xs font-mono uppercase text-rose-800 font-bold">
                       // Captura Orçamentária Opaca (&ldquo;Orçamento
                       Secreto&rdquo; — RP9)
@@ -1872,7 +1927,7 @@ export default function ObservatorioRepublicaPage() {
                 </div>
 
                 {/* Alerta de Risco Crítico Institucional */}
-                <div className="rounded-2xl bg-rose-100/80 border-l-4 border-l-rose-600 border border-rose-300 p-4 flex items-start gap-3">
+                <div className="rounded-2xl bg-rose-100/80 border-l-4 border-l-rose-600 border border-rose-300 p-3.5 sm:p-4 flex items-start gap-2.5 sm:gap-3">
                   <ShieldAlert className="w-5 h-5 text-rose-700 shrink-0 mt-0.5" />
                   <div className="text-xs sm:text-sm text-zinc-800 leading-relaxed">
                     <strong className="text-rose-900 uppercase font-mono block mb-0.5">
@@ -1899,21 +1954,21 @@ export default function ObservatorioRepublicaPage() {
             isSectionVisible("simulador") || isSectionVisible("modulo2")
               ? "block"
               : "hidden"
-          } print:block space-y-6 print-avoid-break`}
+          } print:block space-y-5 sm:space-y-6 print-avoid-break`}
         >
-          <div className="rounded-3xl bg-white border-2 border-zinc-900 shadow-[6px_6px_0px_#18181b] p-6 sm:p-8 space-y-6">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-zinc-200 pb-5">
+          <div className="rounded-2xl sm:rounded-3xl bg-white border-2 border-zinc-900 shadow-[4px_4px_0px_#18181b] sm:shadow-[6px_6px_0px_#18181b] p-4 sm:p-8 space-y-5 sm:space-y-6">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-zinc-200 pb-4 sm:pb-5">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-blue-700">
-                  <Activity className="w-4 h-4" />
+                <div className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-mono font-bold uppercase text-blue-700">
+                  <Activity className="w-4 h-4 shrink-0" />
                   <span>
-                    LABORATÓRIO FISCAL // SIMULADOR DA EQUAÇÃO DA DÍVIDA PÚBLICA
+                    LABORATÓRIO FISCAL // EQUAÇÃO DA DÍVIDA PÚBLICA
                   </span>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-display font-bold text-zinc-950 uppercase">
+                <h3 className="text-lg sm:text-2xl font-display font-bold text-zinc-950 uppercase leading-snug">
                   Equação Canônica de Sustentabilidade da Dívida Bruta (DBGG)
                 </h3>
-                <p className="text-xs sm:text-sm text-zinc-600">
+                <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed">
                   Entenda matematicamente por que a relação entre juro real (
                   <span className="font-mono font-bold text-amber-700">r</span>
                   ), crescimento do PIB (
@@ -1927,11 +1982,11 @@ export default function ObservatorioRepublicaPage() {
               </div>
 
               {/* Bloco da Equação Matemática Destacada */}
-              <div className="rounded-2xl bg-zinc-900 border-2 border-zinc-950 px-5 py-3.5 text-center shrink-0 shadow-[4px_4px_0px_#facc15]">
+              <div className="rounded-2xl bg-zinc-900 border-2 border-zinc-950 px-4 sm:px-5 py-3 sm:py-3.5 text-center shrink-0 shadow-[3px_3px_0px_#facc15]">
                 <div className="text-[10px] font-mono uppercase text-zinc-400 mb-1">
                   Fórmula Macroeconômica Oficial
                 </div>
-                <div className="text-base sm:text-lg font-mono font-bold text-yellow-300 tracking-wide">
+                <div className="text-sm sm:text-lg font-mono font-bold text-yellow-300 tracking-wide">
                   Δd<sub className="text-xs">t</sub> = ((r - g) / (1 + g)) · d
                   <sub className="text-xs">t-1</sub> - p
                   <sub className="text-xs">t</sub>
@@ -1940,48 +1995,50 @@ export default function ObservatorioRepublicaPage() {
             </div>
 
             {/* Botões de Cenários Históricos Pré-Configurados */}
-            <div className="flex flex-wrap items-center gap-2 print:hidden">
-              <span className="text-xs font-mono font-bold text-zinc-600 mr-1 uppercase">
-                Presets Históricos:
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 print:hidden">
+              <span className="text-[11px] font-mono font-bold text-zinc-600 uppercase">
+                Toque para Carregar Cenário:
               </span>
-              <button
-                onClick={() => applyPreset("lula1_2")}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-400 transition cursor-pointer"
-              >
-                Lula I e II (2003–2010: p = +3,16% | g = 4,0%)
-              </button>
-              <button
-                onClick={() => applyPreset("bolsonaro")}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border border-zinc-300 transition cursor-pointer"
-              >
-                Bolsonaro (2019–2022: g = 1,4% | choque pandemia)
-              </button>
-              <button
-                onClick={() => applyPreset("lula3")}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-400 transition cursor-pointer"
-              >
-                Lula III (2025 Atual: d = 78,7% | r = 7% | g = 3% | p = -0,43%)
-              </button>
-              <button
-                onClick={() => applyPreset("ajuste2027")}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-blue-100 hover:bg-blue-200 text-blue-900 border border-blue-300 transition cursor-pointer"
-              >
-                Cenário Estabilização 2027 (r = 4,5% | g = 3% | p = +1,5%)
-              </button>
-              <button
-                onClick={() => applyPreset("lula3")}
-                title="Restaurar valores padrão de 2025"
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-mono bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-300 transition cursor-pointer ml-auto"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                Resetar
-              </button>
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0 sm:flex-wrap">
+                <button
+                  onClick={() => applyPreset("lula1_2")}
+                  className="shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-400 transition cursor-pointer"
+                >
+                  Lula I/II (03–10: p=+3,16% | g=4%)
+                </button>
+                <button
+                  onClick={() => applyPreset("bolsonaro")}
+                  className="shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border border-zinc-300 transition cursor-pointer"
+                >
+                  Bolsonaro (19–22: g=1,4%)
+                </button>
+                <button
+                  onClick={() => applyPreset("lula3")}
+                  className="shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-400 transition cursor-pointer"
+                >
+                  Lula III (2025: r=7% | g=3% | p=-0,43%)
+                </button>
+                <button
+                  onClick={() => applyPreset("ajuste2027")}
+                  className="shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-blue-100 hover:bg-blue-200 text-blue-900 border border-blue-300 transition cursor-pointer"
+                >
+                  Estabilização 2027 (r=4,5% | p=+1,5%)
+                </button>
+                <button
+                  onClick={() => applyPreset("lula3")}
+                  title="Restaurar valores padrão de 2025"
+                  className="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-mono bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-300 transition cursor-pointer"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Resetar
+                </button>
+              </div>
             </div>
 
             {/* Controles Sliders + Resultado Analítico */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4 space-y-2">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center">
+              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4 space-y-2">
                   <div className="flex justify-between items-center">
                     <label className="text-xs font-mono font-semibold text-zinc-700">
                       Estoque Inicial (d<sub>t-1</sub>)
@@ -2004,10 +2061,10 @@ export default function ObservatorioRepublicaPage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4 space-y-2">
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4 space-y-2">
                   <div className="flex justify-between items-center">
                     <label className="text-xs font-mono font-semibold text-zinc-700">
-                      Taxa de Juro Real Implícita (r)
+                      Juro Real Implícito (r)
                     </label>
                     <span className="text-sm font-mono font-bold text-amber-700">
                       {simRealRate.toFixed(1)}% a.a.
@@ -2027,10 +2084,10 @@ export default function ObservatorioRepublicaPage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4 space-y-2">
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4 space-y-2">
                   <div className="flex justify-between items-center">
                     <label className="text-xs font-mono font-semibold text-zinc-700">
-                      Crescimento Real do PIB (g)
+                      Crescimento Real PIB (g)
                     </label>
                     <span className="text-sm font-mono font-bold text-emerald-700">
                       {simGdpGrowth.toFixed(1)}% a.a.
@@ -2046,11 +2103,11 @@ export default function ObservatorioRepublicaPage() {
                     className="w-full accent-emerald-600 cursor-pointer"
                   />
                   <div className="text-[11px] text-zinc-500 font-mono">
-                    Ref: +4,0% (Lula I/II) | +1,4% (Bolsonaro) | +3,0% (Lula III)
+                    Ref: +4,0% (03–10) | +1,4% (19–22) | +3,0% (23–25)
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4 space-y-2">
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4 space-y-2">
                   <div className="flex justify-between items-center">
                     <label className="text-xs font-mono font-semibold text-zinc-700">
                       Resultado Primário (p<sub>t</sub>)
@@ -2078,19 +2135,19 @@ export default function ObservatorioRepublicaPage() {
                     className="w-full accent-blue-600 cursor-pointer"
                   />
                   <div className="text-[11px] text-zinc-500 font-mono">
-                    Ref: +3,16% (2003–10) | -2,29% (23) | -0,43% (25)
+                    Ref: +3,16% (03–10) | -2,29% (23) | -0,43% (25)
                   </div>
                 </div>
               </div>
 
               {/* Painel de Resultado da Equação */}
-              <div className="lg:col-span-5 rounded-2xl bg-zinc-50 border-2 border-zinc-900 p-5 space-y-4">
-                <div className="flex items-center justify-between border-b border-zinc-200 pb-3">
+              <div className="lg:col-span-5 rounded-2xl bg-zinc-50 border-2 border-zinc-900 p-4 sm:p-5 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 pb-3">
                   <span className="text-xs font-mono font-bold uppercase text-zinc-600">
                     Resultado Simulado (Δd<sub>t</sub>)
                   </span>
                   <span
-                    className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded border ${
+                    className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded border ${
                       debtSimulation.deltaDebt > 0.3
                         ? "bg-amber-100 text-amber-900 border-amber-400"
                         : debtSimulation.deltaDebt < -0.3
@@ -2099,10 +2156,10 @@ export default function ObservatorioRepublicaPage() {
                     }`}
                   >
                     {debtSimulation.deltaDebt > 0.3
-                      ? "Trajetória de Alta (Bola de Neve)"
+                      ? "Alta (Bola de Neve)"
                       : debtSimulation.deltaDebt < -0.3
-                      ? "Trajetória de Queda da Dívida"
-                      : "Estabilidade da Dívida/PIB"}
+                      ? "Queda da Dívida"
+                      : "Estabilidade"}
                   </span>
                 </div>
 
@@ -2112,16 +2169,16 @@ export default function ObservatorioRepublicaPage() {
                       Variação Anual (Δd<sub>t</sub>)
                     </div>
                     <div
-                      className={`text-2xl font-mono font-extrabold mt-0.5 flex items-center gap-1 ${
+                      className={`text-xl sm:text-2xl font-mono font-extrabold mt-0.5 flex items-center gap-1 ${
                         debtSimulation.deltaDebt > 0
                           ? "text-amber-700"
                           : "text-emerald-700"
                       }`}
                     >
                       {debtSimulation.deltaDebt > 0 ? (
-                        <ArrowUpRight className="w-5 h-5" />
+                        <ArrowUpRight className="w-5 h-5 shrink-0" />
                       ) : (
-                        <ArrowDownRight className="w-5 h-5" />
+                        <ArrowDownRight className="w-5 h-5 shrink-0" />
                       )}
                       {debtSimulation.deltaDebt > 0 ? "+" : ""}
                       {debtSimulation.deltaDebt.toFixed(2)} p.p.
@@ -2132,7 +2189,7 @@ export default function ObservatorioRepublicaPage() {
                     <div className="text-[11px] font-mono text-zinc-500">
                       Dívida Projetada (d<sub>t</sub>)
                     </div>
-                    <div className="text-2xl font-mono font-extrabold text-zinc-950 mt-0.5">
+                    <div className="text-xl sm:text-2xl font-mono font-extrabold text-zinc-950 mt-0.5">
                       {debtSimulation.nextDebt.toFixed(1)}%{" "}
                       <span className="text-xs font-normal text-zinc-500">
                         PIB
@@ -2142,28 +2199,28 @@ export default function ObservatorioRepublicaPage() {
                 </div>
 
                 <div className="space-y-1.5 text-xs font-mono bg-white p-3 rounded-xl border border-zinc-200">
-                  <div className="flex justify-between">
+                  <div className="flex justify-between gap-2">
                     <span className="text-zinc-600">
-                      Efeito Juros vs. PIB [((r - g)/(1 + g))·d]:
+                      Efeito Juros vs. PIB:
                     </span>
                     <span
                       className={
                         debtSimulation.snowBallTerm > 0
-                          ? "text-amber-700 font-bold"
-                          : "text-emerald-700 font-bold"
+                          ? "text-amber-700 font-bold shrink-0"
+                          : "text-emerald-700 font-bold shrink-0"
                       }
                     >
                       {debtSimulation.snowBallTerm > 0 ? "+" : ""}
                       {debtSimulation.snowBallTerm.toFixed(2)} p.p.
                     </span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between gap-2">
                     <span className="text-zinc-600">
-                      Primário Necessário p/ Estabilizar (Δd = 0):
+                      Primário p/ Estabilizar (Δd = 0):
                     </span>
-                    <span className="text-blue-700 font-bold">
+                    <span className="text-blue-700 font-bold shrink-0">
                       {debtSimulation.stabilizingPrimary > 0 ? "+" : ""}
-                      {debtSimulation.stabilizingPrimary.toFixed(2)}% do PIB
+                      {debtSimulation.stabilizingPrimary.toFixed(2)}% PIB
                     </span>
                   </div>
                 </div>
@@ -2179,31 +2236,31 @@ export default function ObservatorioRepublicaPage() {
           id="modulo-3"
           className={`${
             isSectionVisible("modulo3") ? "block" : "hidden"
-          } print:block space-y-6 print-page-break`}
+          } print:block space-y-5 sm:space-y-6 print-page-break`}
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-zinc-900 pb-4">
-            <div className="flex items-center gap-3.5">
-              <div className="px-3 py-2 rounded-xl bg-blue-700 text-white border-2 border-zinc-900 font-mono font-extrabold text-sm shadow-[3px_3px_0px_#facc15]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b-2 border-zinc-900 pb-3 sm:pb-4">
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-blue-700 text-white border-2 border-zinc-900 font-mono font-extrabold text-xs sm:text-sm shadow-[2px_2px_0px_#facc15] shrink-0">
                 SETOR 03
               </div>
               <div>
-                <span className="text-xs font-mono font-bold uppercase tracking-widest text-blue-700 block">
+                <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-widest text-blue-700 block">
                   Geopolítica, Energia e Política Industrial
                 </span>
-                <h2 className="text-xl sm:text-2xl font-display font-bold text-zinc-950 uppercase">
+                <h2 className="text-lg sm:text-2xl font-display font-bold text-zinc-950 uppercase leading-snug">
                   Análise Técnica do &ldquo;Viralatismo&rdquo; (Subordinação
                   Externa vs. Soberania Nacional)
                 </h2>
               </div>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
               <SourceBadge source="CGU" />
               <SourceBadge source="MCTI" />
               <SourceBadge source="MDIC" />
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-5 sm:space-y-6">
             {SOVEREIGNTY_DATA.map((item) => {
               const Icon =
                 item.icone === "fuel"
@@ -2215,18 +2272,18 @@ export default function ObservatorioRepublicaPage() {
               return (
                 <div
                   key={item.id}
-                  className="rounded-3xl urban-card p-6 sm:p-7 space-y-5 print-avoid-break"
+                  className="rounded-2xl sm:rounded-3xl urban-card p-4 sm:p-7 space-y-4 sm:space-y-5 print-avoid-break"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-200 pb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-200 pb-3.5 sm:pb-4">
                     <div className="flex items-center gap-3">
-                      <div className="p-2.5 rounded-xl bg-yellow-400 text-zinc-950 border-2 border-zinc-900">
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-yellow-400 text-zinc-950 border-2 border-zinc-900 shrink-0">
                         <Icon className="w-5 h-5" />
                       </div>
                       <div>
                         <span className="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-widest block">
                           {item.codigoSetor}
                         </span>
-                        <h3 className="text-lg font-display font-bold text-zinc-950 uppercase">
+                        <h3 className="text-base sm:text-lg font-display font-bold text-zinc-950 uppercase leading-snug">
                           {item.eixo}
                         </h3>
                       </div>
@@ -2238,19 +2295,19 @@ export default function ObservatorioRepublicaPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                     {/* Lado Subordinação Passiva (2019-2022) */}
-                    <div className="rounded-2xl bg-rose-50/40 border-l-4 border-l-rose-600 border border-rose-200 p-5 flex flex-col justify-between space-y-4">
+                    <div className="rounded-2xl bg-rose-50/40 border-l-4 border-l-rose-600 border border-rose-200 p-4 sm:p-5 flex flex-col justify-between space-y-4">
                       <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-mono font-bold uppercase px-2.5 py-0.5 rounded bg-rose-100 text-rose-800 border border-rose-300">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-0.5 rounded bg-rose-100 text-rose-800 border border-rose-300">
                             {item.subordinacao.periodo}
                           </span>
-                          <span className="text-xs font-mono font-bold text-rose-700 uppercase">
+                          <span className="text-[11px] font-mono font-bold text-rose-700 uppercase">
                             // Subordinação Passiva
                           </span>
                         </div>
-                        <h4 className="text-base font-display font-bold text-zinc-950 uppercase">
+                        <h4 className="text-sm sm:text-base font-display font-bold text-zinc-950 uppercase">
                           {item.subordinacao.titulo}
                         </h4>
                         <ul className="space-y-2.5 text-xs sm:text-sm text-zinc-700">
@@ -2271,17 +2328,17 @@ export default function ObservatorioRepublicaPage() {
                     </div>
 
                     {/* Lado Soberania Nacional (2003-2010 / 2023-2026) */}
-                    <div className="rounded-2xl bg-emerald-50/40 border-l-4 border-l-emerald-600 border border-emerald-200 p-5 flex flex-col justify-between space-y-4">
+                    <div className="rounded-2xl bg-emerald-50/40 border-l-4 border-l-emerald-600 border border-emerald-200 p-4 sm:p-5 flex flex-col justify-between space-y-4">
                       <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-mono font-bold uppercase px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
                             {item.soberania.periodo}
                           </span>
-                          <span className="text-xs font-mono font-bold text-emerald-700 uppercase">
+                          <span className="text-[11px] font-mono font-bold text-emerald-700 uppercase">
                             // Soberania Nacional
                           </span>
                         </div>
-                        <h4 className="text-base font-display font-bold text-zinc-950 uppercase">
+                        <h4 className="text-sm sm:text-base font-display font-bold text-zinc-950 uppercase">
                           {item.soberania.titulo}
                         </h4>
                         <ul className="space-y-2.5 text-xs sm:text-sm text-zinc-700">
@@ -2314,24 +2371,24 @@ export default function ObservatorioRepublicaPage() {
           id="modulo-4"
           className={`${
             isSectionVisible("modulo4") ? "block" : "hidden"
-          } print:block space-y-6 print-page-break`}
+          } print:block space-y-5 sm:space-y-6 print-page-break`}
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-zinc-900 pb-4">
-            <div className="flex items-center gap-3.5">
-              <div className="px-3 py-2 rounded-xl bg-rose-600 text-white border-2 border-zinc-900 font-mono font-extrabold text-sm shadow-[3px_3px_0px_#facc15]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b-2 border-zinc-900 pb-3 sm:pb-4">
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-rose-600 text-white border-2 border-zinc-900 font-mono font-extrabold text-xs sm:text-sm shadow-[2px_2px_0px_#facc15] shrink-0">
                 SETOR 04
               </div>
               <div>
-                <span className="text-xs font-mono font-bold uppercase tracking-widest text-rose-700 block">
+                <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-widest text-rose-700 block">
                   Auditoria Partidária, Orçamentária e Processual
                 </span>
-                <h2 className="text-xl sm:text-2xl font-display font-bold text-zinc-950 uppercase">
+                <h2 className="text-lg sm:text-2xl font-display font-bold text-zinc-950 uppercase leading-snug">
                   Raio-X do Partido Liberal (PL) — Orçamento Público e Ficha
                   Criminal + Nota de Equilíbrio Metodológico
                 </h2>
               </div>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
               <SourceBadge source="STF" />
               <SourceBadge source="STJ" />
               <SourceBadge source="TSE" />
@@ -2339,16 +2396,18 @@ export default function ObservatorioRepublicaPage() {
           </div>
 
           {/* Destaque: Máquina Pública e Fundo Eleitoral/Partidário do PL */}
-          <div className="rounded-3xl urban-card border-l-4 border-l-amber-500 p-6 sm:p-7 space-y-5 print-avoid-break">
+          <div className="rounded-2xl sm:rounded-3xl urban-card border-l-4 border-l-amber-500 p-4 sm:p-7 space-y-4 sm:space-y-5 print-avoid-break">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2.5">
-                <DollarSign className="w-5 h-5 text-amber-700" />
-                <h3 className="text-lg font-display font-bold text-zinc-950 uppercase">
+                <DollarSign className="w-5 h-5 text-amber-700 shrink-0" />
+                <h3 className="text-base sm:text-lg font-display font-bold text-zinc-950 uppercase leading-snug">
                   Máquina Pública: O Maior Absorvedor de Recursos Públicos
                   Eleitorais do País
                 </h3>
               </div>
-              <SourceBadge source="TSE" />
+              <div className="self-start sm:self-auto">
+                <SourceBadge source="TSE" />
+              </div>
             </div>
 
             <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed">
@@ -2363,12 +2422,12 @@ export default function ObservatorioRepublicaPage() {
               provas:
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-3.5 sm:p-4">
                 <div className="text-xs font-mono text-zinc-500">
                   Bancada Câmara (Out/2026)
                 </div>
-                <div className="text-2xl font-mono font-extrabold text-zinc-950 mt-1">
+                <div className="text-xl sm:text-2xl font-mono font-extrabold text-zinc-950 mt-1">
                   121 Deputados
                 </div>
                 <div className="text-xs text-zinc-600 mt-1">
@@ -2376,11 +2435,11 @@ export default function ObservatorioRepublicaPage() {
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-amber-50/70 border border-amber-300 p-4">
+              <div className="rounded-2xl bg-amber-50/70 border border-amber-300 p-3.5 sm:p-4">
                 <div className="text-xs font-mono font-bold text-amber-800">
                   Fundo Eleitoral (2024 e 2026)
                 </div>
-                <div className="text-xl font-mono font-extrabold text-amber-900 mt-1">
+                <div className="text-lg sm:text-xl font-mono font-extrabold text-amber-900 mt-1">
                   R$ 886,8 mi → &gt;R$ 900 mi
                 </div>
                 <div className="text-xs text-zinc-600 mt-1">
@@ -2388,11 +2447,11 @@ export default function ObservatorioRepublicaPage() {
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-amber-50/70 border border-amber-300 p-4">
+              <div className="rounded-2xl bg-amber-50/70 border border-amber-300 p-3.5 sm:p-4">
                 <div className="text-xs font-mono font-bold text-amber-800">
                   Fundo Partidário Anual
                 </div>
-                <div className="text-2xl font-mono font-extrabold text-amber-900 mt-1">
+                <div className="text-xl sm:text-2xl font-mono font-extrabold text-amber-900 mt-1">
                   ~R$ 220 mi/ano
                 </div>
                 <div className="text-xs text-zinc-600 mt-1">
@@ -2400,11 +2459,11 @@ export default function ObservatorioRepublicaPage() {
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-rose-50/70 border border-rose-300 p-4">
+              <div className="rounded-2xl bg-rose-50/70 border border-rose-300 p-3.5 sm:p-4">
                 <div className="text-xs font-mono font-bold text-rose-800">
                   Multa no TSE (Litigância de Má-fé)
                 </div>
-                <div className="text-2xl font-mono font-extrabold text-rose-700 mt-1">
+                <div className="text-xl sm:text-2xl font-mono font-extrabold text-rose-700 mt-1">
                   R$ 22,9 milhões
                 </div>
                 <div className="text-xs text-zinc-600 mt-1">
@@ -2415,19 +2474,19 @@ export default function ObservatorioRepublicaPage() {
           </div>
 
           {/* Barra de Filtro das Fichas Jurídicas Individuais */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 print:hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 print:hidden">
             <div className="flex items-center gap-2 text-xs font-mono font-bold text-zinc-700">
-              <Filter className="w-4 h-4 text-emerald-700" />
+              <Filter className="w-4 h-4 text-emerald-700 shrink-0" />
               <span>
-                FILTRAR FICHAS JURÍDICAS ({filteredDossiers.length} DE{" "}
+                FILTRAR FICHAS ({filteredDossiers.length} DE{" "}
                 {JUDICIAL_DOSSIERS.length} EXIBIDAS):
               </span>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0 sm:flex-wrap">
               <button
                 onClick={() => setDossierFilter("todos")}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
+                className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
                   dossierFilter === "todos"
                     ? "bg-yellow-400 text-zinc-950 border-2 border-zinc-900 shadow-[2px_2px_0px_#18181b]"
                     : "bg-white text-zinc-700 border border-zinc-300 hover:bg-zinc-100"
@@ -2437,7 +2496,7 @@ export default function ObservatorioRepublicaPage() {
               </button>
               <button
                 onClick={() => setDossierFilter("PL")}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
+                className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
                   dossierFilter === "PL"
                     ? "bg-rose-600 text-white border-2 border-zinc-900"
                     : "bg-white text-rose-700 border border-rose-300 hover:bg-rose-50"
@@ -2447,19 +2506,19 @@ export default function ObservatorioRepublicaPage() {
               </button>
               <button
                 onClick={() => setDossierFilter("metodologico")}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
+                className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
                   dossierFilter === "metodologico"
                     ? "bg-blue-700 text-white border-2 border-zinc-900"
                     : "bg-white text-blue-700 border border-blue-300 hover:bg-blue-50"
                 }`}
               >
-                Nota de Equilíbrio Metodológico — Lula (1)
+                Nota de Equilíbrio — Lula (1)
               </button>
             </div>
           </div>
 
           {/* Cards Detalhados das Fichas Jurídicas Individuais */}
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-5 sm:gap-6">
             {filteredDossiers.map((dossier, index) => {
               const isMetodologico = dossier.severidade === "metodologico";
               const borderCard = isMetodologico
@@ -2469,13 +2528,13 @@ export default function ObservatorioRepublicaPage() {
               return (
                 <div
                   key={dossier.id}
-                  className={`rounded-3xl border ${borderCard} p-6 sm:p-7 space-y-4 print-avoid-break transition-all duration-200 shadow-md`}
+                  className={`rounded-2xl sm:rounded-3xl border ${borderCard} p-4 sm:p-7 space-y-4 print-avoid-break transition-all duration-200 shadow-md`}
                 >
-                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-zinc-200 pb-4">
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-zinc-200 pb-3.5 sm:pb-4">
                     <div className="space-y-1">
-                      <div className="flex flex-wrap items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                         <span
-                          className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded border ${
+                          className={`text-[10px] sm:text-xs font-mono font-bold px-2.5 py-0.5 rounded border ${
                             isMetodologico
                               ? "bg-blue-100 text-blue-900 border-blue-300"
                               : "bg-rose-100 text-rose-900 border-rose-300"
@@ -2489,7 +2548,7 @@ export default function ObservatorioRepublicaPage() {
                           <SourceBadge key={f} source={f} />
                         ))}
                       </div>
-                      <h3 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-1 uppercase">
+                      <h3 className="text-base sm:text-xl font-display font-bold text-zinc-950 pt-1 uppercase leading-snug">
                         {dossier.nome}
                       </h3>
                       <p className="text-xs sm:text-sm text-zinc-600 font-mono">
@@ -2498,7 +2557,7 @@ export default function ObservatorioRepublicaPage() {
                     </div>
 
                     {dossier.valoresEnvolvidos && (
-                      <div className="rounded-2xl bg-amber-50 border border-amber-300 px-4 py-2.5 text-xs font-mono font-semibold text-amber-900 shrink-0">
+                      <div className="rounded-xl sm:rounded-2xl bg-amber-50 border border-amber-300 px-3.5 py-2 text-xs font-mono font-semibold text-amber-900 break-words">
                         <span className="text-zinc-500 block text-[10px] uppercase">
                           Cifras Auditadas nos Autos:
                         </span>
@@ -2508,11 +2567,11 @@ export default function ObservatorioRepublicaPage() {
                   </div>
 
                   {/* Badges de Status Processual */}
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {dossier.statusCurtos.map((st) => (
                       <span
                         key={st}
-                        className={`text-xs font-mono font-semibold px-3 py-1 rounded-md border ${
+                        className={`text-[11px] sm:text-xs font-mono font-semibold px-2.5 sm:px-3 py-1 rounded-md border ${
                           isMetodologico
                             ? "bg-blue-50 text-blue-900 border-blue-200"
                             : "bg-rose-50 text-rose-900 border-rose-200"
@@ -2524,7 +2583,7 @@ export default function ObservatorioRepublicaPage() {
                   </div>
 
                   {/* Resumo Executivo */}
-                  <p className="text-sm text-zinc-800 font-medium leading-relaxed bg-zinc-50 p-4 rounded-2xl border border-zinc-200">
+                  <p className="text-xs sm:text-sm text-zinc-800 font-medium leading-relaxed bg-zinc-50 p-3.5 sm:p-4 rounded-2xl border border-zinc-200">
                     {dossier.resumoExecutivo}
                   </p>
 
@@ -2537,10 +2596,10 @@ export default function ObservatorioRepublicaPage() {
                       {dossier.detalhesProcessuais.map((detalhe, idx) => (
                         <li
                           key={idx}
-                          className="flex items-start gap-2.5 bg-zinc-50/80 p-3.5 rounded-2xl border border-zinc-200"
+                          className="flex items-start gap-2 sm:gap-2.5 bg-zinc-50/80 p-3 sm:p-3.5 rounded-2xl border border-zinc-200"
                         >
                           <span
-                            className={`font-mono font-bold mt-0.5 ${
+                            className={`font-mono font-bold mt-0.5 shrink-0 ${
                               isMetodologico ? "text-blue-700" : "text-rose-600"
                             }`}
                           >
@@ -2559,16 +2618,52 @@ export default function ObservatorioRepublicaPage() {
       </main>
 
       {/* =====================================================================
+          BARRA DE NAVEGAÇÃO INFERIOR FIXA PARA CELULAR (ESTILO APP NATIVO)
+      ===================================================================== */}
+      <nav
+        aria-label="Menu Rápido Mobile"
+        className="md:hidden print:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t-2 border-zinc-900 px-1.5 py-1.5 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]"
+      >
+        <div className="grid grid-cols-6 gap-1 max-w-md mx-auto">
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  if (typeof window !== "undefined") {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                }}
+                className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-xl transition-all cursor-pointer ${
+                  isActive
+                    ? "bg-emerald-500 text-zinc-950 font-bold border border-zinc-900 shadow-[1px_1px_0px_#facc15]"
+                    : "text-zinc-600 hover:text-zinc-950"
+                }`}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                <span className="text-[9px] font-mono tracking-tight mt-0.5 truncate max-w-full">
+                  {item.shortLabel}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* =====================================================================
           RODAPÉ METODOLÓGICO E AUDITORIA DE FONTES OFICIAIS
       ===================================================================== */}
-      <footer className="border-t-2 border-zinc-900 bg-white mt-12 py-10 print-avoid-break">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <footer className="border-t-2 border-zinc-900 bg-white mt-8 sm:mt-12 py-8 sm:py-10 print-avoid-break">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-5">
             <div className="flex items-center gap-3">
               <BandeiraBrasilUrbanEmblem className="w-11 h-8" />
               <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-emerald-700" />
-                <h3 className="text-base font-display font-bold text-zinc-950 uppercase tracking-wide">
+                <BookOpen className="w-5 h-5 text-emerald-700 shrink-0" />
+                <h3 className="text-sm sm:text-base font-display font-bold text-zinc-950 uppercase tracking-wide">
                   Nota Metodológica e Protocolo de Auditoria das Métricas
                 </h3>
               </div>
@@ -2580,10 +2675,10 @@ export default function ObservatorioRepublicaPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-zinc-600 leading-relaxed">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 text-xs text-zinc-600 leading-relaxed">
             <div className="space-y-2">
               <h4 className="text-emerald-800 font-bold font-mono flex items-center gap-1.5 uppercase">
-                <Info className="w-4 h-4 text-emerald-600" />
+                <Info className="w-4 h-4 text-emerald-600 shrink-0" />
                 1. Contas Nacionais, Trabalho e Desigualdade ([IBGE] / [DIEESE])
               </h4>
               <p>
@@ -2601,7 +2696,7 @@ export default function ObservatorioRepublicaPage() {
 
             <div className="space-y-2">
               <h4 className="text-amber-800 font-bold font-mono flex items-center gap-1.5 uppercase">
-                <Info className="w-4 h-4 text-amber-600" />
+                <Info className="w-4 h-4 text-amber-600 shrink-0" />
                 2. Estatísticas Fiscais, Monetárias e Ambientais ([BCB] / [TN] /
                 [INPE])
               </h4>
@@ -2619,7 +2714,7 @@ export default function ObservatorioRepublicaPage() {
 
             <div className="space-y-2">
               <h4 className="text-blue-800 font-bold font-mono flex items-center gap-1.5 uppercase">
-                <Info className="w-4 h-4 text-blue-600" />
+                <Info className="w-4 h-4 text-blue-600 shrink-0" />
                 3. Registros Processuais e Jurisprudência ([STF] / [STJ] /
                 [TSE])
               </h4>
@@ -2637,10 +2732,10 @@ export default function ObservatorioRepublicaPage() {
             </div>
           </div>
 
-          <div className="pt-4 border-t border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono text-zinc-500">
+          <div className="pt-4 border-t border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono text-zinc-500 text-center sm:text-left">
             <span>
               Observatório Quantitativo da República (2003–2026) • Arquitetura
-              Urbana Cívica Brasileira (Tema Claro)
+              Urbana Cívica Brasileira (Mobile-First & Desktop)
             </span>
             <span>
               Documento formatado para exportação integral via @media print
