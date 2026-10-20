@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   BarChart3,
   ShieldAlert,
@@ -849,10 +849,63 @@ export default function ObservatorioRepublicaPage() {
     });
   }, [dossierFilter, searchQuery]);
 
-  const isSectionVisible = (sectionId: TabId) => {
-    if (activeTab === "todos") return true;
-    return activeTab === sectionId;
+  const handleNavigateTab = (tabId: TabId) => {
+    setActiveTab(tabId);
+    if (typeof window !== "undefined") {
+      if (tabId === "todos") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      const idMap: Record<Exclude<TabId, "todos">, string> = {
+        modulo1: "modulo-1",
+        modulo2: "modulo-2",
+        simulador: "simulador-divida",
+        modulo3: "modulo-3",
+        modulo4: "modulo-4",
+      };
+
+      const targetId = idMap[tabId];
+      const el = document.getElementById(targetId);
+      if (el) {
+        // scrollIntoView respeita nativamente a classe scroll-mt configurada nas seções
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
   };
+
+  // Scroll Spy: atualiza a aba ativa conforme o usuário rola a página no PC ou celular
+  useEffect(() => {
+    const sectionIds: Array<{ id: string; tab: TabId }> = [
+      { id: "modulo-1", tab: "modulo1" },
+      { id: "modulo-2", tab: "modulo2" },
+      { id: "simulador-divida", tab: "simulador" },
+      { id: "modulo-3", tab: "modulo3" },
+      { id: "modulo-4", tab: "modulo4" },
+    ];
+
+    const handleScroll = () => {
+      if (window.scrollY < 200) {
+        setActiveTab("todos");
+        return;
+      }
+
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const item = sectionIds[i];
+        const el = document.getElementById(item.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 140) {
+            setActiveTab(item.tab);
+            return;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handlePrintDossier = () => {
     setActiveTab("todos");
@@ -861,7 +914,7 @@ export default function ObservatorioRepublicaPage() {
     if (typeof window !== "undefined") {
       setTimeout(() => {
         window.print();
-      }, 60);
+      }, 150);
     }
   };
 
@@ -905,7 +958,7 @@ export default function ObservatorioRepublicaPage() {
   ];
 
   return (
-    <div className="min-h-screen text-zinc-900 flex flex-col urban-concrete-bg pb-20 md:pb-0">
+    <div className="min-h-screen text-zinc-900 flex flex-col urban-concrete-bg pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
       {/* =====================================================================
           BARRA DE TELEMETRIA URBANA SUPERIOR (DESLIZÁVEL NO CELULAR)
       ===================================================================== */}
@@ -980,8 +1033,9 @@ export default function ObservatorioRepublicaPage() {
           <div className="flex items-center shrink-0">
             <button
               onClick={handlePrintDossier}
+              type="button"
               title="Baixar Dossiê Completo em PDF (Formato A4 Organizado)"
-              className="inline-flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-display font-bold text-xs sm:text-sm uppercase tracking-wider border-2 border-zinc-900 shadow-[2px_2px_0px_#18181b] sm:shadow-[4px_4px_0px_#18181b] active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer"
+              className="touch-manipulation select-none active:scale-95 inline-flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-display font-bold text-xs sm:text-sm uppercase tracking-wider border-2 border-zinc-900 shadow-[2px_2px_0px_#18181b] sm:shadow-[4px_4px_0px_#18181b] active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer"
             >
               <FileDown className="w-4 h-4 stroke-[2.5] shrink-0" />
               <span className="hidden sm:inline">
@@ -1190,8 +1244,9 @@ export default function ObservatorioRepublicaPage() {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`shrink-0 snap-start inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 cursor-pointer ${
+                    type="button"
+                    onClick={() => handleNavigateTab(tab.id)}
+                    className={`touch-manipulation select-none active:scale-95 shrink-0 snap-start inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 cursor-pointer ${
                       isActive
                         ? "bg-emerald-500 text-zinc-950 border-2 border-zinc-900 shadow-[2px_2px_0px_#facc15]"
                         : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 hover:text-zinc-950 border border-zinc-300"
@@ -1212,13 +1267,14 @@ export default function ObservatorioRepublicaPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Filtrar indicador, processo, valor..."
-                className="w-full pl-10 pr-8 py-2 rounded-xl bg-zinc-50 border-2 border-zinc-300 text-xs sm:text-sm font-mono text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-900"
+                className="w-full pl-10 pr-9 py-2 sm:py-2.5 rounded-xl bg-zinc-50 border-2 border-zinc-300 text-xs sm:text-sm font-mono text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-900"
               />
               {searchQuery && (
                 <button
+                  type="button"
                   onClick={() => setSearchQuery("")}
                   title="Limpar busca"
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-600 hover:text-zinc-950 px-2 py-0.5 rounded bg-zinc-200"
+                  className="touch-manipulation active:scale-90 absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-zinc-700 hover:text-zinc-950 w-7 h-7 flex items-center justify-center rounded-lg bg-zinc-200 border border-zinc-300 cursor-pointer"
                 >
                   ✕
                 </button>
@@ -1232,9 +1288,7 @@ export default function ObservatorioRepublicaPage() {
         =================================================================== */}
         <section
           id="modulo-1"
-          className={`${
-            isSectionVisible("modulo1") ? "block" : "hidden"
-          } print:block space-y-5 sm:space-y-6`}
+          className="scroll-mt-20 sm:scroll-mt-24 space-y-5 sm:space-y-6 print:block"
         >
           {/* Cabeçalho Urbano de Setor */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b-2 border-zinc-900 pb-3 sm:pb-4">
@@ -1765,9 +1819,7 @@ export default function ObservatorioRepublicaPage() {
         =================================================================== */}
         <section
           id="modulo-2"
-          className={`${
-            isSectionVisible("modulo2") ? "block" : "hidden"
-          } print:block space-y-5 sm:space-y-6 print-page-break`}
+          className="scroll-mt-20 sm:scroll-mt-24 space-y-5 sm:space-y-6 print:block print-page-break"
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b-2 border-zinc-900 pb-3 sm:pb-4">
             <div className="flex items-start sm:items-center gap-3">
@@ -2071,11 +2123,7 @@ export default function ObservatorioRepublicaPage() {
         =================================================================== */}
         <section
           id="simulador-divida"
-          className={`${
-            isSectionVisible("simulador") || isSectionVisible("modulo2")
-              ? "block"
-              : "hidden"
-          } print:block space-y-5 sm:space-y-6 print-avoid-break`}
+          className="scroll-mt-20 sm:scroll-mt-24 space-y-5 sm:space-y-6 print:block print-avoid-break"
         >
           <div className="rounded-2xl sm:rounded-3xl bg-white border-2 border-zinc-900 shadow-[4px_4px_0px_#18181b] sm:shadow-[6px_6px_0px_#18181b] p-4 sm:p-8 space-y-5 sm:space-y-6">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-zinc-200 pb-4 sm:pb-5">
@@ -2120,35 +2168,40 @@ export default function ObservatorioRepublicaPage() {
               <span className="text-[11px] font-mono font-bold text-zinc-600 uppercase">
                 Toque para Carregar Cenário:
               </span>
-              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0 sm:flex-wrap">
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1.5 sm:pb-0 sm:flex-wrap">
                 <button
+                  type="button"
                   onClick={() => applyPreset("lula1_2")}
-                  className="shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-400 transition cursor-pointer"
+                  className="touch-manipulation select-none active:scale-95 shrink-0 px-3.5 py-2 rounded-xl text-xs font-mono font-bold bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-400 transition cursor-pointer"
                 >
                   Lula I/II (03–10: p=+3,16% | g=4%)
                 </button>
                 <button
+                  type="button"
                   onClick={() => applyPreset("bolsonaro")}
-                  className="shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border border-zinc-300 transition cursor-pointer"
+                  className="touch-manipulation select-none active:scale-95 shrink-0 px-3.5 py-2 rounded-xl text-xs font-mono font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border border-zinc-300 transition cursor-pointer"
                 >
                   Bolsonaro (19–22: g=1,4%)
                 </button>
                 <button
+                  type="button"
                   onClick={() => applyPreset("lula3")}
-                  className="shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-400 transition cursor-pointer"
+                  className="touch-manipulation select-none active:scale-95 shrink-0 px-3.5 py-2 rounded-xl text-xs font-mono font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-400 transition cursor-pointer"
                 >
                   Lula III (2025: r=7% | g=3% | p=-0,43%)
                 </button>
                 <button
+                  type="button"
                   onClick={() => applyPreset("ajuste2027")}
-                  className="shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-blue-100 hover:bg-blue-200 text-blue-900 border border-blue-300 transition cursor-pointer"
+                  className="touch-manipulation select-none active:scale-95 shrink-0 px-3.5 py-2 rounded-xl text-xs font-mono font-bold bg-blue-100 hover:bg-blue-200 text-blue-900 border border-blue-300 transition cursor-pointer"
                 >
                   Estabilização 2027 (r=4,5% | p=+1,5%)
                 </button>
                 <button
+                  type="button"
                   onClick={() => applyPreset("lula3")}
                   title="Restaurar valores padrão de 2025"
-                  className="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-mono bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-300 transition cursor-pointer"
+                  className="touch-manipulation select-none active:scale-95 shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-300 transition cursor-pointer"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Resetar
@@ -2426,9 +2479,7 @@ export default function ObservatorioRepublicaPage() {
         =================================================================== */}
         <section
           id="modulo-3"
-          className={`${
-            isSectionVisible("modulo3") ? "block" : "hidden"
-          } print:block space-y-5 sm:space-y-6 print-page-break`}
+          className="scroll-mt-20 sm:scroll-mt-24 space-y-5 sm:space-y-6 print:block print-page-break"
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b-2 border-zinc-900 pb-3 sm:pb-4">
             <div className="flex items-start sm:items-center gap-3">
@@ -2561,9 +2612,7 @@ export default function ObservatorioRepublicaPage() {
         =================================================================== */}
         <section
           id="modulo-4"
-          className={`${
-            isSectionVisible("modulo4") ? "block" : "hidden"
-          } print:block space-y-5 sm:space-y-6 print-page-break`}
+          className="scroll-mt-20 sm:scroll-mt-24 space-y-5 sm:space-y-6 print:block print-page-break"
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b-2 border-zinc-900 pb-3 sm:pb-4">
             <div className="flex items-start sm:items-center gap-3">
@@ -2675,10 +2724,11 @@ export default function ObservatorioRepublicaPage() {
               </span>
             </div>
 
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0 sm:flex-wrap">
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1.5 sm:pb-0 sm:flex-wrap">
               <button
+                type="button"
                 onClick={() => setDossierFilter("todos")}
-                className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
+                className={`touch-manipulation select-none active:scale-95 shrink-0 px-3.5 py-2 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
                   dossierFilter === "todos"
                     ? "bg-yellow-400 text-zinc-950 border-2 border-zinc-900 shadow-[2px_2px_0px_#18181b]"
                     : "bg-white text-zinc-700 border border-zinc-300 hover:bg-zinc-100"
@@ -2687,8 +2737,9 @@ export default function ObservatorioRepublicaPage() {
                 Todos os Dossiês (6)
               </button>
               <button
+                type="button"
                 onClick={() => setDossierFilter("PL")}
-                className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
+                className={`touch-manipulation select-none active:scale-95 shrink-0 px-3.5 py-2 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
                   dossierFilter === "PL"
                     ? "bg-rose-600 text-white border-2 border-zinc-900"
                     : "bg-white text-rose-700 border border-rose-300 hover:bg-rose-50"
@@ -2697,8 +2748,9 @@ export default function ObservatorioRepublicaPage() {
                 Cúpula e Bancada do PL (5)
               </button>
               <button
+                type="button"
                 onClick={() => setDossierFilter("metodologico")}
-                className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
+                className={`touch-manipulation select-none active:scale-95 shrink-0 px-3.5 py-2 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
                   dossierFilter === "metodologico"
                     ? "bg-blue-700 text-white border-2 border-zinc-900"
                     : "bg-white text-blue-700 border border-blue-300 hover:bg-blue-50"
@@ -2819,7 +2871,7 @@ export default function ObservatorioRepublicaPage() {
       ===================================================================== */}
       <nav
         aria-label="Menu Rápido Mobile"
-        className="md:hidden print:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t-2 border-zinc-900 px-1.5 py-1.5 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]"
+        className="md:hidden print:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t-2 border-zinc-900 px-2 pt-1.5 pb-[max(10px,env(safe-area-inset-bottom))] shadow-[0_-4px_16px_rgba(0,0,0,0.08)]"
       >
         <div className="grid grid-cols-6 gap-1 max-w-md mx-auto">
           {NAV_ITEMS.map((item) => {
@@ -2828,20 +2880,16 @@ export default function ObservatorioRepublicaPage() {
             return (
               <button
                 key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id);
-                  if (typeof window !== "undefined") {
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }
-                }}
-                className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-xl transition-all cursor-pointer ${
+                type="button"
+                onClick={() => handleNavigateTab(item.id)}
+                className={`touch-manipulation select-none active:scale-95 flex flex-col items-center justify-center min-h-[46px] py-1.5 px-0.5 rounded-xl transition-all cursor-pointer ${
                   isActive
-                    ? "bg-emerald-500 text-zinc-950 font-bold border border-zinc-900 shadow-[1px_1px_0px_#facc15]"
-                    : "text-zinc-600 hover:text-zinc-950"
+                    ? "bg-emerald-500 text-zinc-950 font-bold border-2 border-zinc-900 shadow-[1px_1px_0px_#facc15]"
+                    : "text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100"
                 }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />
-                <span className="text-[9px] font-mono tracking-tight mt-0.5 truncate max-w-full">
+                <span className="text-[10px] font-mono font-bold tracking-tight mt-0.5 truncate max-w-full">
                   {item.shortLabel}
                 </span>
               </button>
@@ -2936,7 +2984,8 @@ export default function ObservatorioRepublicaPage() {
             </span>
             <button
               onClick={handlePrintDossier}
-              className="print:hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-yellow-300 font-mono font-bold text-xs uppercase tracking-wider border border-zinc-950 cursor-pointer transition"
+              type="button"
+              className="touch-manipulation select-none active:scale-95 print:hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-yellow-300 font-mono font-bold text-xs uppercase tracking-wider border border-zinc-950 cursor-pointer transition"
             >
               <Printer className="w-3.5 h-3.5" />
               Exportar Relatório Integral (PDF A4)

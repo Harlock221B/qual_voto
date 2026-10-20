@@ -26,6 +26,12 @@ export const metadata: Metadata = {
     "Painel analítico e comparativo empírico baseado em dados oficiais (IBGE, Banco Central, Tesouro Nacional, INPE, STF, STJ e TSE) sobre os governos Lula (2003–2010 e 2023–2026) e Bolsonaro / Flávio Bolsonaro (2019–2022 e Plano 2026).",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{

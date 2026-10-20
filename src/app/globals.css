@@ -3,18 +3,16 @@
 @tailwind utilities;
 
 @layer base {
-  html,
-  body {
+  html {
     scroll-behavior: smooth;
     color-scheme: light;
-    overflow-x: hidden;
-    max-width: 100vw;
   }
 
   body {
     background-color: #f7f8f6;
     color: #18181b;
     font-family: var(--font-sans), system-ui, sans-serif;
+    overflow-x: clip;
     @apply antialiased selection:bg-yellow-300 selection:text-zinc-950;
     background-image:
       radial-gradient(circle at 12% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 38%),
@@ -40,6 +38,15 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Otimização de toque para botões em smartphones */
+button,
+input[type="button"],
+input[type="submit"],
+[role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Sliders mais confortáveis para toque no celular */
