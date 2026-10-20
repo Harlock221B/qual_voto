@@ -1,0 +1,2654 @@
+"use client";
+
+import React, { useState, useMemo } from "react";
+import {
+  BarChart3,
+  ShieldAlert,
+  Globe2,
+  Scale,
+  Printer,
+  Search,
+  TrendingUp,
+  AlertTriangle,
+  Flame,
+  Gavel,
+  Calculator,
+  BookOpen,
+  FileText,
+  Filter,
+  ArrowUpRight,
+  ArrowDownRight,
+  Cpu,
+  Fuel,
+  Handshake,
+  DollarSign,
+  Users,
+  Trees,
+  Info,
+  RotateCcw,
+  Terminal,
+  Activity,
+} from "lucide-react";
+
+// ============================================================================
+// TIPOS E INTERFACES
+// ============================================================================
+
+type SourceBadgeType =
+  | "IBGE"
+  | "BCB"
+  | "TN"
+  | "INPE"
+  | "STF"
+  | "STJ"
+  | "TSE"
+  | "DIEESE"
+  | "CGU"
+  | "MCTI"
+  | "MDIC";
+
+type TabId =
+  | "todos"
+  | "modulo1"
+  | "modulo2"
+  | "modulo3"
+  | "modulo4"
+  | "simulador";
+
+interface GdpCycle {
+  id: string;
+  codigoUrbano: string;
+  governo: string;
+  periodo: string;
+  pibAcumulado: number;
+  pibAcumuladoLabel: string;
+  mediaAnual: number;
+  mediaAnualLabel: string;
+  pibPerCapita: number;
+  pibPerCapitaLabel: string;
+  observacao: string;
+  corBarra: string;
+  corTexto: string;
+  bordaLateral: string;
+  fonte: SourceBadgeType[];
+}
+
+interface SovereigntyComparison {
+  id: string;
+  codigoSetor: string;
+  eixo: string;
+  icone: "fuel" | "cpu" | "globe";
+  fontes: SourceBadgeType[];
+  subordinacao: {
+    titulo: string;
+    periodo: string;
+    pontos: string[];
+    impactoCritico: string;
+  };
+  soberania: {
+    titulo: string;
+    periodo: string;
+    pontos: string[];
+    impactoPositivo: string;
+  };
+}
+
+interface JudicialDossier {
+  id: string;
+  protocolo: string;
+  nome: string;
+  cargo: string;
+  partidoPolo: "PL" | "PT / Equilíbrio Metodológico";
+  statusCurtos: string[];
+  severidade: "critico" | "alerta" | "metodologico";
+  fontes: SourceBadgeType[];
+  resumoExecutivo: string;
+  detalhesProcessuais: string[];
+  valoresEnvolvidos?: string;
+}
+
+// ============================================================================
+// DADOS OFICIAIS HARDCODED (INTEGRALMENTE PRESERVADOS)
+// ============================================================================
+
+const HERO_KPIS = [
+  {
+    id: "kpi-pib",
+    codigo: "IND-01 // PIB REAL",
+    titulo: "Crescimento do PIB Real",
+    valorPrincipal: "+37,3% vs +5,6%",
+    subtitulo:
+      "Lula I e II (2003–2010: +4,0% a.a.) e Lula III (+9,2% no triênio 2023–2025) vs. Bolsonaro (2019–2022: +1,4% a.a.)",
+    tendencia: "positivo" as const,
+    fontes: ["IBGE"] as SourceBadgeType[],
+  },
+  {
+    id: "kpi-trabalho-gini",
+    codigo: "IND-02 // TRABALHO & RENDA",
+    titulo: "Desemprego & Índice de Gini",
+    valorPrincipal: "5,6% | Gini 0,491",
+    subtitulo:
+      "Mínimas históricas em 2025 (Lula III) e valorização real do Salário Mínimo de +53,6% (Lula I/II) e +8,8% (Lula III) vs +1,3% (Bolsonaro)",
+    tendencia: "positivo" as const,
+    fontes: ["IBGE", "DIEESE"] as SourceBadgeType[],
+  },
+  {
+    id: "kpi-risco-fiscal",
+    codigo: "IND-03 // ALERTA FISCAL",
+    titulo: "Alerta Fiscal: DBGG & Juros Reais",
+    valorPrincipal: "78,7% do PIB (+7,0 p.p.)",
+    subtitulo:
+      "Salto de 71,7% (2022) para 78,7% (2025) sob r ≈ 7% > g ≈ 3%, déficits primários consecutivos e Carga Tributária recorde de 32,40% do PIB",
+    tendencia: "alerta" as const,
+    fontes: ["BCB", "TN"] as SourceBadgeType[],
+  },
+  {
+    id: "kpi-risco-institucional",
+    codigo: "IND-04 // RISCO PENAL/STF",
+    titulo: "Risco Institucional & Condenações STF",
+    valorPrincipal: "27 anos e 3 meses",
+    subtitulo:
+      "Condenação de Jair Bolsonaro no STF (Arts. 359-M e 359-L CP), Inquérito Banco Master (Flávio Bolsonaro) e 1ª condenação do Orçamento Secreto",
+    tendencia: "risco" as const,
+    fontes: ["STF", "TSE"] as SourceBadgeType[],
+  },
+];
+
+const GDP_DATA: GdpCycle[] = [
+  {
+    id: "lula-1",
+    codigoUrbano: "CICLO 01 // 2003–2006",
+    governo: "Lula I",
+    periodo: "2003–2006",
+    pibAcumulado: 14.8,
+    pibAcumuladoLabel: "+14,8% acum.",
+    mediaAnual: 3.5,
+    mediaAnualLabel: "+3,5% a.a.",
+    pibPerCapita: 9.1,
+    pibPerCapitaLabel: "+9,1%",
+    observacao:
+      "Consolidação do tripé macroeconômico com superávit primário e início do ciclo de expansão de crédito e renda.",
+    corBarra: "bg-gradient-to-r from-emerald-700 to-emerald-500",
+    corTexto: "text-emerald-700",
+    bordaLateral: "border-l-4 border-l-emerald-600",
+    fonte: ["IBGE"],
+  },
+  {
+    id: "lula-2",
+    codigoUrbano: "CICLO 02 // 2007–2010",
+    governo: "Lula II",
+    periodo: "2007–2010",
+    pibAcumulado: 19.6,
+    pibAcumuladoLabel: "+19,6% acum.",
+    mediaAnual: 4.6,
+    mediaAnualLabel: "+4,6% a.a.",
+    pibPerCapita: 12.8,
+    pibPerCapitaLabel: "+12,8%",
+    observacao:
+      "Total combinado 2003–2010: +37,3% acumulado (+4,0% a.a.), atravessando a crise financeira global de 2008/2009.",
+    corBarra: "bg-gradient-to-r from-emerald-600 via-emerald-500 to-yellow-500",
+    corTexto: "text-emerald-700",
+    bordaLateral: "border-l-4 border-l-emerald-600",
+    fonte: ["IBGE"],
+  },
+  {
+    id: "bolsonaro",
+    codigoUrbano: "CICLO 03 // 2019–2022",
+    governo: "Jair Bolsonaro",
+    periodo: "2019–2022",
+    pibAcumulado: 5.6,
+    pibAcumuladoLabel: "+5,6% acum.",
+    mediaAnual: 1.4,
+    mediaAnualLabel: "+1,4% a.a.",
+    pibPerCapita: 2.8,
+    pibPerCapitaLabel: "+2,8%",
+    observacao:
+      "Crescimento de +1,2% em 2019 (pré-pandemia), retração em 2020 e recuperação parcial em 2021–2022 com estagnação salarial.",
+    corBarra: "bg-gradient-to-r from-amber-600 to-yellow-500",
+    corTexto: "text-amber-700",
+    bordaLateral: "border-l-4 border-l-amber-500",
+    fonte: ["IBGE"],
+  },
+  {
+    id: "lula-3",
+    codigoUrbano: "CICLO 04 // 2023–2025",
+    governo: "Lula III",
+    periodo: "2023–2025 (Triênio)",
+    pibAcumulado: 9.2,
+    pibAcumuladoLabel: "+9,2% acum. no triênio",
+    mediaAnual: 3.0,
+    mediaAnualLabel: "+3,0% a.a.",
+    pibPerCapita: 7.8,
+    pibPerCapitaLabel: "+7,8%",
+    observacao:
+      "Expansão acima das projeções de mercado por três anos seguidos, puxada pelo mercado de trabalho aquecido, agro e indústria.",
+    corBarra: "bg-gradient-to-r from-emerald-700 to-emerald-500",
+    corTexto: "text-emerald-700",
+    bordaLateral: "border-l-4 border-l-emerald-600",
+    fonte: ["IBGE"],
+  },
+];
+
+const LABOR_INCOME_DATA = [
+  {
+    indicador: "Taxa de Desemprego (Desocupação)",
+    lula1e2: "Caiu de 12,3% para 6,7% (Metodologia PME)",
+    bolsonaro: "Média de 12,1% no ciclo (fechou 2022 em 9,3% na PNAD-C)",
+    lula3: "Média de 6,7%, atingindo em 2025 a mínima histórica de 5,6%",
+    fontes: ["IBGE", "DIEESE"] as SourceBadgeType[],
+    destaque: "Mínima histórica da série PNAD Contínua em 2025 (5,6%)",
+  },
+  {
+    indicador: "Índice de Gini (Desigualdade de Renda)",
+    lula1e2: "Derrubou de 0,581 (2003) para 0,538 (2010)",
+    bolsonaro: "Foi de 0,544 (2019) para 0,518 (2022, sob efeito do Auxílio de R$ 600)",
+    lula3: "Atingiu a mínima histórica de 0,491 em 2025",
+    fontes: ["IBGE"] as SourceBadgeType[],
+    destaque: "Primeira vez na história abaixo do patamar de 0,500 (0,491)",
+  },
+  {
+    indicador: "Valorização Real do Salário Mínimo (Acima da Inflação)",
+    lula1e2: "+53,6% de ganho real acumulado (2003–2010)",
+    bolsonaro: "+1,3% no quadriênio (2019–2022) — fim da política de valorização",
+    lula3: "+8,8% de ganho real acumulado (2023–2026) — retomada da regra PIB + INPC",
+    fontes: ["IBGE", "DIEESE"] as SourceBadgeType[],
+    destaque: "+53,6% (Lula I/II) e +8,8% (Lula III) vs. +1,3% (Bolsonaro)",
+  },
+];
+
+const ENVIRONMENT_DATA = [
+  {
+    id: "env-lula-1-2",
+    codigo: "PRODES // 01",
+    ciclo: "Lula I e II (2003–2010)",
+    variacao: "-74,8%",
+    taxaReferencia: "De 27.772 km² (pico 2004) para 7.000 km² (2010)",
+    kmAnoNumerico: 7000,
+    status: "positivo" as const,
+    marcosInstitucionais:
+      "Criação do PPCDAm (Plano de Ação para Prevenção e Controle do Desmatamento na Amazônia Legal), sistema DETER/INPE em tempo real, criação do ICMBio e do Fundo Amazônia.",
+    fontes: ["INPE"] as SourceBadgeType[],
+  },
+  {
+    id: "env-bolsonaro",
+    codigo: "PRODES // 02",
+    ciclo: "Bolsonaro (2019–2022)",
+    variacao: "+53,8% no ciclo",
+    taxaReferencia: "Média de 11.403 km²/ano (pico de 13.038 km² em 2021)",
+    kmAnoNumerico: 13038,
+    status: "risco" as const,
+    marcosInstitucionais:
+      "Paralisação unilateral do Fundo Amazônia, desmonte da governança ambiental e queda drástica na aplicação e cobrança de multas ambientais pelo Ibama.",
+    fontes: ["INPE"] as SourceBadgeType[],
+  },
+  {
+    id: "env-lula-3",
+    codigo: "PRODES // 03",
+    ciclo: "Lula III (2023–2026)",
+    variacao: "-71,2% acum.",
+    taxaReferencia: "3.335 km²/ano em 2026 (menor taxa histórica desde 1988)",
+    kmAnoNumerico: 3335,
+    status: "positivo" as const,
+    marcosInstitucionais:
+      "Menor taxa da série histórica do PRODES (desde 1988), reativação imediata do Fundo Amazônia e R$ 11,8 bilhões em multas aplicadas pelo Ibama.",
+    fontes: ["INPE"] as SourceBadgeType[],
+  },
+];
+
+const SOVEREIGNTY_DATA: SovereigntyComparison[] = [
+  {
+    id: "petrobras-energia",
+    codigoSetor: "EIXO 01 // ENERGIA & REFINO",
+    eixo: "Petrobras, Refino e Soberania Energética",
+    icone: "fuel",
+    fontes: ["CGU", "BCB", "TN"],
+    subordinacao: {
+      titulo: "Subordinação Passiva (2019–2022)",
+      periodo: "Governo Jair Bolsonaro",
+      pontos: [
+        "Manutenção estrita da dolarização artificial dos combustíveis internos via Preço de Paridade de Importação (PPI), transferindo choques externos diretamente para a inflação de alimentos e transporte no Brasil.",
+        "Distribuição de R$ 215,8 bilhões em dividendos recordes em 2022 aos acionistas (inclusive estrangeiros), às custas da compressão do investimento produtivo e da inflação interna.",
+        "Venda da Refinaria Landulpho Alves — RLAM (BA) por US$ 1,65 bilhão, valor apontado como abaixo do valor de mercado segundo auditoria da CGU, gerando monopólio regional privado com preços mais caros na Bahia.",
+      ],
+      impactoCritico:
+        "Desverticalização da estatal, perda de capacidade de refino nacional e transferência de renda do consumidor brasileiro para dividendos de curto prazo.",
+    },
+    soberania: {
+      titulo: "Soberania Nacional (2003–2010 / 2023–2026)",
+      periodo: "Governos Lula I, II e III",
+      pontos: [
+        "Fim oficial da política de Preço de Paridade de Importação (PPI) em maio de 2023, adotando custo alternativo do cliente e vantagem competitiva do petróleo extraído no pré-sal nacional.",
+        "Plano Estratégico da Petrobras de US$ 111 bilhões focado na ampliação do parque de refino nacional (RNEST, REPLAN, Boaventura), transição energética e exploração da Margem Equatorial.",
+        "Retomada das fábricas nacionais de fertilizantes (Araucária Nitrogenados - ANSA e UFN-III em Três Lagoas/MS) para reduzir a dependência externa do agronegócio brasileiro.",
+      ],
+      impactoPositivo:
+        "Amortecimento da volatilidade cambial sobre o diesel e gasolina, segurança energética e reconstrução da cadeia petroquímica e de fertilizantes.",
+    },
+  },
+  {
+    id: "ciencia-tecnologia-industria",
+    codigoSetor: "EIXO 02 // CHIPS, C&T & INDÚSTRIA",
+    eixo: "Ciência, Tecnologia, Semicondutores e Indústria",
+    icone: "cpu",
+    fontes: ["MCTI", "TN", "CGU"],
+    subordinacao: {
+      titulo: "Desmonte Científico e Desindustrialização (2019–2022)",
+      periodo: "Governo Jair Bolsonaro",
+      pontos: [
+        "Contingenciamento ilegal de mais de R$ 4+ bilhões do FNDCT (Fundo Nacional de Desenvolvimento Científico e Tecnológico), paralisando laboratórios e infraestrutura de pesquisa.",
+        "Cortes severos no orçamento do CNPq e da CAPES, congelamento de bolsas de mestrado, doutorado e iniciação científica por todo o mandato.",
+        "Tentativa de liquidar e extinguir a estatal de semicondutores CEITEC (única fabricante de chips com sala limpa da América Latina, sediada em Porto Alegre).",
+      ],
+      impactoCritico:
+        "Fuga de cérebros, sucateamento tecnológico e tentativa de abandono da indústria estratégica de microeletrônica em plena crise global de chips.",
+    },
+    soberania: {
+      titulo: "Reindustrialização e Autonomia Tecnológica (2003–2010 / 2023–2026)",
+      periodo: "Governos Lula I, II e III",
+      pontos: [
+        "Descontingenciamento total e integral do FNDCT, garantindo execução superior a R$ 10 bilhões/ano em fomento direto à ciência, inovação e universidades.",
+        "Reversão da liquidação e retomada plena da estatal de chips CEITEC, com investimentos em semicondutores de carbeto de silício (SiC) para transição energética e mobilidade elétrica.",
+        "Lançamento do programa Nova Indústria Brasil (NIB) com R$ 300 bilhões em financiamentos (BNDES, FINEP e EMBRAPII) até 2026 para complexos de saúde, defesa, agroindústria e transformação digital.",
+      ],
+      impactoPositivo:
+        "Reconstrução da capacidade produtiva doméstica, reajuste imediato das bolsas científicas (+40% a +75%) e soberania em tecnologias críticas.",
+    },
+  },
+  {
+    id: "diplomacia-comercio",
+    codigoSetor: "EIXO 03 // GEOPOLÍTICA & COMÉRCIO",
+    eixo: "Diplomacia Econômica e Comércio Exterior",
+    icone: "globe",
+    fontes: ["MDIC", "BCB"],
+    subordinacao: {
+      titulo: "Alinhamento Automático sem Contrapartida (2019–2022)",
+      periodo: "Governo Jair Bolsonaro",
+      pontos: [
+        "Renúncia unilateral do Brasil ao status de Tratamento Especial e Diferenciado (TED) na OMC em 2019 em visita a Washington, sem obter qualquer contrapartida concreta dos EUA (inclusive ficando fora da OCDE).",
+        "Imposição de cotas e sobretaxas pelos EUA ao aço e alumínio brasileiros mesmo após concessões tarifárias unilaterais do Brasil ao etanol e trigo norte-americanos.",
+        "Isolamento ambiental internacional, paralisação do acordo Mercosul-União Europeia e perda de protagonismo nos fóruns multilaterais (G20, BRICS e COP).",
+      ],
+      impactoCritico:
+        "Subordinação ideológica externa sem ganhos comerciais, resultando em barreiras sanitárias/ambientais e perda de poder de barganha geopolítico.",
+    },
+    soberania: {
+      titulo: "Autonomia Multipolar e Pragmatismo Comercial (2003–2010 / 2023–2026)",
+      periodo: "Governos Lula I, II e III",
+      pontos: [
+        "Política externa de autonomia multipolar: fortalecimento estratégico do BRICS+, presidência brasileira do G20 (2024) e da COP30 (Belém, 2025) com diálogo aberto com EUA, China e União Europeia.",
+        "Destravamento diplomático e assinatura das bases do acordo comercial Mercosul-União Europeia com salvaguardas para compras governamentais e indústria local.",
+        "Abertura recorde de mais de 300 novos mercados internacionais para produtos do agronegócio e da indústria brasileira em mais de 65 países entre 2023 e 2026.",
+      ],
+      impactoPositivo:
+        "Recordes históricos na balança comercial brasileira, diversificação de parceiros comerciais e atração de investimentos verdes e industriais.",
+    },
+  },
+];
+
+const JUDICIAL_DOSSIERS: JudicialDossier[] = [
+  {
+    id: "jair-bolsonaro",
+    protocolo: "AUTOS // STF-2025-1T",
+    nome: "Jair Messias Bolsonaro",
+    cargo: "Ex-Presidente da República (2019–2022) e Presidente de Honra do PL",
+    partidoPolo: "PL",
+    statusCurtos: [
+      "Condenado a 27 anos e 3 meses no STF (Regime Fechado)",
+      "2x Inelegível no TSE (até 2030)",
+      "Indiciado pela PF (Joias Sauditas)",
+    ],
+    severidade: "critico",
+    fontes: ["STF", "TSE"],
+    resumoExecutivo:
+      "Condenado criminalmente pela 1ª Turma do Supremo Tribunal Federal (2025) a 27 anos e 3 meses de prisão em regime fechado por liderar organização criminosa voltada à ruptura democrática.",
+    detalhesProcessuais: [
+      "Condenação criminal pela 1ª Turma do STF (2025) a 27 anos e 3 meses de reclusão em regime fechado pelos crimes de tentativa de golpe de Estado (Art. 359-M do Código Penal), abolição violenta do Estado Democrático de Direito (Art. 359-L do CP), organização criminosa armada e dano qualificado ao patrimônio tombado.",
+      "Duas condenações colegiadas à inelegibilidade por 8 anos no Tribunal Superior Eleitoral (TSE) por abuso de poder político e uso indevido dos meios de comunicação (reunião com embaixadores para atacar o sistema eleitoral e uso eleitoral do Bicentenário da Independência no 7 de Setembro).",
+      "Indiciado pela Polícia Federal no inquérito das Joias Sauditas pelos crimes de peculato (desvio de bens públicos de alto valor do acervo presidencial), lavagem de dinheiro no exterior e associação criminosa.",
+    ],
+  },
+  {
+    id: "flavio-bolsonaro",
+    protocolo: "AUTOS // STF-INQ-2026",
+    nome: "Flávio Nantes Bolsonaro",
+    cargo: "Senador da República (PL-RJ) e Candidato Presidencial (Plano 2026)",
+    partidoPolo: "PL",
+    statusCurtos: [
+      "Inquérito Ativo no STF (Set/2026 - Caso Banco Master / Filme Dark Horse)",
+      "Operação Make Up (Auditoria da PF sobre Emendas)",
+      "Caso Rachadinhas Alerj (Anulado por Erro de Foro)",
+      "0 Leis de Autoria Individual em ~8 anos de Senado",
+    ],
+    severidade: "critico",
+    fontes: ["STF", "STJ"],
+    valoresEnvolvidos:
+      "R$ 134 milhões (Dark Horse / Master) | R$ 61 milhões (EUA) | R$ 58 milhões (Ex-sócio) | R$ 6,1 milhões (Rachadinhas Alerj)",
+    resumoExecutivo:
+      "Alvo de inquérito ativo no STF (Rel. Min. Flávio Dino, aberto em set/2026) por suspeita de corrupção, lavagem de dinheiro e evasão de divisas, além de apresentar produtividade legislativa de zero projetos de autoria individual sancionados como lei em quase 8 anos de Senado.",
+    detalhesProcessuais: [
+      "Investigado em inquérito ativo no STF (Relator Min. Flávio Dino, instaurado em setembro/2026) por suspeita de corrupção, lavagem de dinheiro e evasão de divisas no caso Banco Master / Filme 'Dark Horse': negociação estruturada de R$ 134 milhões, com R$ 61 milhões remetidos via fundo nos Estados Unidos.",
+      "Investigação conexa sobre movimentações de R$ 58 milhões envolvendo ex-sócio empresarial e auditoria da Polícia Federal sobre destinação de emendas parlamentares no âmbito da Operação Make Up.",
+      "No caso das 'Rachadinhas' da Alerj (R$ 6,1 milhões movimentados pelo ex-assessor Fabrício Queiroz, depósitos fracionados em espécie e lavagem via franquia de chocolates Kopenhagen e transações imobiliárias), foi denunciado pelo MPRJ em 2020 por peculato, lavagem de dinheiro e organização criminosa, mas teve o processo arquivado em 2022 exclusivamente porque o STJ e o STF anularam as quebras de sigilo bancário/fiscal por erro formal de foro (competência de 1ª instância vs. Órgão Especial do TJRJ).",
+      "Risco institucional no Plano 2026: propõe limitar poderes constitucionais do STF e conceder anistia irrestrita a condenados por golpe de Estado enquanto é ele próprio investigado em inquérito criminal ativo na Corte.",
+    ],
+  },
+  {
+    id: "valdemar-costa-neto",
+    protocolo: "AUTOS // STF-AP470",
+    nome: "Valdemar Costa Neto",
+    cargo: "Presidente Nacional do Partido Liberal (PL)",
+    partidoPolo: "PL",
+    statusCurtos: [
+      "Condenado no STF na AP 470 (7 anos e 10 meses)",
+      "Indiciado pela PF em 2024 (Trama Golpista)",
+      "Multa de R$ 22,9 milhões ao PL (Litigância de Má-fé no TSE)",
+    ],
+    severidade: "critico",
+    fontes: ["STF", "TSE"],
+    valoresEnvolvidos:
+      "Gerencia >R$ 900 mi de Fundo Eleitoral (2026), R$ 886,8 mi (2024) e ~R$ 220 mi/ano de Fundo Partidário",
+    resumoExecutivo:
+      "Comandante do orçamento bilionário do PL, já foi condenado pelo STF por corrupção passiva e lavagem de dinheiro no Mensalão e indiciado pela Polícia Federal na investigação da tentativa de golpe de Estado.",
+    detalhesProcessuais: [
+      "Condenado pelo Plenário do STF na Ação Penal 470 (Mensalão) à pena de 7 anos e 10 meses de prisão pelos crimes de corrupção passiva e lavagem de dinheiro (tendo renunciado ao mandato antes para tentar evitar cassação e cumprido pena antes de receber indulto em 2016).",
+      "Indiciado pela Polícia Federal em 2024 no inquérito da trama golpista por financiar e dar suporte partidário-institucional à disseminação de desinformação contra o sistema eleitoral e à tentativa de subversão do resultado das urnas.",
+      "Acionou o TSE sem provas contra as urnas eletrônicas do 2º turno de 2022, resultando na condenação histórica do PL à multa de R$ 22,9 milhões por litigância de má-fé (Rel. Min. Alexandre de Moraes).",
+    ],
+  },
+  {
+    id: "deputados-orcamento-secreto",
+    protocolo: "AUTOS // STF-17/03/2026",
+    nome: "Josimar Maranhãozinho (PL-MA), Pastor Gil (PL-MA) e Bosco Costa (PL-SE)",
+    cargo: "Deputados Federais da Bancada do PL",
+    partidoPolo: "PL",
+    statusCurtos: [
+      "1ª Condenação Criminal da História no STF pelo 'Orçamento Secreto' (17/03/2026)",
+      "Propina de 25% sobre Emendas da Saúde (SUS)",
+      "Pena de 6 anos e 5 meses + R$ 1,66 milhão",
+    ],
+    severidade: "critico",
+    fontes: ["STF"],
+    valoresEnvolvidos: "Propina de 25% sobre emendas SUS | Indenização de R$ 1,66 milhão",
+    resumoExecutivo:
+      "Primeiros parlamentares da história condenados criminalmente pelo STF (1ª Turma, por unanimidade, em 17/03/2026) por corrupção passiva e organização criminosa no esquema do 'Orçamento Secreto' (emendas de relator RP9 e emendas Pix).",
+    detalhesProcessuais: [
+      "Condenação unânime pela 1ª Turma do STF em 17/03/2026: os parlamentares operavam uma organização criminosa que cobrava propina de 25% ('pedágio') de prefeitos para liberar emendas parlamentares destinadas ao custeio da saúde pública (SUS) em municípios do Maranhão (como São José de Ribamar).",
+      "O líder do esquema, deputado Josimar Maranhãozinho (PL-MA), foi condenado a 6 anos e 5 meses de reclusão, além do pagamento de indenização por danos coletivos de R$ 1,66 milhão, com uso documentado de agiotas e homens armados para cobrança das propinas.",
+      "Caso paradigmático que comprovou judicialmente como a falta de transparência das emendas criadas/expandidas entre 2020 e 2022 abriu margem para desvios diretos de verbas do SUS.",
+    ],
+  },
+  {
+    id: "ramagem-zambelli",
+    protocolo: "AUTOS // STF-ABIN-CNJ",
+    nome: "Alexandre Ramagem (PL-RJ) e Carla Zambelli (PL-SP)",
+    cargo: "Deputados Federais (PL-RJ e PL-SP)",
+    partidoPolo: "PL",
+    statusCurtos: [
+      "Réus no STF",
+      "Caso 'Abin Paralela' (Espionagem Clandestina)",
+      "Invasão Hacker ao Sistema do CNJ",
+    ],
+    severidade: "critico",
+    fontes: ["STF", "TSE"],
+    resumoExecutivo:
+      "Parlamentares de destaque da bancada do PL que respondem como réus em ações penais no Supremo Tribunal Federal por crimes contra a administração da Justiça e aparelhamento clandestino de órgãos de inteligência.",
+    detalhesProcessuais: [
+      "Alexandre Ramagem (ex-Diretor-Geral da ABIN e Deputado Federal PL-RJ): Réu no STF no caso da 'Abin Paralela' (uso ilegal do software espião FirstMile para monitorar clandestinamente ministros do STF, parlamentares, jornalistas e adversários políticos sem autorização judicial) e integrante do núcleo de inteligência da trama golpista.",
+      "Carla Zambelli (Deputada Federal PL-SP): Ré no STF por invasão de dispositivo informático e falsidade ideológica, acusada de comandar e financiar o hacker Walter Delgatti Neto na invasão criminosa aos sistemas do Conselho Nacional de Justiça (CNJ) para inserir mandado de prisão falso contra ministro do STF, além de responder por porte ilegal de arma de fogo com perseguição a civil em via pública na véspera do 2º turno de 2022.",
+    ],
+  },
+  {
+    id: "nota-equilibrio-lula",
+    protocolo: "HC 193.726 & HC 164.493",
+    nome: "Nota de Equilíbrio e Rigor Metodológico: Luiz Inácio Lula da Silva",
+    cargo: "Presidente da República (2003–2010 e 2023–2026)",
+    partidoPolo: "PT / Equilíbrio Metodológico",
+    statusCurtos: [
+      "Condenações da Lava Jato Anuladas pelo Plenário do STF (2021)",
+      "Incompetência Territorial de Curitiba (HC 193.726)",
+      "Suspeição do Ex-Juiz Sérgio Moro (HC 164.493)",
+      "Prescrição e Arquivamento — Sem Condenação Vigente",
+    ],
+    severidade: "metodologico",
+    fontes: ["STF", "STJ"],
+    resumoExecutivo:
+      "Rigor simétrico na análise jurídica: assim como Flávio Bolsonaro teve o caso das Rachadinhas arquivado por nulidade processual de foro no STJ/STF, Luiz Inácio Lula da Silva teve suas condenações na Operação Lava Jato anuladas pelo STF por vícios formais de competência e parcialidade do juízo.",
+    detalhesProcessuais: [
+      "Nos casos do Triplex do Guarujá e do Sítio de Atibaia (Operação Lava Jato), Lula havia sido condenado em 1ª e 2ª instâncias (13ª Vara Federal de Curitiba e TRF-4) e no STJ, cumprindo 580 dias de prisão entre 2018 e 2019.",
+      "Em março/abril de 2021, o Plenário do STF declarou a incompetência territorial absoluta da 13ª Vara Federal de Curitiba (HC 193.726) para julgar os casos — por ausência de vínculo direto e exclusivo com desvios da Petrobras — remetendo os autos à Justiça Federal do Distrito Federal.",
+      "Subsequentemente, o STF reconheceu a suspeição (parcialidade) do ex-juiz Sérgio Moro (HC 164.493), anulando todos os atos decisórios e instrutórios desde o início das ações. Com a nulidade e a idade superior a 70 anos (que reduz os prazos prescricionais pela metade no Código Penal), os processos resultaram em prescrição e arquivamento definitivo, sem condenação criminal vigente.",
+      "Conclusão Metodológica: A análise técnica comprova que ambos os polos políticos brasileiros se beneficiaram diretamente de anulações processuais formais nos tribunais superiores (STJ e STF) baseadas em regras de competência de foro e devido processo legal.",
+    ],
+  },
+];
+
+// ============================================================================
+// COMPONENTES AUXILIARES DE UI (ESTILO CARIMBO TÉCNICO URBANO EM TEMA BRANCO)
+// ============================================================================
+
+const SOURCE_STYLES: Record<
+  SourceBadgeType,
+  { bg: string; text: string; border: string; nomeCompleto: string }
+> = {
+  IBGE: {
+    bg: "bg-blue-50",
+    text: "text-blue-800",
+    border: "border-blue-300",
+    nomeCompleto: "Instituto Brasileiro de Geografia e Estatística",
+  },
+  BCB: {
+    bg: "bg-amber-50",
+    text: "text-amber-900",
+    border: "border-amber-300",
+    nomeCompleto: "Banco Central do Brasil",
+  },
+  TN: {
+    bg: "bg-yellow-50",
+    text: "text-yellow-900",
+    border: "border-yellow-400",
+    nomeCompleto: "Secretaria do Tesouro Nacional",
+  },
+  INPE: {
+    bg: "bg-emerald-50",
+    text: "text-emerald-800",
+    border: "border-emerald-300",
+    nomeCompleto: "Instituto Nacional de Pesquisas Espaciais (PRODES/DETER)",
+  },
+  STF: {
+    bg: "bg-rose-50",
+    text: "text-rose-800",
+    border: "border-rose-300",
+    nomeCompleto: "Supremo Tribunal Federal",
+  },
+  STJ: {
+    bg: "bg-indigo-50",
+    text: "text-indigo-800",
+    border: "border-indigo-300",
+    nomeCompleto: "Superior Tribunal de Justiça",
+  },
+  TSE: {
+    bg: "bg-sky-50",
+    text: "text-sky-800",
+    border: "border-sky-300",
+    nomeCompleto: "Tribunal Superior Eleitoral",
+  },
+  DIEESE: {
+    bg: "bg-teal-50",
+    text: "text-teal-800",
+    border: "border-teal-300",
+    nomeCompleto: "Departamento Intersindical de Estatística e Estudos Socioeconômicos",
+  },
+  CGU: {
+    bg: "bg-orange-50",
+    text: "text-orange-800",
+    border: "border-orange-300",
+    nomeCompleto: "Controladoria-Geral da União",
+  },
+  MCTI: {
+    bg: "bg-blue-50",
+    text: "text-blue-900",
+    border: "border-blue-300",
+    nomeCompleto: "Ministério da Ciência, Tecnologia e Inovação / FNDCT",
+  },
+  MDIC: {
+    bg: "bg-emerald-50",
+    text: "text-emerald-900",
+    border: "border-emerald-300",
+    nomeCompleto: "Ministério do Desenvolvimento, Indústria, Comércio e Serviços",
+  },
+};
+
+function SourceBadge({ source }: { source: SourceBadgeType }) {
+  const style = SOURCE_STYLES[source];
+  return (
+    <span
+      title={`Fonte Oficial: ${style.nomeCompleto}`}
+      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold tracking-wider border ${style.bg} ${style.text} ${style.border}`}
+    >
+      [{source}]
+    </span>
+  );
+}
+
+/**
+ * Emblema Cívico Urbano-Orgânico da Bandeira do Brasil
+ */
+function BandeiraBrasilUrbanEmblem({
+  className = "w-14 h-10",
+}: {
+  className?: string;
+}) {
+  return (
+    <div
+      className={`relative rounded-xl overflow-hidden bg-white border-2 border-zinc-900 shadow-[3px_3px_0px_#18181b] shrink-0 ${className}`}
+      title="República Federativa do Brasil • Observatório Quantitativo Urbano"
+    >
+      <svg
+        viewBox="0 0 60 42"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full"
+      >
+        {/* Base Verde Bandeira Urbano */}
+        <rect width="60" height="42" fill="#059669" />
+        <path d="M0 0H60V42H0V0Z" fill="url(#urbanGreenLight)" />
+
+        {/* Grid técnico sutil sobre o verde */}
+        <line
+          x1="0"
+          y1="21"
+          x2="60"
+          y2="21"
+          stroke="#ffffff"
+          strokeOpacity="0.15"
+          strokeWidth="0.5"
+        />
+        <line
+          x1="30"
+          y1="0"
+          x2="30"
+          y2="42"
+          stroke="#ffffff"
+          strokeOpacity="0.15"
+          strokeWidth="0.5"
+        />
+
+        {/* Losango Amarelo Sinalização Urbana */}
+        <path
+          d="M30 4L55 21L30 38L5 21L30 4Z"
+          fill="#FACC15"
+          stroke="#18181B"
+          strokeWidth="1.2"
+        />
+
+        {/* Esfera Azul República */}
+        <circle
+          cx="30"
+          cy="21"
+          r="10.2"
+          fill="#1D4ED8"
+          stroke="#18181B"
+          strokeWidth="1"
+        />
+
+        {/* Faixa Orgânica Equatorial */}
+        <path
+          d="M20.2 19.2C24.8 16.8 35.2 18.2 39.8 22.8"
+          stroke="#FFFFFF"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+        />
+
+        {/* Estrelas do Cruzeiro do Sul */}
+        <circle cx="30" cy="24.5" r="0.9" fill="#FACC15" />
+        <circle cx="30" cy="28" r="0.8" fill="#FFFFFF" />
+        <circle cx="27.5" cy="26" r="0.7" fill="#FFFFFF" />
+        <circle cx="32.5" cy="25.8" r="0.7" fill="#FFFFFF" />
+        <circle cx="33.5" cy="17" r="0.75" fill="#FFFFFF" />
+
+        <defs>
+          <linearGradient
+            id="urbanGreenLight"
+            x1="0"
+            y1="0"
+            x2="60"
+            y2="42"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#10B981" />
+            <stop offset="1" stopColor="#047857" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+
+// ============================================================================
+// PÁGINA PRINCIPAL
+// ============================================================================
+
+export default function ObservatorioRepublicaPage() {
+  const [activeTab, setActiveTab] = useState<TabId>("todos");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [dossierFilter, setDossierFilter] = useState<
+    "todos" | "PL" | "metodologico"
+  >("todos");
+
+  // Estados da Calculadora / Simulador da Equação da Dívida Pública
+  // Fórmula: Δd_t = ((r - g) / (1 + g)) * d_{t-1} - p_t
+  const [simDebtPrev, setSimDebtPrev] = useState<number>(78.7);
+  const [simRealRate, setSimRealRate] = useState<number>(7.0);
+  const [simGdpGrowth, setSimGdpGrowth] = useState<number>(3.0);
+  const [simPrimaryBalance, setSimPrimaryBalance] = useState<number>(-0.43);
+
+  const debtSimulation = useMemo(() => {
+    const rDecimal = simRealRate / 100;
+    const gDecimal = simGdpGrowth / 100;
+
+    const snowBallTerm =
+      ((rDecimal - gDecimal) / (1 + gDecimal)) * simDebtPrev;
+    const deltaDebt = snowBallTerm - simPrimaryBalance;
+    const nextDebt = simDebtPrev + deltaDebt;
+    const stabilizingPrimary = snowBallTerm;
+
+    return {
+      snowBallTerm,
+      deltaDebt,
+      nextDebt,
+      stabilizingPrimary,
+    };
+  }, [simDebtPrev, simRealRate, simGdpGrowth, simPrimaryBalance]);
+
+  const applyPreset = (
+    preset: "lula1_2" | "bolsonaro" | "lula3" | "ajuste2027"
+  ) => {
+    if (preset === "lula1_2") {
+      setSimDebtPrev(68.4);
+      setSimRealRate(6.5);
+      setSimGdpGrowth(4.0);
+      setSimPrimaryBalance(3.16);
+    } else if (preset === "bolsonaro") {
+      setSimDebtPrev(74.3);
+      setSimRealRate(3.2);
+      setSimGdpGrowth(1.4);
+      setSimPrimaryBalance(-1.8);
+    } else if (preset === "lula3") {
+      setSimDebtPrev(78.7);
+      setSimRealRate(7.0);
+      setSimGdpGrowth(3.0);
+      setSimPrimaryBalance(-0.43);
+    } else if (preset === "ajuste2027") {
+      setSimDebtPrev(78.7);
+      setSimRealRate(4.5);
+      setSimGdpGrowth(3.0);
+      setSimPrimaryBalance(1.5);
+    }
+  };
+
+  const filteredDossiers = useMemo(() => {
+    return JUDICIAL_DOSSIERS.filter((item) => {
+      const matchesCategory =
+        dossierFilter === "todos"
+          ? true
+          : dossierFilter === "PL"
+          ? item.partidoPolo === "PL"
+          : item.severidade === "metodologico";
+
+      if (!searchQuery.trim()) return matchesCategory;
+
+      const q = searchQuery.toLowerCase();
+      const fullText = [
+        item.nome,
+        item.cargo,
+        item.resumoExecutivo,
+        item.valoresEnvolvidos || "",
+        ...item.statusCurtos,
+        ...item.detalhesProcessuais,
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      return matchesCategory && fullText.includes(q);
+    });
+  }, [dossierFilter, searchQuery]);
+
+  const isSectionVisible = (sectionId: TabId) => {
+    if (activeTab === "todos") return true;
+    return activeTab === sectionId;
+  };
+
+  const handlePrintDossier = () => {
+    if (typeof window !== "undefined") {
+      window.print();
+    }
+  };
+
+  return (
+    <div className="min-h-screen text-zinc-900 flex flex-col urban-concrete-bg">
+      {/* =====================================================================
+          BARRA DE TELEMETRIA URBANA SUPERIOR (PAINEL DE METRÓPOLE)
+      ===================================================================== */}
+      <div className="bg-zinc-900 text-zinc-200 border-b border-zinc-800 px-4 py-1.5 text-[11px] font-mono print:hidden">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-white font-bold tracking-wider">
+              BR-REPÚBLICA // TELEMETRIA OFICIAL 2003–2026
+            </span>
+          </div>
+          <div className="hidden md:flex items-center gap-4 text-xs">
+            <span>
+              PIB 03–10:{" "}
+              <strong className="text-emerald-400">+37,3%</strong>
+            </span>
+            <span className="text-zinc-600">|</span>
+            <span>
+              DESEMPREGO 2025:{" "}
+              <strong className="text-emerald-400">5,6% (MÍN.)</strong>
+            </span>
+            <span className="text-zinc-600">|</span>
+            <span>
+              DBGG 2025:{" "}
+              <strong className="text-yellow-400">78,7% PIB</strong>
+            </span>
+            <span className="text-zinc-600">|</span>
+            <span>
+              PRODES 2026:{" "}
+              <strong className="text-emerald-400">3.335 km²</strong>
+            </span>
+            <span className="text-zinc-600">|</span>
+            <span>
+              STF 2025:{" "}
+              <strong className="text-rose-400">27A 3M (FECHADO)</strong>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* FAIXA DE SINALIZAÇÃO TRICOLOR (VERDE, AMARELO VIÁRIO E AZUL) */}
+      <div className="h-2 w-full bg-gradient-to-r from-emerald-600 via-yellow-400 to-blue-700" />
+
+      {/* =====================================================================
+          HEADER URBANO BRANCO BRUTALISTA & ORGÂNICO + EXPORTAÇÃO PDF
+      ===================================================================== */}
+      <header className="sticky top-0 z-50 border-b-2 border-zinc-900 bg-white/95 backdrop-blur-xl shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex items-start sm:items-center gap-4">
+            <BandeiraBrasilUrbanEmblem />
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded bg-zinc-900 text-yellow-300">
+                  DOC // BR-2003-2026
+                </span>
+                <span className="text-xs text-emerald-700 font-mono font-bold">
+                  • ARQUITETURA DE DADOS PÚBLICOS
+                </span>
+              </div>
+              <h1 className="text-lg sm:text-xl md:text-2xl font-display font-bold tracking-tight text-zinc-950 mt-0.5 uppercase">
+                Observatório Quantitativo da República{" "}
+                <span className="text-emerald-700 underline decoration-yellow-400 decoration-4 underline-offset-4">
+                  (2003–2026)
+                </span>
+              </h1>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 self-start md:self-auto print:hidden">
+            <button
+              onClick={handlePrintDossier}
+              className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-display font-bold text-xs sm:text-sm uppercase tracking-wider border-2 border-zinc-900 shadow-[4px_4px_0px_#18181b] hover:shadow-[2px_2px_0px_#18181b] hover:translate-x-[2px] hover:translate-y-[2px] transition-all cursor-pointer"
+            >
+              <Printer className="w-4 h-4 stroke-[2.5]" />
+              <span>Baixar Dossiê Completo em PDF</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* =====================================================================
+          CONTEÚDO PRINCIPAL
+      ===================================================================== */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+        {/* ===================================================================
+            HERO SECTION URBANA EM TEMA BRANCO (CALÇADÃO ORGÂNICO + 4 KPIs)
+        =================================================================== */}
+        <section className="space-y-6 print-avoid-break">
+          <div className="rounded-3xl bg-white border-2 border-zinc-900 shadow-[6px_6px_0px_#18181b] p-6 sm:p-9 relative overflow-hidden">
+            {/* Barra lateral esquerda tricolor estilo pilastra de concreto urbano */}
+            <div className="absolute left-0 top-0 bottom-0 w-2.5 bg-gradient-to-b from-emerald-600 via-yellow-400 to-blue-700" />
+
+            {/* Arte Vetorial Urbana + Ondas Orgânicas do Calçadão Brasileiro no fundo */}
+            <svg
+              className="absolute right-0 top-0 w-[520px] h-full opacity-[0.08] pointer-events-none"
+              viewBox="0 0 500 360"
+              fill="none"
+            >
+              {/* Ondas Orgânicas do Calçadão Brasileiro */}
+              <path
+                d="M0 280C80 230 160 330 240 280C320 230 400 330 480 280"
+                stroke="#047857"
+                strokeWidth="14"
+                strokeLinecap="round"
+              />
+              <path
+                d="M0 325C80 275 160 375 240 325C320 275 400 375 480 325"
+                stroke="#EAB308"
+                strokeWidth="14"
+                strokeLinecap="round"
+              />
+              {/* Geometria da Bandeira em Traço Arquitetônico */}
+              <path
+                d="M330 20L470 130L330 240L190 130L330 20Z"
+                stroke="#18181B"
+                strokeWidth="4"
+              />
+              <circle
+                cx="330"
+                cy="130"
+                r="60"
+                stroke="#1D4ED8"
+                strokeWidth="4"
+              />
+            </svg>
+
+            <div className="relative z-10 max-w-4xl space-y-4 pl-2">
+              <div className="inline-flex flex-wrap items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-zinc-950 bg-emerald-400 px-3 py-1 rounded-md border border-zinc-900 shadow-[3px_3px_0px_#facc15]">
+                <Terminal className="w-3.5 h-3.5" />
+                <span>
+                  AUDITORIA EMPÍRICA: IBGE • BCB • TESOURO NACIONAL • INPE •
+                  STF • STJ • TSE
+                </span>
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-zinc-950 tracking-tight leading-tight uppercase">
+                Comparação Empírica de Governos, Riscos Sistêmicos, Soberania
+                Nacional e Responsabilização Judicial
+              </h2>
+
+              <p className="text-zinc-700 text-sm sm:text-base leading-relaxed">
+                Dossiê urbano de transparência pública que contrasta, sem
+                cortes ou omissões, os dados oficiais entre os governos de{" "}
+                <strong className="text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
+                  Luiz Inácio Lula da Silva (2003–2010 e 2023–2026)
+                </strong>{" "}
+                e{" "}
+                <strong className="text-amber-900 font-bold bg-yellow-100 px-2 py-0.5 rounded border border-yellow-400">
+                  Jair Bolsonaro / Flávio Bolsonaro (2019–2022 e Plano 2026)
+                </strong>
+                .
+              </p>
+            </div>
+
+            {/* 4 KPIs de Impacto Rápido Estilo Painel Urbano Claro */}
+            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pl-2">
+              {HERO_KPIS.map((kpi) => {
+                const cardStyle =
+                  kpi.tendencia === "positivo"
+                    ? "border-l-4 border-l-emerald-600 border-zinc-200 bg-emerald-50/40"
+                    : kpi.tendencia === "alerta"
+                    ? "border-l-4 border-l-amber-500 border-zinc-200 bg-amber-50/50"
+                    : "border-l-4 border-l-rose-600 border-zinc-200 bg-rose-50/50";
+
+                const valueColor =
+                  kpi.tendencia === "positivo"
+                    ? "text-emerald-700"
+                    : kpi.tendencia === "alerta"
+                    ? "text-amber-700"
+                    : "text-rose-700";
+
+                const IconComponent =
+                  kpi.tendencia === "positivo"
+                    ? TrendingUp
+                    : kpi.tendencia === "alerta"
+                    ? AlertTriangle
+                    : ShieldAlert;
+
+                return (
+                  <div
+                    key={kpi.id}
+                    className={`rounded-2xl border ${cardStyle} p-4 flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 shadow-sm`}
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-500">
+                          {kpi.codigo}
+                        </span>
+                        <IconComponent
+                          className={`w-4 h-4 ${valueColor} shrink-0`}
+                        />
+                      </div>
+                      <div className="text-xs font-bold text-zinc-800">
+                        {kpi.titulo}
+                      </div>
+                      <div
+                        className={`text-xl font-extrabold font-mono ${valueColor}`}
+                      >
+                        {kpi.valorPrincipal}
+                      </div>
+                      <p className="text-xs text-zinc-700 leading-relaxed">
+                        {kpi.subtitulo}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-zinc-200/80">
+                      {kpi.fontes.map((f) => (
+                        <SourceBadge key={f} source={f} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================================
+            BARRA DE NAVEGAÇÃO POR ABAS + FILTRO DE BUSCA RÁPIDA (ESTILO METRÔ/VIÁRIO)
+        =================================================================== */}
+        <section className="print:hidden space-y-4">
+          <div className="rounded-2xl bg-white border-2 border-zinc-900 p-3.5 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 shadow-[4px_4px_0px_#18181b]">
+            <nav
+              aria-label="Navegação por Setores"
+              className="flex flex-wrap items-center gap-2"
+            >
+              {[
+                {
+                  id: "todos" as TabId,
+                  label: "00 // VISÃO COMPLETA",
+                  icon: FileText,
+                },
+                {
+                  id: "modulo1" as TabId,
+                  label: "01 // SOCIEDADE & ECONOMIA",
+                  icon: BarChart3,
+                },
+                {
+                  id: "modulo2" as TabId,
+                  label: "02 // MATRIZ DE RISCOS",
+                  icon: ShieldAlert,
+                },
+                {
+                  id: "simulador" as TabId,
+                  label: "LAB // EQUAÇÃO DA DÍVIDA",
+                  icon: Calculator,
+                },
+                {
+                  id: "modulo3" as TabId,
+                  label: "03 // SOBERANIA VS. VIRALATISMO",
+                  icon: Globe2,
+                },
+                {
+                  id: "modulo4" as TabId,
+                  label: "04 // RAIO-X DO PL & STF",
+                  icon: Scale,
+                },
+              ].map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 cursor-pointer ${
+                      isActive
+                        ? "bg-emerald-500 text-zinc-950 border-2 border-zinc-900 shadow-[3px_3px_0px_#facc15]"
+                        : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 hover:text-zinc-950 border border-zinc-300"
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* Filtro de Busca Rápida */}
+            <div className="relative min-w-[260px] sm:min-w-[320px]">
+              <Search className="w-4 h-4 text-emerald-700 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Filtrar indicador, processo, artigo, valor..."
+                className="w-full pl-10 pr-8 py-2 rounded-xl bg-zinc-50 border-2 border-zinc-300 text-sm font-mono text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-900"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  title="Limpar busca"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-600 hover:text-zinc-950 px-2 py-0.5 rounded bg-zinc-200"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================================
+            MÓDULO 1: QUEM BENEFICIOU MAIS A SOCIEDADE? (DADOS MACROECONÔMICOS E SOCIAIS)
+        =================================================================== */}
+        <section
+          id="modulo-1"
+          className={`${
+            isSectionVisible("modulo1") ? "block" : "hidden"
+          } print:block space-y-6`}
+        >
+          {/* Cabeçalho Urbano de Setor */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-zinc-900 pb-4">
+            <div className="flex items-center gap-3.5">
+              <div className="px-3 py-2 rounded-xl bg-emerald-500 text-zinc-950 border-2 border-zinc-900 font-mono font-extrabold text-sm shadow-[3px_3px_0px_#facc15]">
+                SETOR 01
+              </div>
+              <div>
+                <span className="text-xs font-mono font-bold uppercase tracking-widest text-emerald-700 block">
+                  Indicadores Empíricos Oficiais • Economia Real & Amazônia
+                </span>
+                <h2 className="text-xl sm:text-2xl font-display font-bold text-zinc-950 uppercase">
+                  Quem Beneficiou Mais a Sociedade? (Dados Macroeconômicos,
+                  Sociais e Ambientais)
+                </h2>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <SourceBadge source="IBGE" />
+              <SourceBadge source="DIEESE" />
+              <SourceBadge source="INPE" />
+            </div>
+          </div>
+
+          {/* 1.1 PIB Real Acumulado e Média Anual (IBGE) */}
+          <div className="rounded-3xl urban-card p-6 sm:p-7 space-y-6 print-avoid-break">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 className="text-lg font-display font-bold text-zinc-950 uppercase flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-emerald-700" />
+                  <span>
+                    PIB Real Acumulado, Média Anual e PIB per Capita (IBGE)
+                  </span>
+                </h3>
+                <p className="text-xs sm:text-sm text-zinc-600 mt-1">
+                  Total combinado Lula I e II (2003–2010):{" "}
+                  <strong className="text-emerald-700 font-mono">
+                    +37,3% acumulado (+4,0% a.a.)
+                  </strong>{" "}
+                  | Bolsonaro (2019–2022):{" "}
+                  <strong className="text-amber-700 font-mono">
+                    +5,6% acumulado (+1,4% a.a.)
+                  </strong>{" "}
+                  | Lula III (2023–2025):{" "}
+                  <strong className="text-emerald-700 font-mono">
+                    +9,2% acumulado no triênio (+3,0% a.a.)
+                  </strong>
+                </p>
+              </div>
+              <SourceBadge source="IBGE" />
+            </div>
+
+            {/* Gráfico Visual de Barras Proporcionais para o PIB */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {GDP_DATA.map((item) => {
+                const widthAcum = Math.min(
+                  100,
+                  Math.round((item.pibAcumulado / 20) * 100)
+                );
+                const widthPerCapita = Math.min(
+                  100,
+                  Math.round((item.pibPerCapita / 20) * 100)
+                );
+
+                return (
+                  <div
+                    key={item.id}
+                    className={`rounded-2xl bg-zinc-50 border border-zinc-200 ${item.bordaLateral} p-5 space-y-4 hover:border-zinc-400 transition-all`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="text-[11px] font-mono font-bold text-zinc-500 uppercase tracking-wider">
+                          {item.codigoUrbano}
+                        </span>
+                        <h4 className="text-lg font-display font-bold text-zinc-950 uppercase">
+                          {item.governo}{" "}
+                          <span className="text-xs font-mono text-zinc-500 font-normal">
+                            ({item.periodo})
+                          </span>
+                        </h4>
+                      </div>
+                      <div className="text-right">
+                        <span
+                          className={`text-lg font-mono font-extrabold ${item.corTexto}`}
+                        >
+                          {item.pibAcumuladoLabel}
+                        </span>
+                        <div className="text-xs font-mono text-zinc-600">
+                          Média: {item.mediaAnualLabel}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Barra PIB Acumulado */}
+                    <div className="space-y-1.5">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-zinc-700 font-mono">
+                          Crescimento do PIB Real Acumulado
+                        </span>
+                        <span
+                          className={`font-mono font-bold ${item.corTexto}`}
+                        >
+                          {item.pibAcumuladoLabel} ({item.mediaAnualLabel})
+                        </span>
+                      </div>
+                      <div className="w-full h-3.5 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
+                        <div
+                          className={`h-full ${item.corBarra} transition-all duration-500`}
+                          style={{ width: `${widthAcum}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Barra PIB per Capita */}
+                    <div className="space-y-1.5">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-zinc-700 font-mono">
+                          Evolução do PIB per Capita
+                        </span>
+                        <span className="font-mono font-bold text-blue-700">
+                          {item.pibPerCapitaLabel}
+                        </span>
+                      </div>
+                      <div className="w-full h-2.5 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
+                        <div
+                          className="h-full bg-gradient-to-r from-blue-700 to-sky-500 transition-all duration-500"
+                          style={{ width: `${widthPerCapita}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-zinc-600 leading-relaxed pt-2 border-t border-zinc-200">
+                      {item.observacao}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Faixa de Síntese Acumulada */}
+            <div className="rounded-2xl bg-emerald-50/70 border-l-4 border-l-emerald-600 border border-emerald-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="text-xs font-mono uppercase text-emerald-800 font-bold">
+                  // SÍNTESE HISTÓRICA ACUMULADA (2003–2010 vs. 2019–2022 vs.
+                  2023–2025)
+                </div>
+                <p className="text-sm text-zinc-800">
+                  No consolidado dos dois primeiros mandatos de Lula (2003–2010),
+                  o PIB Real cresceu{" "}
+                  <strong className="text-emerald-800 font-mono">
+                    +37,3% acumulado
+                  </strong>{" "}
+                  (média de{" "}
+                  <strong className="text-emerald-800 font-mono">
+                    +4,0% a.a.
+                  </strong>
+                  ), contra{" "}
+                  <strong className="text-amber-800 font-mono">
+                    +5,6% acumulado (+1,4% a.a.)
+                  </strong>{" "}
+                  no governo Bolsonaro (2019–2022) e{" "}
+                  <strong className="text-emerald-800 font-mono">
+                    +9,2% no triênio 2023–2025 (+3,0% a.a.)
+                  </strong>{" "}
+                  em Lula III.
+                </p>
+              </div>
+              <SourceBadge source="IBGE" />
+            </div>
+          </div>
+
+          {/* 1.2 Mercado de Trabalho e Renda (IBGE / DIEESE) */}
+          <div className="rounded-3xl urban-card p-6 sm:p-7 space-y-6 print-avoid-break">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 className="text-lg font-display font-bold text-zinc-950 uppercase flex items-center gap-2">
+                  <Users className="w-5 h-5 text-blue-700" />
+                  <span>
+                    Mercado de Trabalho, Desigualdade (Gini) e Salário Mínimo
+                    (IBGE / DIEESE)
+                  </span>
+                </h3>
+                <p className="text-xs sm:text-sm text-zinc-600 mt-1">
+                  Comparativo direto da taxa de desocupação, distribuição de
+                  renda domiciliar e valorização real do salário mínimo.
+                </p>
+              </div>
+              <div className="flex gap-1.5">
+                <SourceBadge source="IBGE" />
+                <SourceBadge source="DIEESE" />
+              </div>
+            </div>
+
+            {/* Tabela Comparativa Completa */}
+            <div className="overflow-x-auto rounded-2xl border border-zinc-300">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-zinc-900 text-white text-xs font-mono uppercase border-b border-zinc-300">
+                    <th className="py-4 px-4">Indicador Social / Trabalhista</th>
+                    <th className="py-4 px-4 text-emerald-300">
+                      Lula I e II (2003–2010)
+                    </th>
+                    <th className="py-4 px-4 text-yellow-300">
+                      Bolsonaro (2019–2022)
+                    </th>
+                    <th className="py-4 px-4 text-emerald-300">
+                      Lula III (2023–2026)
+                    </th>
+                    <th className="py-4 px-4">Fontes</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-200 text-sm">
+                  {LABOR_INCOME_DATA.map((row) => (
+                    <tr
+                      key={row.indicador}
+                      className="bg-white hover:bg-zinc-50 transition-colors"
+                    >
+                      <td className="py-4 px-4 font-bold text-zinc-900">
+                        <div>{row.indicador}</div>
+                        <div className="text-xs text-emerald-700 font-mono mt-1">
+                          ★ {row.destaque}
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 text-zinc-800">{row.lula1e2}</td>
+                      <td className="py-4 px-4 text-zinc-700">
+                        {row.bolsonaro}
+                      </td>
+                      <td className="py-4 px-4 text-emerald-800 font-semibold">
+                        {row.lula3}
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="flex flex-wrap gap-1">
+                          {row.fontes.map((f) => (
+                            <SourceBadge key={f} source={f} />
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Barras Visuais Comparativas: Desemprego e Salário Mínimo */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+              {/* Gráfico Desemprego */}
+              <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-bold text-zinc-900 uppercase font-mono">
+                    Taxa de Desemprego (Menor = Melhor)
+                  </h4>
+                  <SourceBadge source="IBGE" />
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-zinc-700">
+                        Lula I e II (Queda de 12,3% para 6,7% PME)
+                      </span>
+                      <span className="font-mono text-emerald-700 font-bold">
+                        6,7% (Final 2010)
+                      </span>
+                    </div>
+                    <div className="w-full h-3 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
+                      <div
+                        className="h-full bg-gradient-to-r from-emerald-600 to-emerald-500"
+                        style={{ width: "45%" }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-zinc-700">
+                        Bolsonaro (Média de 12,1% | Fechou 2022 em 9,3% PNAD-C)
+                      </span>
+                      <span className="font-mono text-amber-700 font-bold">
+                        12,1% média (9,3% fim)
+                      </span>
+                    </div>
+                    <div className="w-full h-3 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
+                      <div
+                        className="h-full bg-gradient-to-r from-amber-600 to-yellow-500"
+                        style={{ width: "82%" }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-zinc-700">
+                        Lula III (Média de 6,7% | Mínima Histórica em 2025)
+                      </span>
+                      <span className="font-mono text-emerald-700 font-bold">
+                        5,6% (Mínima 2025)
+                      </span>
+                    </div>
+                    <div className="w-full h-3 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
+                      <div
+                        className="h-full bg-gradient-to-r from-emerald-600 to-yellow-400"
+                        style={{ width: "37%" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Gráfico Valorização Real do Salário Mínimo */}
+              <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-bold text-zinc-900 uppercase font-mono">
+                    Valorização Real do Salário Mínimo
+                  </h4>
+                  <SourceBadge source="DIEESE" />
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-zinc-700">
+                        Lula I e II (2003–2010)
+                      </span>
+                      <span className="font-mono text-emerald-700 font-bold">
+                        +53,6% real
+                      </span>
+                    </div>
+                    <div className="w-full h-3 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
+                      <div
+                        className="h-full bg-gradient-to-r from-emerald-600 via-emerald-500 to-yellow-400"
+                        style={{ width: "100%" }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-zinc-700">
+                        Bolsonaro (2019–2022)
+                      </span>
+                      <span className="font-mono text-amber-700 font-bold">
+                        +1,3% real
+                      </span>
+                    </div>
+                    <div className="w-full h-3 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
+                      <div
+                        className="h-full bg-amber-500"
+                        style={{ width: "4%" }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-zinc-700">
+                        Lula III (2023–2026)
+                      </span>
+                      <span className="font-mono text-emerald-700 font-bold">
+                        +8,8% real
+                      </span>
+                    </div>
+                    <div className="w-full h-3 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
+                      <div
+                        className="h-full bg-gradient-to-r from-emerald-600 to-emerald-500"
+                        style={{ width: "22%" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 1.3 Meio Ambiente e Desmatamento na Amazônia (INPE / PRODES) */}
+          <div className="rounded-3xl urban-card p-6 sm:p-7 space-y-6 print-avoid-break">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 className="text-lg font-display font-bold text-zinc-950 uppercase flex items-center gap-2">
+                  <Trees className="w-5 h-5 text-emerald-700" />
+                  <span>
+                    Meio Ambiente e Desmatamento na Amazônia Legal (INPE /
+                    PRODES)
+                  </span>
+                </h3>
+                <p className="text-xs sm:text-sm text-zinc-600 mt-1">
+                  Monitoramento oficial por satélite (PRODES/DETER), governança
+                  ambiental e fiscalização do Ibama.
+                </p>
+              </div>
+              <SourceBadge source="INPE" />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+              {ENVIRONMENT_DATA.map((env) => {
+                const isPositivo = env.status === "positivo";
+                const cardBorder = isPositivo
+                  ? "border-l-4 border-l-emerald-600 border-zinc-200 bg-emerald-50/30"
+                  : "border-l-4 border-l-rose-600 border-zinc-200 bg-rose-50/30";
+                const badgeColor = isPositivo
+                  ? "text-emerald-800 bg-emerald-100 border-emerald-300"
+                  : "text-rose-800 bg-rose-100 border-rose-300";
+                const barColor = isPositivo
+                  ? "bg-gradient-to-r from-emerald-600 to-emerald-500"
+                  : "bg-gradient-to-r from-rose-600 to-rose-500";
+                const barWidth = Math.min(
+                  100,
+                  Math.round((env.kmAnoNumerico / 14000) * 100)
+                );
+
+                return (
+                  <div
+                    key={env.id}
+                    className={`rounded-2xl border ${cardBorder} p-5 flex flex-col justify-between space-y-4`}
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <div>
+                          <span className="text-[10px] font-mono text-zinc-500 block">
+                            {env.codigo}
+                          </span>
+                          <span className="text-sm font-display font-bold text-zinc-950 uppercase">
+                            {env.ciclo}
+                          </span>
+                        </div>
+                        <span
+                          className={`text-xs font-mono font-bold px-2.5 py-1 rounded-md border ${badgeColor}`}
+                        >
+                          {env.variacao}
+                        </span>
+                      </div>
+
+                      <div className="text-xs font-mono text-zinc-800 bg-white p-3 rounded-xl border border-zinc-200">
+                        {env.taxaReferencia}
+                      </div>
+
+                      {/* Barra Visual Proporcional da Taxa Final/Pico */}
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-[11px] text-zinc-600 font-mono">
+                          <span>Patamar de Desmatamento Anual</span>
+                          <span>
+                            {env.kmAnoNumerico.toLocaleString("pt-BR")} km²/ano
+                          </span>
+                        </div>
+                        <div className="w-full h-3 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
+                          <div
+                            className={`h-full ${barColor}`}
+                            style={{ width: `${barWidth}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-zinc-700 leading-relaxed">
+                        {env.marcosInstitucionais}
+                      </p>
+                    </div>
+
+                    <div className="pt-3 border-t border-zinc-200 flex items-center justify-between">
+                      <span className="text-[11px] font-mono text-zinc-500">
+                        Série Histórica PRODES
+                      </span>
+                      <SourceBadge source="INPE" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================================
+            MÓDULO 2: QUAL É O MAIS PERIGOSO? (MATRIZ FRIA DE RISCOS SISTÊMICOS)
+        =================================================================== */}
+        <section
+          id="modulo-2"
+          className={`${
+            isSectionVisible("modulo2") ? "block" : "hidden"
+          } print:block space-y-6 print-page-break`}
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-zinc-900 pb-4">
+            <div className="flex items-center gap-3.5">
+              <div className="px-3 py-2 rounded-xl bg-yellow-400 text-zinc-950 border-2 border-zinc-900 font-mono font-extrabold text-sm shadow-[3px_3px_0px_#f43f5e]">
+                SETOR 02
+              </div>
+              <div>
+                <span className="text-xs font-mono font-bold uppercase tracking-widest text-amber-700 block">
+                  Diagnóstico Estrutural de Vulnerabilidades
+                </span>
+                <h2 className="text-xl sm:text-2xl font-display font-bold text-zinc-950 uppercase">
+                  Qual é o Mais Perigoso? (Matriz Fria de Riscos Sistêmicos)
+                </h2>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <SourceBadge source="BCB" />
+              <SourceBadge source="TN" />
+              <SourceBadge source="STF" />
+              <SourceBadge source="TSE" />
+            </div>
+          </div>
+
+          {/* Comparação Lado a Lado dos Dois Perigos Opostos */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* COLUNA 1: O PERIGO DO MODELO LULA (DOMINÂNCIA FISCAL) */}
+            <div className="rounded-3xl urban-card-yellow overflow-hidden flex flex-col justify-between print-avoid-break">
+              {/* Faixa de Alerta Urbano (Caution Stripe) */}
+              <div className="h-3.5 w-full urban-Caution-stripe border-b border-amber-300" />
+
+              <div className="p-6 sm:p-7 space-y-5 flex-1 flex flex-col justify-between">
+                <div className="space-y-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase px-2.5 py-1 rounded bg-yellow-400 text-zinc-950 border border-zinc-900">
+                        <Flame className="w-3.5 h-3.5" />
+                        VETOR 01 // RISCO MACRO-FISCAL
+                      </span>
+                      <h3 className="text-xl font-display font-bold text-zinc-950 pt-1 uppercase">
+                        1. O Perigo do Modelo Lula: Risco de Dominância Fiscal e
+                        &ldquo;Bola de Neve&rdquo;
+                      </h3>
+                    </div>
+                    <div className="flex gap-1 shrink-0">
+                      <SourceBadge source="BCB" />
+                      <SourceBadge source="TN" />
+                    </div>
+                  </div>
+
+                  {/* Contraste Histórico Fiscal 2003-2010 vs 2023-2025 */}
+                  <div className="rounded-2xl bg-amber-50/50 border border-amber-200 p-4 space-y-3">
+                    <div className="text-xs font-mono uppercase text-amber-900 font-bold">
+                      // Inversão do Regime Fiscal: Lula I/II vs. Lula III
+                    </div>
+                    <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed">
+                      Embora em{" "}
+                      <strong className="text-emerald-700">2003–2010</strong>{" "}
+                      tenha gerado superávits primários médios de{" "}
+                      <strong className="text-emerald-700 font-mono">
+                        +3,16% do PIB
+                      </strong>{" "}
+                      e reduzido a Dívida Bruta (DBGG) em{" "}
+                      <strong className="text-emerald-700 font-mono">
+                        11,9 p.p.
+                      </strong>
+                      , em{" "}
+                      <strong className="text-amber-800">
+                        Lula III (2023–2025)
+                      </strong>{" "}
+                      houve déficits primários consecutivos:
+                    </p>
+                    <div className="grid grid-cols-3 gap-2 pt-1">
+                      <div className="rounded-xl bg-white border border-amber-300 p-2.5 text-center">
+                        <div className="text-[11px] font-mono text-zinc-500">
+                          Primário 2023
+                        </div>
+                        <div className="text-base font-mono font-bold text-amber-800">
+                          -2,29% PIB
+                        </div>
+                      </div>
+                      <div className="rounded-xl bg-white border border-amber-300 p-2.5 text-center">
+                        <div className="text-[11px] font-mono text-zinc-500">
+                          Primário 2024
+                        </div>
+                        <div className="text-base font-mono font-bold text-amber-800">
+                          -0,40% PIB
+                        </div>
+                      </div>
+                      <div className="rounded-xl bg-white border border-amber-300 p-2.5 text-center">
+                        <div className="text-[11px] font-mono text-zinc-500">
+                          Primário 2025
+                        </div>
+                        <div className="text-base font-mono font-bold text-amber-800">
+                          -0,43% PIB
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Dinâmica da Dívida Bruta e Carga Tributária */}
+                  <div className="rounded-2xl bg-amber-50/50 border border-amber-200 p-4 space-y-3">
+                    <div className="text-xs font-mono uppercase text-amber-900 font-bold">
+                      // Dinâmica Explosiva (r &gt; g) e Carga Tributária Recorde
+                    </div>
+                    <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed">
+                      Com juro real (
+                      <strong className="font-mono text-amber-800">
+                        r ≈ 7%
+                      </strong>
+                      ) muito maior que o crescimento do PIB (
+                      <strong className="font-mono text-emerald-700">
+                        g ≈ 3%
+                      </strong>
+                      ), a Dívida Bruta do Governo Geral (DBGG) saltou{" "}
+                      <strong className="text-amber-800 font-mono">
+                        +7,0 pontos percentuais em 3 anos
+                      </strong>{" "}
+                      (de <strong className="font-mono">71,7%</strong> em 2022
+                      para{" "}
+                      <strong className="font-mono text-amber-800">
+                        78,7% do PIB
+                      </strong>{" "}
+                      em 2025), enquanto a{" "}
+                      <strong className="text-amber-900">
+                        Carga Tributária Bruta bateu recorde histórico de 32,40%
+                        do PIB em 2025
+                      </strong>
+                      .
+                    </p>
+
+                    <div className="space-y-2 pt-1">
+                      <div>
+                        <div className="flex justify-between text-xs font-mono mb-1">
+                          <span className="text-zinc-600">DBGG em 2022</span>
+                          <span className="text-zinc-900 font-semibold">
+                            71,7% do PIB
+                          </span>
+                        </div>
+                        <div className="w-full h-2.5 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
+                          <div
+                            className="h-full bg-zinc-500"
+                            style={{ width: "71.7%" }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-xs font-mono mb-1">
+                          <span className="text-amber-900">
+                            DBGG em 2025 (+7,0 p.p. em 3 anos)
+                          </span>
+                          <span className="text-amber-800 font-bold">
+                            78,7% do PIB
+                          </span>
+                        </div>
+                        <div className="w-full h-2.5 bg-zinc-200 rounded-md overflow-hidden border border-zinc-300">
+                          <div
+                            className="h-full bg-gradient-to-r from-amber-600 to-yellow-500"
+                            style={{ width: "78.7%" }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Alerta de Risco Crítico 2027 */}
+                <div className="rounded-2xl bg-amber-100/80 border-l-4 border-l-amber-600 border border-amber-300 p-4 flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+                  <div className="text-xs sm:text-sm text-zinc-800 leading-relaxed">
+                    <strong className="text-amber-900 uppercase font-mono block mb-0.5">
+                      Risco Crítico (Horizonte 2027):
+                    </strong>
+                    Sem corte estrutural de gastos obrigatórios e desindexação
+                    orçamentária em 2027, há risco técnico de{" "}
+                    <strong>Dominância Fiscal</strong> (estado em que aumentos da
+                    taxa Selic pelo Banco Central elevam o custo da dívida e o
+                    prêmio de risco a ponto de gerar perda de controle
+                    inflacionário e cambial).
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* COLUNA 2: O PERIGO DO MODELO BOLSONARO / FLÁVIO BOLSONARO */}
+            <div className="rounded-3xl urban-card-rose overflow-hidden flex flex-col justify-between print-avoid-break">
+              {/* Faixa de Perigo Urbano (Danger Stripe) */}
+              <div className="h-3.5 w-full urban-danger-stripe border-b border-rose-300" />
+
+              <div className="p-6 sm:p-7 space-y-5 flex-1 flex flex-col justify-between">
+                <div className="space-y-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase px-2.5 py-1 rounded bg-rose-600 text-white border border-zinc-900">
+                        <Gavel className="w-3.5 h-3.5" />
+                        VETOR 02 // RISCO DEMOCRÁTICO & PENAL
+                      </span>
+                      <h3 className="text-xl font-display font-bold text-zinc-950 pt-1 uppercase">
+                        2. O Perigo do Modelo Bolsonaro / Flávio Bolsonaro:
+                        Ruptura Democrática, Paralisia Institucional e Isolamento
+                      </h3>
+                    </div>
+                    <div className="flex gap-1 shrink-0">
+                      <SourceBadge source="STF" />
+                      <SourceBadge source="TSE" />
+                    </div>
+                  </div>
+
+                  {/* Condenação Criminal de Jair Bolsonaro */}
+                  <div className="rounded-2xl bg-rose-50/50 border border-rose-200 p-4 space-y-2.5">
+                    <div className="text-xs font-mono uppercase text-rose-800 font-bold">
+                      // Condenação Criminal por Tentativa de Golpe de Estado
+                      (STF)
+                    </div>
+                    <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed">
+                      Condenação criminal de{" "}
+                      <strong className="text-zinc-950">Jair Bolsonaro</strong>{" "}
+                      pela{" "}
+                      <strong className="text-rose-700">
+                        1ª Turma do STF (2025) a 27 anos e 3 meses de prisão em
+                        regime fechado
+                      </strong>{" "}
+                      por tentativa de golpe de Estado (
+                      <span className="font-mono text-rose-800 font-semibold">
+                        Art. 359-M CP
+                      </span>
+                      ), abolição violenta do Estado Democrático de Direito (
+                      <span className="font-mono text-rose-800 font-semibold">
+                        Art. 359-L CP
+                      </span>
+                      ) e organização criminosa, além de{" "}
+                      <strong className="text-rose-700">
+                        2 condenações à inelegibilidade no TSE
+                      </strong>
+                      .
+                    </p>
+                  </div>
+
+                  {/* Risco Flávio Bolsonaro (Plano 2026) */}
+                  <div className="rounded-2xl bg-rose-50/50 border border-rose-200 p-4 space-y-2.5">
+                    <div className="text-xs font-mono uppercase text-rose-800 font-bold">
+                      // Risco Flávio Bolsonaro (Plano 2026) & Baixa
+                      Produtividade Legislativa
+                    </div>
+                    <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed">
+                      Propõe limitar poderes constitucionais do STF e anistiar
+                      golpistas enquanto o próprio candidato é alvo de{" "}
+                      <strong className="text-rose-700">
+                        Inquérito ativo no STF (Caso Banco Master / Filme Dark
+                        Horse)
+                      </strong>{" "}
+                      e teve{" "}
+                      <strong className="text-rose-700 font-mono">
+                        0 projetos de autoria individual sancionados como lei em
+                        quase 8 anos de Senado
+                      </strong>
+                      .
+                    </p>
+                  </div>
+
+                  {/* Institucionalização do Orçamento Secreto */}
+                  <div className="rounded-2xl bg-rose-50/50 border border-rose-200 p-4 space-y-2.5">
+                    <div className="text-xs font-mono uppercase text-rose-800 font-bold">
+                      // Captura Orçamentária Opaca (&ldquo;Orçamento
+                      Secreto&rdquo; — RP9)
+                    </div>
+                    <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed">
+                      Institucionalização do{" "}
+                      <strong className="text-zinc-950">
+                        &ldquo;Orçamento Secreto&rdquo; (emendas de relator RP9)
+                      </strong>{" "}
+                      que transferiu{" "}
+                      <strong className="text-rose-700 font-mono">
+                        mais de R$ 30 bilhões/ano sem transparência
+                      </strong>{" "}
+                      e sem critérios técnicos ao Centrão, esvaziando a
+                      capacidade de planejamento do Executivo e gerando esquemas
+                      de corrupção já condenados pelo STF.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Alerta de Risco Crítico Institucional */}
+                <div className="rounded-2xl bg-rose-100/80 border-l-4 border-l-rose-600 border border-rose-300 p-4 flex items-start gap-3">
+                  <ShieldAlert className="w-5 h-5 text-rose-700 shrink-0 mt-0.5" />
+                  <div className="text-xs sm:text-sm text-zinc-800 leading-relaxed">
+                    <strong className="text-rose-900 uppercase font-mono block mb-0.5">
+                      Risco Crítico (Institucional & Geopolítico):
+                    </strong>
+                    Uma plataforma eleitoral centrada no confronto direto com o
+                    Supremo Tribunal Federal para estancar inquéritos criminais e
+                    anistiar crimes contra o Estado Democrático produz crise
+                    constitucional permanente, insegurança jurídica extrema e fuga
+                    de capitais.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================================
+            CALCULADORA / SIMULADOR INTERATIVO DA EQUAÇÃO DA DÍVIDA PÚBLICA
+        =================================================================== */}
+        <section
+          id="simulador-divida"
+          className={`${
+            isSectionVisible("simulador") || isSectionVisible("modulo2")
+              ? "block"
+              : "hidden"
+          } print:block space-y-6 print-avoid-break`}
+        >
+          <div className="rounded-3xl bg-white border-2 border-zinc-900 shadow-[6px_6px_0px_#18181b] p-6 sm:p-8 space-y-6">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-zinc-200 pb-5">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-blue-700">
+                  <Activity className="w-4 h-4" />
+                  <span>
+                    LABORATÓRIO FISCAL // SIMULADOR DA EQUAÇÃO DA DÍVIDA PÚBLICA
+                  </span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-display font-bold text-zinc-950 uppercase">
+                  Equação Canônica de Sustentabilidade da Dívida Bruta (DBGG)
+                </h3>
+                <p className="text-xs sm:text-sm text-zinc-600">
+                  Entenda matematicamente por que a relação entre juro real (
+                  <span className="font-mono font-bold text-amber-700">r</span>
+                  ), crescimento do PIB (
+                  <span className="font-mono font-bold text-emerald-700">
+                    g
+                  </span>
+                  ) e resultado primário (
+                  <span className="font-mono font-bold text-blue-700">p_t</span>
+                  ) determina a estabilidade ou explosão da dívida pública.
+                </p>
+              </div>
+
+              {/* Bloco da Equação Matemática Destacada */}
+              <div className="rounded-2xl bg-zinc-900 border-2 border-zinc-950 px-5 py-3.5 text-center shrink-0 shadow-[4px_4px_0px_#facc15]">
+                <div className="text-[10px] font-mono uppercase text-zinc-400 mb-1">
+                  Fórmula Macroeconômica Oficial
+                </div>
+                <div className="text-base sm:text-lg font-mono font-bold text-yellow-300 tracking-wide">
+                  Δd<sub className="text-xs">t</sub> = ((r - g) / (1 + g)) · d
+                  <sub className="text-xs">t-1</sub> - p
+                  <sub className="text-xs">t</sub>
+                </div>
+              </div>
+            </div>
+
+            {/* Botões de Cenários Históricos Pré-Configurados */}
+            <div className="flex flex-wrap items-center gap-2 print:hidden">
+              <span className="text-xs font-mono font-bold text-zinc-600 mr-1 uppercase">
+                Presets Históricos:
+              </span>
+              <button
+                onClick={() => applyPreset("lula1_2")}
+                className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-400 transition cursor-pointer"
+              >
+                Lula I e II (2003–2010: p = +3,16% | g = 4,0%)
+              </button>
+              <button
+                onClick={() => applyPreset("bolsonaro")}
+                className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border border-zinc-300 transition cursor-pointer"
+              >
+                Bolsonaro (2019–2022: g = 1,4% | choque pandemia)
+              </button>
+              <button
+                onClick={() => applyPreset("lula3")}
+                className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-400 transition cursor-pointer"
+              >
+                Lula III (2025 Atual: d = 78,7% | r = 7% | g = 3% | p = -0,43%)
+              </button>
+              <button
+                onClick={() => applyPreset("ajuste2027")}
+                className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-blue-100 hover:bg-blue-200 text-blue-900 border border-blue-300 transition cursor-pointer"
+              >
+                Cenário Estabilização 2027 (r = 4,5% | g = 3% | p = +1,5%)
+              </button>
+              <button
+                onClick={() => applyPreset("lula3")}
+                title="Restaurar valores padrão de 2025"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-mono bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-300 transition cursor-pointer ml-auto"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                Resetar
+              </button>
+            </div>
+
+            {/* Controles Sliders + Resultado Analítico */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-mono font-semibold text-zinc-700">
+                      Estoque Inicial (d<sub>t-1</sub>)
+                    </label>
+                    <span className="text-sm font-mono font-bold text-zinc-950">
+                      {simDebtPrev.toFixed(1)}% do PIB
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={40}
+                    max={110}
+                    step={0.1}
+                    value={simDebtPrev}
+                    onChange={(e) => setSimDebtPrev(parseFloat(e.target.value))}
+                    className="w-full accent-emerald-600 cursor-pointer"
+                  />
+                  <div className="text-[11px] text-zinc-500 font-mono">
+                    Ref: 71,7% (2022) → 78,7% (2025)
+                  </div>
+                </div>
+
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-mono font-semibold text-zinc-700">
+                      Taxa de Juro Real Implícita (r)
+                    </label>
+                    <span className="text-sm font-mono font-bold text-amber-700">
+                      {simRealRate.toFixed(1)}% a.a.
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={12}
+                    step={0.1}
+                    value={simRealRate}
+                    onChange={(e) => setSimRealRate(parseFloat(e.target.value))}
+                    className="w-full accent-amber-500 cursor-pointer"
+                  />
+                  <div className="text-[11px] text-zinc-500 font-mono">
+                    Ref Lula III (2025): r ≈ 7,0% a.a.
+                  </div>
+                </div>
+
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-mono font-semibold text-zinc-700">
+                      Crescimento Real do PIB (g)
+                    </label>
+                    <span className="text-sm font-mono font-bold text-emerald-700">
+                      {simGdpGrowth.toFixed(1)}% a.a.
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={-4}
+                    max={8}
+                    step={0.1}
+                    value={simGdpGrowth}
+                    onChange={(e) => setSimGdpGrowth(parseFloat(e.target.value))}
+                    className="w-full accent-emerald-600 cursor-pointer"
+                  />
+                  <div className="text-[11px] text-zinc-500 font-mono">
+                    Ref: +4,0% (Lula I/II) | +1,4% (Bolsonaro) | +3,0% (Lula III)
+                  </div>
+                </div>
+
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-mono font-semibold text-zinc-700">
+                      Resultado Primário (p<sub>t</sub>)
+                    </label>
+                    <span
+                      className={`text-sm font-mono font-bold ${
+                        simPrimaryBalance >= 0
+                          ? "text-emerald-700"
+                          : "text-rose-700"
+                      }`}
+                    >
+                      {simPrimaryBalance > 0 ? "+" : ""}
+                      {simPrimaryBalance.toFixed(2)}% do PIB
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={-4}
+                    max={4.5}
+                    step={0.05}
+                    value={simPrimaryBalance}
+                    onChange={(e) =>
+                      setSimPrimaryBalance(parseFloat(e.target.value))
+                    }
+                    className="w-full accent-blue-600 cursor-pointer"
+                  />
+                  <div className="text-[11px] text-zinc-500 font-mono">
+                    Ref: +3,16% (2003–10) | -2,29% (23) | -0,43% (25)
+                  </div>
+                </div>
+              </div>
+
+              {/* Painel de Resultado da Equação */}
+              <div className="lg:col-span-5 rounded-2xl bg-zinc-50 border-2 border-zinc-900 p-5 space-y-4">
+                <div className="flex items-center justify-between border-b border-zinc-200 pb-3">
+                  <span className="text-xs font-mono font-bold uppercase text-zinc-600">
+                    Resultado Simulado (Δd<sub>t</sub>)
+                  </span>
+                  <span
+                    className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded border ${
+                      debtSimulation.deltaDebt > 0.3
+                        ? "bg-amber-100 text-amber-900 border-amber-400"
+                        : debtSimulation.deltaDebt < -0.3
+                        ? "bg-emerald-100 text-emerald-900 border-emerald-400"
+                        : "bg-blue-100 text-blue-900 border-blue-400"
+                    }`}
+                  >
+                    {debtSimulation.deltaDebt > 0.3
+                      ? "Trajetória de Alta (Bola de Neve)"
+                      : debtSimulation.deltaDebt < -0.3
+                      ? "Trajetória de Queda da Dívida"
+                      : "Estabilidade da Dívida/PIB"}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl bg-white border border-zinc-200 p-3">
+                    <div className="text-[11px] font-mono text-zinc-500">
+                      Variação Anual (Δd<sub>t</sub>)
+                    </div>
+                    <div
+                      className={`text-2xl font-mono font-extrabold mt-0.5 flex items-center gap-1 ${
+                        debtSimulation.deltaDebt > 0
+                          ? "text-amber-700"
+                          : "text-emerald-700"
+                      }`}
+                    >
+                      {debtSimulation.deltaDebt > 0 ? (
+                        <ArrowUpRight className="w-5 h-5" />
+                      ) : (
+                        <ArrowDownRight className="w-5 h-5" />
+                      )}
+                      {debtSimulation.deltaDebt > 0 ? "+" : ""}
+                      {debtSimulation.deltaDebt.toFixed(2)} p.p.
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl bg-white border border-zinc-200 p-3">
+                    <div className="text-[11px] font-mono text-zinc-500">
+                      Dívida Projetada (d<sub>t</sub>)
+                    </div>
+                    <div className="text-2xl font-mono font-extrabold text-zinc-950 mt-0.5">
+                      {debtSimulation.nextDebt.toFixed(1)}%{" "}
+                      <span className="text-xs font-normal text-zinc-500">
+                        PIB
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 text-xs font-mono bg-white p-3 rounded-xl border border-zinc-200">
+                  <div className="flex justify-between">
+                    <span className="text-zinc-600">
+                      Efeito Juros vs. PIB [((r - g)/(1 + g))·d]:
+                    </span>
+                    <span
+                      className={
+                        debtSimulation.snowBallTerm > 0
+                          ? "text-amber-700 font-bold"
+                          : "text-emerald-700 font-bold"
+                      }
+                    >
+                      {debtSimulation.snowBallTerm > 0 ? "+" : ""}
+                      {debtSimulation.snowBallTerm.toFixed(2)} p.p.
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-zinc-600">
+                      Primário Necessário p/ Estabilizar (Δd = 0):
+                    </span>
+                    <span className="text-blue-700 font-bold">
+                      {debtSimulation.stabilizingPrimary > 0 ? "+" : ""}
+                      {debtSimulation.stabilizingPrimary.toFixed(2)}% do PIB
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================================
+            MÓDULO 3: ANÁLISE TÉCNICA DO "VIRALATISMO" (SUBORDINAÇÃO EXTERNA VS. SOBERANIA NACIONAL)
+        =================================================================== */}
+        <section
+          id="modulo-3"
+          className={`${
+            isSectionVisible("modulo3") ? "block" : "hidden"
+          } print:block space-y-6 print-page-break`}
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-zinc-900 pb-4">
+            <div className="flex items-center gap-3.5">
+              <div className="px-3 py-2 rounded-xl bg-blue-700 text-white border-2 border-zinc-900 font-mono font-extrabold text-sm shadow-[3px_3px_0px_#facc15]">
+                SETOR 03
+              </div>
+              <div>
+                <span className="text-xs font-mono font-bold uppercase tracking-widest text-blue-700 block">
+                  Geopolítica, Energia e Política Industrial
+                </span>
+                <h2 className="text-xl sm:text-2xl font-display font-bold text-zinc-950 uppercase">
+                  Análise Técnica do &ldquo;Viralatismo&rdquo; (Subordinação
+                  Externa vs. Soberania Nacional)
+                </h2>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <SourceBadge source="CGU" />
+              <SourceBadge source="MCTI" />
+              <SourceBadge source="MDIC" />
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            {SOVEREIGNTY_DATA.map((item) => {
+              const Icon =
+                item.icone === "fuel"
+                  ? Fuel
+                  : item.icone === "cpu"
+                  ? Cpu
+                  : Handshake;
+
+              return (
+                <div
+                  key={item.id}
+                  className="rounded-3xl urban-card p-6 sm:p-7 space-y-5 print-avoid-break"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-200 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2.5 rounded-xl bg-yellow-400 text-zinc-950 border-2 border-zinc-900">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-widest block">
+                          {item.codigoSetor}
+                        </span>
+                        <h3 className="text-lg font-display font-bold text-zinc-950 uppercase">
+                          {item.eixo}
+                        </h3>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {item.fontes.map((f) => (
+                        <SourceBadge key={f} source={f} />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Lado Subordinação Passiva (2019-2022) */}
+                    <div className="rounded-2xl bg-rose-50/40 border-l-4 border-l-rose-600 border border-rose-200 p-5 flex flex-col justify-between space-y-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold uppercase px-2.5 py-0.5 rounded bg-rose-100 text-rose-800 border border-rose-300">
+                            {item.subordinacao.periodo}
+                          </span>
+                          <span className="text-xs font-mono font-bold text-rose-700 uppercase">
+                            // Subordinação Passiva
+                          </span>
+                        </div>
+                        <h4 className="text-base font-display font-bold text-zinc-950 uppercase">
+                          {item.subordinacao.titulo}
+                        </h4>
+                        <ul className="space-y-2.5 text-xs sm:text-sm text-zinc-700">
+                          {item.subordinacao.pontos.map((ponto, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <span className="text-rose-600 font-bold mt-0.5">
+                                ■
+                              </span>
+                              <span className="leading-relaxed">{ponto}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="pt-3 border-t border-rose-200 text-xs text-rose-900 font-mono">
+                        <strong>Impacto Estrutural:</strong>{" "}
+                        {item.subordinacao.impactoCritico}
+                      </div>
+                    </div>
+
+                    {/* Lado Soberania Nacional (2003-2010 / 2023-2026) */}
+                    <div className="rounded-2xl bg-emerald-50/40 border-l-4 border-l-emerald-600 border border-emerald-200 p-5 flex flex-col justify-between space-y-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold uppercase px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+                            {item.soberania.periodo}
+                          </span>
+                          <span className="text-xs font-mono font-bold text-emerald-700 uppercase">
+                            // Soberania Nacional
+                          </span>
+                        </div>
+                        <h4 className="text-base font-display font-bold text-zinc-950 uppercase">
+                          {item.soberania.titulo}
+                        </h4>
+                        <ul className="space-y-2.5 text-xs sm:text-sm text-zinc-700">
+                          {item.soberania.pontos.map((ponto, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <span className="text-emerald-600 font-bold mt-0.5">
+                                ■
+                              </span>
+                              <span className="leading-relaxed">{ponto}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="pt-3 border-t border-emerald-200 text-xs text-emerald-900 font-mono">
+                        <strong>Resultado Estratégico:</strong>{" "}
+                        {item.soberania.impactoPositivo}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ===================================================================
+            MÓDULO 4: RAIO-X DO PARTIDO LIBERAL (PL) — ORÇAMENTO PÚBLICO E FICHA CRIMINAL
+        =================================================================== */}
+        <section
+          id="modulo-4"
+          className={`${
+            isSectionVisible("modulo4") ? "block" : "hidden"
+          } print:block space-y-6 print-page-break`}
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-zinc-900 pb-4">
+            <div className="flex items-center gap-3.5">
+              <div className="px-3 py-2 rounded-xl bg-rose-600 text-white border-2 border-zinc-900 font-mono font-extrabold text-sm shadow-[3px_3px_0px_#facc15]">
+                SETOR 04
+              </div>
+              <div>
+                <span className="text-xs font-mono font-bold uppercase tracking-widest text-rose-700 block">
+                  Auditoria Partidária, Orçamentária e Processual
+                </span>
+                <h2 className="text-xl sm:text-2xl font-display font-bold text-zinc-950 uppercase">
+                  Raio-X do Partido Liberal (PL) — Orçamento Público e Ficha
+                  Criminal + Nota de Equilíbrio Metodológico
+                </h2>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <SourceBadge source="STF" />
+              <SourceBadge source="STJ" />
+              <SourceBadge source="TSE" />
+            </div>
+          </div>
+
+          {/* Destaque: Máquina Pública e Fundo Eleitoral/Partidário do PL */}
+          <div className="rounded-3xl urban-card border-l-4 border-l-amber-500 p-6 sm:p-7 space-y-5 print-avoid-break">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <DollarSign className="w-5 h-5 text-amber-700" />
+                <h3 className="text-lg font-display font-bold text-zinc-950 uppercase">
+                  Máquina Pública: O Maior Absorvedor de Recursos Públicos
+                  Eleitorais do País
+                </h3>
+              </div>
+              <SourceBadge source="TSE" />
+            </div>
+
+            <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed">
+              O Partido Liberal (PL) consolidou a{" "}
+              <strong className="text-zinc-950">
+                maior bancada eleita na Câmara dos Deputados em outubro/2026
+                (121 deputados federais)
+              </strong>{" "}
+              e opera como o maior recebedor individual de dinheiro público
+              eleitoral e partidário do Brasil, tendo ainda sofrido punição
+              histórica do TSE por litigância de má-fé ao atacar as urnas sem
+              provas:
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="rounded-2xl bg-zinc-50 border border-zinc-200 p-4">
+                <div className="text-xs font-mono text-zinc-500">
+                  Bancada Câmara (Out/2026)
+                </div>
+                <div className="text-2xl font-mono font-extrabold text-zinc-950 mt-1">
+                  121 Deputados
+                </div>
+                <div className="text-xs text-zinc-600 mt-1">
+                  Maior bancada eleita na Câmara Federal
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-amber-50/70 border border-amber-300 p-4">
+                <div className="text-xs font-mono font-bold text-amber-800">
+                  Fundo Eleitoral (2024 e 2026)
+                </div>
+                <div className="text-xl font-mono font-extrabold text-amber-900 mt-1">
+                  R$ 886,8 mi → &gt;R$ 900 mi
+                </div>
+                <div className="text-xs text-zinc-600 mt-1">
+                  R$ 886,8 milhões em 2024 e mais de R$ 900 milhões em 2026
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-amber-50/70 border border-amber-300 p-4">
+                <div className="text-xs font-mono font-bold text-amber-800">
+                  Fundo Partidário Anual
+                </div>
+                <div className="text-2xl font-mono font-extrabold text-amber-900 mt-1">
+                  ~R$ 220 mi/ano
+                </div>
+                <div className="text-xs text-zinc-600 mt-1">
+                  Fluxo contínuo de recursos públicos para custeio da legenda
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-rose-50/70 border border-rose-300 p-4">
+                <div className="text-xs font-mono font-bold text-rose-800">
+                  Multa no TSE (Litigância de Má-fé)
+                </div>
+                <div className="text-2xl font-mono font-extrabold text-rose-700 mt-1">
+                  R$ 22,9 milhões
+                </div>
+                <div className="text-xs text-zinc-600 mt-1">
+                  Condenação por atacar as urnas eletrônicas sem qualquer prova
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Barra de Filtro das Fichas Jurídicas Individuais */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 print:hidden">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-zinc-700">
+              <Filter className="w-4 h-4 text-emerald-700" />
+              <span>
+                FILTRAR FICHAS JURÍDICAS ({filteredDossiers.length} DE{" "}
+                {JUDICIAL_DOSSIERS.length} EXIBIDAS):
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setDossierFilter("todos")}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
+                  dossierFilter === "todos"
+                    ? "bg-yellow-400 text-zinc-950 border-2 border-zinc-900 shadow-[2px_2px_0px_#18181b]"
+                    : "bg-white text-zinc-700 border border-zinc-300 hover:bg-zinc-100"
+                }`}
+              >
+                Todos os Dossiês (6)
+              </button>
+              <button
+                onClick={() => setDossierFilter("PL")}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
+                  dossierFilter === "PL"
+                    ? "bg-rose-600 text-white border-2 border-zinc-900"
+                    : "bg-white text-rose-700 border border-rose-300 hover:bg-rose-50"
+                }`}
+              >
+                Cúpula e Bancada do PL (5)
+              </button>
+              <button
+                onClick={() => setDossierFilter("metodologico")}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition cursor-pointer ${
+                  dossierFilter === "metodologico"
+                    ? "bg-blue-700 text-white border-2 border-zinc-900"
+                    : "bg-white text-blue-700 border border-blue-300 hover:bg-blue-50"
+                }`}
+              >
+                Nota de Equilíbrio Metodológico — Lula (1)
+              </button>
+            </div>
+          </div>
+
+          {/* Cards Detalhados das Fichas Jurídicas Individuais */}
+          <div className="grid grid-cols-1 gap-6">
+            {filteredDossiers.map((dossier, index) => {
+              const isMetodologico = dossier.severidade === "metodologico";
+              const borderCard = isMetodologico
+                ? "border-l-4 border-l-blue-600 border-zinc-300 bg-white"
+                : "border-l-4 border-l-rose-600 border-zinc-300 bg-white";
+
+              return (
+                <div
+                  key={dossier.id}
+                  className={`rounded-3xl border ${borderCard} p-6 sm:p-7 space-y-4 print-avoid-break transition-all duration-200 shadow-md`}
+                >
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-zinc-200 pb-4">
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span
+                          className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded border ${
+                            isMetodologico
+                              ? "bg-blue-100 text-blue-900 border-blue-300"
+                              : "bg-rose-100 text-rose-900 border-rose-300"
+                          }`}
+                        >
+                          {isMetodologico
+                            ? `6. NOTA DE EQUILÍBRIO E RIGOR METODOLÓGICO // ${dossier.protocolo}`
+                            : `FICHA JURÍDICA #0${index + 1} // ${dossier.protocolo}`}
+                        </span>
+                        {dossier.fontes.map((f) => (
+                          <SourceBadge key={f} source={f} />
+                        ))}
+                      </div>
+                      <h3 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-1 uppercase">
+                        {dossier.nome}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-zinc-600 font-mono">
+                        {dossier.cargo}
+                      </p>
+                    </div>
+
+                    {dossier.valoresEnvolvidos && (
+                      <div className="rounded-2xl bg-amber-50 border border-amber-300 px-4 py-2.5 text-xs font-mono font-semibold text-amber-900 shrink-0">
+                        <span className="text-zinc-500 block text-[10px] uppercase">
+                          Cifras Auditadas nos Autos:
+                        </span>
+                        {dossier.valoresEnvolvidos}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Badges de Status Processual */}
+                  <div className="flex flex-wrap gap-2">
+                    {dossier.statusCurtos.map((st) => (
+                      <span
+                        key={st}
+                        className={`text-xs font-mono font-semibold px-3 py-1 rounded-md border ${
+                          isMetodologico
+                            ? "bg-blue-50 text-blue-900 border-blue-200"
+                            : "bg-rose-50 text-rose-900 border-rose-200"
+                        }`}
+                      >
+                        {st}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Resumo Executivo */}
+                  <p className="text-sm text-zinc-800 font-medium leading-relaxed bg-zinc-50 p-4 rounded-2xl border border-zinc-200">
+                    {dossier.resumoExecutivo}
+                  </p>
+
+                  {/* Detalhamento Técnico dos Processos */}
+                  <div className="space-y-2.5 pt-1">
+                    <div className="text-xs font-mono uppercase text-zinc-600 font-bold">
+                      // Histórico Processual e Fundamentação nos Autos:
+                    </div>
+                    <ul className="space-y-2 text-xs sm:text-sm text-zinc-700">
+                      {dossier.detalhesProcessuais.map((detalhe, idx) => (
+                        <li
+                          key={idx}
+                          className="flex items-start gap-2.5 bg-zinc-50/80 p-3.5 rounded-2xl border border-zinc-200"
+                        >
+                          <span
+                            className={`font-mono font-bold mt-0.5 ${
+                              isMetodologico ? "text-blue-700" : "text-rose-600"
+                            }`}
+                          >
+                            0{idx + 1}.
+                          </span>
+                          <span className="leading-relaxed">{detalhe}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      </main>
+
+      {/* =====================================================================
+          RODAPÉ METODOLÓGICO E AUDITORIA DE FONTES OFICIAIS
+      ===================================================================== */}
+      <footer className="border-t-2 border-zinc-900 bg-white mt-12 py-10 print-avoid-break">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-5">
+            <div className="flex items-center gap-3">
+              <BandeiraBrasilUrbanEmblem className="w-11 h-8" />
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-emerald-700" />
+                <h3 className="text-base font-display font-bold text-zinc-950 uppercase tracking-wide">
+                  Nota Metodológica e Protocolo de Auditoria das Métricas
+                </h3>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {(Object.keys(SOURCE_STYLES) as SourceBadgeType[]).map((s) => (
+                <SourceBadge key={s} source={s} />
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-zinc-600 leading-relaxed">
+            <div className="space-y-2">
+              <h4 className="text-emerald-800 font-bold font-mono flex items-center gap-1.5 uppercase">
+                <Info className="w-4 h-4 text-emerald-600" />
+                1. Contas Nacionais, Trabalho e Desigualdade ([IBGE] / [DIEESE])
+              </h4>
+              <p>
+                As taxas de crescimento real do PIB e do PIB per capita provêm
+                do Sistema de Contas Nacionais Trimestrais e Anuais do IBGE. Os
+                dados de desocupação de 2003–2010 seguem a Pesquisa Mensal de
+                Emprego (PME/IBGE), vigente à época, enquanto os ciclos
+                2019–2022 e 2023–2025 utilizam a série histórica da PNAD
+                Contínua (IBGE). O Índice de Gini é calculado a partir da
+                PNAD/PNAD-C (rendimento domiciliar per capita), e o ganho real
+                do Salário Mínimo é deflacionado pelo INPC/IBGE conforme
+                metodologia técnica do DIEESE.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="text-amber-800 font-bold font-mono flex items-center gap-1.5 uppercase">
+                <Info className="w-4 h-4 text-amber-600" />
+                2. Estatísticas Fiscais, Monetárias e Ambientais ([BCB] / [TN] /
+                [INPE])
+              </h4>
+              <p>
+                A Dívida Bruta do Governo Geral (DBGG) segue a metodologia do
+                Banco Central do Brasil (conceito FMI/BCB em % do PIB), e o
+                Resultado Primário do Setor Público Consolidado e a Carga
+                Tributária Bruta (32,40% do PIB em 2025) provêm dos Boletins do
+                Tesouro Nacional e do BCB. As taxas anuais de desmatamento na
+                Amazônia Legal referem-se ao calendário oficial PRODES/INPE
+                (agosto a julho do ano subsequente), auditadas por
+                sensoriamento orbital.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="text-blue-800 font-bold font-mono flex items-center gap-1.5 uppercase">
+                <Info className="w-4 h-4 text-blue-600" />
+                3. Registros Processuais e Jurisprudência ([STF] / [STJ] /
+                [TSE])
+              </h4>
+              <p>
+                Os dados processuais e penais refletem acórdãos colegiados e
+                inquéritos públicos tramitando no Supremo Tribunal Federal (AP
+                470, Ações Penais da Trama Golpista de 2025, Condenação do
+                Orçamento Secreto em 17/03/2026, Inquérito Set/2026 Rel. Min.
+                Flávio Dino, HC 193.726 e HC 164.493), no Superior Tribunal de
+                Justiça (RHC sobre anulação de quebras de sigilo por erro de
+                foro na Alerj) e no Tribunal Superior Eleitoral (Ações de
+                Investigação Judicial Eleitoral e prestação de contas do
+                FEFC/Fundo Partidário).
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono text-zinc-500">
+            <span>
+              Observatório Quantitativo da República (2003–2026) • Arquitetura
+              Urbana Cívica Brasileira (Tema Claro)
+            </span>
+            <span>
+              Documento formatado para exportação integral via @media print
+              (PDF)
+            </span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}

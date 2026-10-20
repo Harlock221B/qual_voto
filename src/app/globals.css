@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
+
+  body {
+    background-color: #f7f8f6;
+    color: #18181b;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    @apply antialiased selection:bg-yellow-300 selection:text-zinc-950;
+    background-image:
+      radial-gradient(circle at 12% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 38%),
+      radial-gradient(circle at 88% 8%, rgba(250, 204, 21, 0.12) 0%, transparent 36%),
+      radial-gradient(circle at 50% 85%, rgba(37, 99, 235, 0.06) 0%, transparent 45%),
+      linear-gradient(180deg, #f7f8f6 0%, #f1f4f0 50%, #f7f8f6 100%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display), system-ui, sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono), monospace;
+  }
+}
+
+/* Malha Urbana de Concreto Claro / Papel Técnico Arquitetônico */
+.urban-concrete-bg {
+  background-size: 36px 36px;
+  background-image:
+    linear-gradient(to right, rgba(24, 24, 27, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(24, 24, 27, 0.04) 1px, transparent 1px);
+}
+
+/* Faixas de Sinalização Urbana (Estilo Vias / Alerta Técnico em Tema Claro) */
+.urban-Caution-stripe {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(234, 179, 8, 0.25),
+    rgba(234, 179, 8, 0.25) 8px,
+    rgba(254, 249, 195, 0.7) 8px,
+    rgba(254, 249, 195, 0.7) 16px
+  );
+}
+
+.urban-danger-stripe {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(244, 63, 94, 0.22),
+    rgba(244, 63, 94, 0.22) 8px,
+    rgba(255, 228, 230, 0.75) 8px,
+    rgba(255, 228, 230, 0.75) 16px
+  );
+}
+
+/* Cards Urbanos Claros (Brutalismo Arquitetônico + Curvas Orgânicas) */
+.urban-card {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1.5px solid #e4e4e7;
+  box-shadow: 0 8px 24px -8px rgba(24, 24, 27, 0.07), 4px 4px 0px 0px rgba(24, 24, 27, 0.08);
+}
+
+.urban-card-emerald {
+  background: #ffffff;
+  border: 1.5px solid rgba(5, 150, 105, 0.45);
+  box-shadow: 4px 4px 0px 0px rgba(16, 185, 129, 0.2);
+}
+
+.urban-card-yellow {
+  background: #ffffff;
+  border: 1.5px solid rgba(217, 119, 6, 0.45);
+  box-shadow: 4px 4px 0px 0px rgba(234, 179, 8, 0.22);
+}
+
+.urban-card-rose {
+  background: #ffffff;
+  border: 1.5px solid rgba(225, 29, 72, 0.45);
+  box-shadow: 4px 4px 0px 0px rgba(244, 63, 94, 0.2);
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #18181b !important;
+  }
+
+  .print-avoid-break {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-page-break {
+    break-before: page;
+    page-break-before: always;
+  }
+}
