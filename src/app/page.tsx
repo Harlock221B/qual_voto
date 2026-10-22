@@ -1377,9 +1377,11 @@ export default function ObservatorioRepublicaPage() {
                   • ARQUITETURA DE DADOS PÚBLICOS
                 </span>
               </div>
-              <h1 className="text-sm sm:text-xl md:text-2xl font-display font-bold tracking-tight text-zinc-950 uppercase leading-tight truncate sm:whitespace-normal">
-                Observatório Quantitativo da República{" "}
-                <span className="text-emerald-700 underline decoration-yellow-400 decoration-2 sm:decoration-4 underline-offset-2 sm:underline-offset-4">
+              <h1 className="text-sm sm:text-xl md:text-2xl font-display font-bold tracking-tight text-zinc-950 uppercase leading-tight">
+                <span className="block truncate sm:whitespace-normal">
+                  Observatório Quantitativo da República
+                </span>
+                <span className="block text-xs sm:text-base md:text-lg text-emerald-700 underline decoration-yellow-400 decoration-2 sm:decoration-4 underline-offset-2 sm:underline-offset-4 mt-0.5">
                   (2003–2026)
                 </span>
               </h1>
@@ -1437,7 +1439,8 @@ export default function ObservatorioRepublicaPage() {
                   REPÚBLICA FEDERATIVA DO BRASIL • RELATÓRIO TÉCNICO INTEGRAL AUDITADO
                 </div>
                 <h1 className="text-xl font-display font-bold text-zinc-950 uppercase leading-tight">
-                  Observatório Quantitativo da República (2003–2026)
+                  <span className="block">Observatório Quantitativo da República</span>
+                  <span className="block text-sm text-emerald-700 mt-0.5">(2003–2026)</span>
                 </h1>
                 <p className="text-[11px] font-mono text-zinc-600">
                   Comparação Empírica: Luiz Inácio Lula da Silva (2003–2010 / 2023–2026) vs. Jair Bolsonaro / Flávio Bolsonaro (2019–2022 / Plano 2026)
