@@ -30,6 +30,9 @@ import {
   RotateCcw,
   Terminal,
   Activity,
+  ExternalLink,
+  Instagram,
+  Share2,
 } from "lucide-react";
 
 // ============================================================================
@@ -47,7 +50,9 @@ type SourceBadgeType =
   | "DIEESE"
   | "CGU"
   | "MCTI"
-  | "MDIC";
+  | "MDIC"
+  | "LUPA"
+  | "AOSFATOS";
 
 type TabId =
   | "todos"
@@ -55,6 +60,7 @@ type TabId =
   | "modulo2"
   | "modulo3"
   | "modulo4"
+  | "modulo5"
   | "simulador";
 
 interface GdpCycle {
@@ -525,90 +531,421 @@ const JUDICIAL_DOSSIERS: JudicialDossier[] = [
 ];
 
 // ============================================================================
+// DADOS DO MÓDULO 5: CREDIBILIDADE, CHECAGEM DOS DEBATES E ÚLTIMAS NOTÍCIAS (OUT/2026)
+// ============================================================================
+
+interface DebateFactCheckItem {
+  id: string;
+  protocolo: string;
+  candidato: "Lula (PT)" | "Flávio Bolsonaro (PL)";
+  eventoData: string;
+  declaracao: string;
+  veredito: "FALSO" | "ENGANOSO" | "IMPRECISO" | "VERDADEIRO";
+  resumoVeredito: string;
+  auditoriaTecnica: string;
+  fontes: SourceBadgeType[];
+}
+
+interface CandidateCredibilityProfile {
+  id: string;
+  candidato: string;
+  partido: string;
+  cargoAtual: string;
+  resultado1TurnoTSE: string;
+  votos1TurnoTSE: string;
+  indicePrecisaoDebates: number;
+  indicePrecisaoLabel: string;
+  placarChecagem: {
+    verdadeiro: number;
+    impreciso: number;
+    falsoEnganoso: number;
+  };
+  pilaresCredibilidade: string[];
+  passivosCredibilidade: string[];
+  fontes: SourceBadgeType[];
+}
+
+interface ElectionNewsItem {
+  id: string;
+  data: string;
+  categoria: string;
+  manchete: string;
+  resumo: string;
+  impactoEleitoral: string;
+  destaqueCor: "emerald" | "amber" | "blue" | "rose";
+  fontes: SourceBadgeType[];
+}
+
+const CANDIDATE_CREDIBILITY: CandidateCredibilityProfile[] = [
+  {
+    id: "cred-lula",
+    candidato: "Luiz Inácio Lula da Silva",
+    partido: "PT • Coligação Brasil da Esperança",
+    cargoAtual: "Presidente da República (Candidato à Reeleição)",
+    resultado1TurnoTSE: "45,16% dos votos válidos",
+    votos1TurnoTSE: "53.876.617 votos (TSE)",
+    indicePrecisaoDebates: 74,
+    indicePrecisaoLabel: "74% de Aderência a Séries Oficiais (Com Improvisos Imprecisos)",
+    placarChecagem: {
+      verdadeiro: 6,
+      impreciso: 3,
+      falsoEnganoso: 1,
+    },
+    pilaresCredibilidade: [
+      "Lastro Empírico Auditável: Os indicadores centrais citados na campanha (desemprego na mínima histórica de 5,6%, Índice de Gini em 0,491, ganho real do salário mínimo e menor desmatamento desde 1988 no PRODES) são integralmente confirmados pelo IBGE e pelo INPE.",
+      "Defesa de Checagem em Tempo Real: A campanha apoiou formalmente a petição pública com mais de 1 milhão de assinaturas pela implementação de fact-checking ao vivo nos debates televisivos do 2º turno.",
+      "Previsibilidade Institucional e Diplomática: Cumprimento integral das regras do calendário eleitoral, respeito às decisões do STF/TSE e interlocução ativa com EUA, União Europeia e BRICS.",
+    ],
+    passivosCredibilidade: [
+      "Promessa de 'Déficit Zero' Descumprida: Apesar do compromisso firmado pelo Ministério da Fazenda em 2023, o governo entregou déficits primários consecutivos (-2,29% em 2023; -0,40% em 2024; -0,43% em 2025) e elevou a Dívida Bruta (DBGG) em +7,0 p.p. (78,7% do PIB).",
+      "Exageros Retóricos de Improviso nos Debates: No Debate da Band (18/10/2026), afirmou falsamente que o PIB nunca havia crescido acima de 3% entre 2011 e 2022 (ignorando os +4,0% de 2011 e o rebote de +4,8% em 2021) e inflou de cabeça a proporção de cestas básicas compradas pelo salário mínimo.",
+    ],
+    fontes: ["IBGE", "BCB", "TN", "LUPA", "AOSFATOS", "TSE"],
+  },
+  {
+    id: "cred-flavio",
+    candidato: "Flávio Bolsonaro",
+    partido: "PL • Partido Liberal",
+    cargoAtual: "Senador da República (RJ) e Candidato a Presidente",
+    resultado1TurnoTSE: "47,03% dos votos válidos",
+    votos1TurnoTSE: "56.104.268 votos (TSE)",
+    indicePrecisaoDebates: 32,
+    indicePrecisaoLabel: "32% de Aderência Factual (Uso Recorrente de Peças Desmentidas)",
+    placarChecagem: {
+      verdadeiro: 2,
+      impreciso: 3,
+      falsoEnganoso: 5,
+    },
+    pilaresCredibilidade: [
+      "Tração Eleitoral e Coerência Ideológica: Venceu o 1º turno com 47,03% dos votos válidos (vantagem de 2,22 milhões de votos sobre Lula), mantendo discurso coeso de oposição fiscal ao governo, endurecimento penal e defesa da anistia a Jair Bolsonaro.",
+      "Capacidade de Mobilização Digital: Lidera o engajamento orgânico nas redes e consolidou a transferência de capital político do bolsonarismo em torno de sua candidatura em 2026.",
+    ],
+    passivosCredibilidade: [
+      "Repetição de Desinformação Desmentida nos Debates: No Debate da Band (18/10/2026), insistiu na afirmação falsa de que Lula e Janja teriam gasto 'R$ 7 bilhões em viagens' (valor que corresponde a todas as diárias e passagens de centenas de milhares de servidores, policiais e militares de todo o Estado brasileiro) e distorceu regras do Código Penal (Art. 75).",
+      "Baixa Entrega Legislativa vs. Discurso Antissistema: Teve 0 projetos de autoria individual sancionados como lei em quase 8 anos de Senado, enquanto seu partido (PL) absorveu mais de R$ 900 milhões de Fundo Eleitoral em 2026.",
+      "Passivo Investigativo Ativo no STF: Responde ao inquérito aberto em set/2026 no STF (Rel. Min. Flávio Dino) sobre negociação de R$ 134 milhões no caso Banco Master / Filme Dark Horse (com R$ 61 milhões enviados a fundo nos EUA), além de ter tido o caso das Rachadinhas (R$ 6,1 mi) arquivado apenas por anulação formal de foro.",
+    ],
+    fontes: ["TSE", "STF", "LUPA", "AOSFATOS", "CGU"],
+  },
+];
+
+const DEBATE_FACT_CHECKS: DebateFactCheckItem[] = [
+  {
+    id: "fc-1",
+    protocolo: "CHECAGEM // BAND-01",
+    candidato: "Flávio Bolsonaro (PL)",
+    eventoData: "Debate da Band (2º Turno) — 18/10/2026",
+    declaracao:
+      "“O Lula gastou R$ 7 bilhões do dinheiro do povo brasileiro em viagens internacionais com a primeira-dama Janja.”",
+    veredito: "FALSO",
+    resumoVeredito:
+      "Mentira recorrente: O valor de R$ 7 bilhões é o gasto global de toda a Administração Federal (militares, PF, Ibama e servidores), não do casal presidencial.",
+    auditoriaTecnica:
+      "Auditado por Agência Lupa, Aos Fatos e Estadão Verifica com base no Portal da Transparência (CGU): O montante citado soma todas as diárias e passagens aéreas/terrestres pagas entre 2023 e 2026 a centenas de milhares de servidores públicos civis e militares em missões oficiais dentro e fora do Brasil (incluindo operações da Polícia Federal, Forças Armadas e fiscalização ambiental).",
+    fontes: ["LUPA", "AOSFATOS", "CGU"],
+  },
+  {
+    id: "fc-2",
+    protocolo: "CHECAGEM // BAND-02",
+    candidato: "Flávio Bolsonaro (PL)",
+    eventoData: "Debate da Band (2º Turno) — 18/10/2026",
+    declaracao:
+      "“O governo Lula ficou de braços cruzados e inerte diante do tarifaço dos Estados Unidos e não defendeu os produtos brasileiros.”",
+    veredito: "FALSO",
+    resumoVeredito:
+      "Falso segundo registros oficiais do Itamaraty e do MDIC: houve dezenas de rodadas diplomáticas e reunião bilateral na Casa Branca.",
+    auditoriaTecnica:
+      "Dados oficiais do Ministério das Relações Exteriores e do MDIC comprovam que o governo brasileiro realizou dezenas de reuniões técnicas com o USTR e o Departamento de Comércio dos EUA, incluindo encontro presencial entre Lula e Donald Trump na Casa Branca para negociar cotas tarifárias, além da abertura de mais de 300 novos mercados externos para compensar barreiras.",
+    fontes: ["LUPA", "MDIC"],
+  },
+  {
+    id: "fc-3",
+    protocolo: "CHECAGEM // BAND-03",
+    candidato: "Lula (PT)",
+    eventoData: "Debate da Band (2º Turno) — 18/10/2026",
+    declaracao:
+      "“Desde que eu deixei a Presidência em 2010, o PIB brasileiro nunca mais cresceu acima de 3% até eu voltar ao governo em 2023.”",
+    veredito: "FALSO",
+    resumoVeredito:
+      "Falso segundo a série histórica do IBGE: o PIB superou 3% em 2011 (+4,0%), em 2013 (+3,0%) e em 2021 (+4,8%).",
+    auditoriaTecnica:
+      "De acordo com o Sistema de Contas Nacionais do IBGE, a economia brasileira cresceu +4,0% em 2011 e +3,0% em 2013 (durante o primeiro mandato de Dilma Rousseff) e registrou alta de +4,8% em 2021 (sob Jair Bolsonaro, em recuperação estatística após a queda de -3,3% na pandemia de 2020). Na média acumulada dos ciclos, porém, Lula detém a maior taxa (+4,0% a.a. em 2003–2010 e +3,0% a.a. em 2023–2025, contra +1,4% a.a. de Bolsonaro).",
+    fontes: ["LUPA", "AOSFATOS", "IBGE"],
+  },
+  {
+    id: "fc-4",
+    protocolo: "CHECAGEM // BAND-04",
+    candidato: "Flávio Bolsonaro (PL)",
+    eventoData: "Debate da Band (2º Turno) — 18/10/2026",
+    declaracao:
+      "“Com a aprovação da nossa lei, líderes de facções criminosas vão ficar obrigatoriamente 80 anos presos na cadeia.”",
+    veredito: "ENGANOSO",
+    resumoVeredito:
+      "Enganoso: O artigo 75 do Código Penal brasileiro limita o cumprimento efetivo máximo de prisão a 40 anos no país.",
+    auditoriaTecnica:
+      "Embora a alteração legislativa permita dobrar penas na dosimetria da sentença (podendo a condenação somar 80 anos no papel), o Art. 75 do Código Penal (alterado pelo próprio Pacote Anticrime de 2019) fixa que o tempo de cumprimento das penas privativas de liberdade não pode ser superior a 40 anos no Brasil.",
+    fontes: ["LUPA", "STF"],
+  },
+  {
+    id: "fc-5",
+    protocolo: "CHECAGEM // BAND-05",
+    candidato: "Flávio Bolsonaro (PL)",
+    eventoData: "Debate da Band (2º Turno) — 18/10/2026",
+    declaracao:
+      "“As ações do governo federal na segurança pública não tiveram nenhum efeito prático na redução do roubo de celulares.”",
+    veredito: "ENGANOSO",
+    resumoVeredito:
+      "Enganoso: O Anuário Brasileiro de Segurança Pública registrou queda consistente nos roubos de celular com o programa Celular Seguro.",
+    auditoriaTecnica:
+      "Levantamento do Fórum Brasileiro de Segurança Pública e relatórios do MJSP apontam queda expressiva nas ocorrências de roubo e furto de aparelhos móveis nas capitais após a integração do aplicativo federal Celular Seguro com a Anatel, operadoras de telefonia e instituições financeiras da Febraban.",
+    fontes: ["AOSFATOS", "LUPA"],
+  },
+  {
+    id: "fc-6",
+    protocolo: "CHECAGEM // BAND-06",
+    candidato: "Lula (PT)",
+    eventoData: "Debate da Band (2º Turno) — 18/10/2026",
+    declaracao:
+      "“Nós derrubamos a inflação de alimentos pela metade e hoje o salário mínimo compra o dobro de cestas básicas do governo passado.”",
+    veredito: "IMPRECISO",
+    resumoVeredito:
+      "Impreciso com fundo de verdade: A inflação de alimentos caiu e o poder de compra subiu, mas não na proporção do 'dobro'.",
+    auditoriaTecnica:
+      "Segundo o IPCA/IBGE e a Pesquisa Nacional da Cesta Básica de Alimentos do DIEESE, a inflação acumulada de alimentos e bebidas em Lula III (2023–2025) foi de fato inferior à metade da registrada no ciclo Bolsonaro (2019–2022, quando alimentos subiram mais de 40%), e o salário mínimo teve ganho real de +8,8%, mas o poder de compra em cestas básicas cresceu cerca de 18% a 22%, e não 100% ('o dobro').",
+    fontes: ["AOSFATOS", "DIEESE", "IBGE"],
+  },
+  {
+    id: "fc-7",
+    protocolo: "CHECAGEM // BAND-07",
+    candidato: "Lula (PT)",
+    eventoData: "Debate da Band (2º Turno) — 18/10/2026",
+    declaracao:
+      "“Entregamos a menor taxa de desemprego da série histórica do IBGE (5,6%) e o menor desmatamento na Amazônia desde 1988.”",
+    veredito: "VERDADEIRO",
+    resumoVeredito:
+      "Verdadeiro: Confirmado integralmente pelas séries históricas oficiais da PNAD Contínua (IBGE) e do sistema PRODES (INPE).",
+    auditoriaTecnica:
+      "A PNAD Contínua do IBGE confirma que a taxa de desocupação atingiu 5,6% em 2025 (menor marca desde o início da série em 2012), e o monitoramento orbital PRODES/INPE registrou 3.335 km² de desmatamento na Amazônia Legal em 2026 (queda acumulada de -71,2% em Lula III e menor valor desde o início da medição em 1988).",
+    fontes: ["IBGE", "INPE", "LUPA"],
+  },
+  {
+    id: "fc-8",
+    protocolo: "CHECAGEM // BAND-08",
+    candidato: "Flávio Bolsonaro (PL)",
+    eventoData: "Debate da Band (2º Turno) — 18/10/2026",
+    declaracao:
+      "“O governo Lula aumentou a dívida pública e bateu recorde de arrecadação e carga tributária sobre o setor produtivo em 2025.”",
+    veredito: "VERDADEIRO",
+    resumoVeredito:
+      "Verdadeiro: A Dívida Bruta (DBGG) subiu +7,0 p.p. (para 78,7% do PIB) e a Carga Tributária Bruta atingiu recorde de 32,40% do PIB em 2025.",
+    auditoriaTecnica:
+      "Os boletins fiscais do Banco Central e da Secretaria do Tesouro Nacional confirmam que, entre dezembro de 2022 e dezembro de 2025, a DBGG avançou de 71,7% para 78,7% do PIB, enquanto a Carga Tributária Bruta do Governo Geral alcançou 32,40% do PIB em 2025, o maior patamar da série histórica recente.",
+    fontes: ["BCB", "TN", "AOSFATOS"],
+  },
+];
+
+const OCTOBER_2026_NEWS: ElectionNewsItem[] = [
+  {
+    id: "news-1",
+    data: "22 OUT 2026 • PESQUISAS DO 2º TURNO",
+    categoria: "EMPATE TÉCNICO EXTREMO",
+    manchete:
+      "Quaest, PoderData e Indexa apontam empate técnico absoluto a 3 dias da votação (25/10)",
+    resumo:
+      "As rodadas divulgadas entre 21 e 22 de outubro de 2026 mostram a disputa mais acirrada desde 1989: na Quaest/Globo, Flávio Bolsonaro tem 45% e Lula 44% dos votos totais (~50,5% a 49,4% nos válidos, margem de 2 p.p.). No PoderData (22/10), o placar é de 51% a 49% nos válidos (49% a 48% nos totais, margem de 1,6 p.p.), e na Indexa/Broadcast é de 50,6% a 49,4%.",
+    impactoEleitoral:
+      "Com cerca de 90% do eleitorado já decidido segundo a Quaest, os ~5% a 8% de eleitores indecisos ou que cogitam voto branco/nulo decidirão matematicamente a Presidência da República no domingo (25/10).",
+    destaqueCor: "amber",
+    fontes: ["TSE", "LUPA"],
+  },
+  {
+    id: "news-2",
+    data: "22 OUT 2026 • MOBILIZAÇÃO CÍVICA",
+    categoria: "FACT-CHECKING AO VIVO",
+    manchete:
+      "Petição por checagem de fatos em tempo real no Debate da Globo (23/10) ultrapassa 1 milhão de assinaturas",
+    resumo:
+      "Após o alto volume de números falsos ou distorcidos no debate da Band (18/10), um abaixo-assinado nacional superou 1 milhão de subscrições cobrando verificação factual ao vivo no último debate presidencial desta sexta-feira (23/10, às 21h20), mediado por César Tralli nos Estúdios Globo.",
+    impactoEleitoral:
+      "A pressão pública por checagem ao vivo reflete o cansaço do eleitor moderado com a guerra de desinformação e eleva o peso de dossiês baseados em dados primários oficiais.",
+    destaqueCor: "emerald",
+    fontes: ["LUPA", "AOSFATOS"],
+  },
+  {
+    id: "news-3",
+    data: "18–22 OUT 2026 • PAUTAS DECISIVAS",
+    categoria: "ECONOMIA, SEGURANÇA & STF",
+    manchete:
+      "Fim da Escala 6x1, PEC da Segurança Pública e Inquérito do Banco Master dominam a reta final",
+    resumo:
+      "Nos últimos dias de campanha, Lula concentrou foco na defesa do fim da escala de trabalho 6x1, na isenção de IR e na queda do desemprego (5,6%), enquanto Flávio Bolsonaro apostou na pauta de segurança pública, mas precisou responder na imprensa e nos debates sobre o avanço do inquérito no STF (Caso Banco Master / Filme Dark Horse — R$ 134 milhões).",
+    impactoEleitoral:
+      "O contraste final opõe a agenda trabalhista e social de Lula (com o desafio fiscal de 2027) à pauta conservadora de Flávio Bolsonaro (pressionada pelas condenações do pai e de deputados do PL no STF).",
+    destaqueCor: "blue",
+    fontes: ["STF", "IBGE", "DIEESE"],
+  },
+  {
+    id: "news-4",
+    data: "04 OUT 2026 • RESULTADO OFICIAL 1º TURNO",
+    categoria: "APURAÇÃO OFICIAL TSE",
+    manchete:
+      "1º Turno terminou com diferença de apenas 1,87 p.p. entre Flávio Bolsonaro (47,03%) e Lula (45,16%)",
+    resumo:
+      "Segundo a totalização oficial do Tribunal Superior Eleitoral (119.300.788 votos válidos), Flávio Bolsonaro (PL) recebeu 56.104.268 votos (47,03%) e Luiz Inácio Lula da Silva (PT) obteve 53.876.617 votos (45,16%). Votos brancos somaram 2.300.781 (1,84%) e nulos 3.674.149 (2,93%), além da renovação da Câmara com o PL elegendo a maior bancada (121 deputados).",
+    impactoEleitoral:
+      "Os 5,97 milhões de brasileiros que votaram branco/nulo e os eleitores da 3ª via tornaram-se o público-alvo central das duas campanhas para o 2º turno em 25 de outubro.",
+    destaqueCor: "rose",
+    fontes: ["TSE"],
+  },
+];
+
+// ============================================================================
 // COMPONENTES AUXILIARES DE UI (ESTILO CARIMBO TÉCNICO URBANO EM TEMA BRANCO)
 // ============================================================================
 
 const SOURCE_STYLES: Record<
   SourceBadgeType,
-  { bg: string; text: string; border: string; nomeCompleto: string }
+  {
+    bg: string;
+    text: string;
+    border: string;
+    nomeCompleto: string;
+    url: string;
+    descricao: string;
+  }
 > = {
   IBGE: {
-    bg: "bg-blue-50",
+    bg: "bg-blue-50 hover:bg-blue-100",
     text: "text-blue-800",
     border: "border-blue-300",
     nomeCompleto: "Instituto Brasileiro de Geografia e Estatística",
+    url: "https://www.ibge.gov.br/estatisticas/economicas/contas-nacionais.html",
+    descricao:
+      "Sistema de Contas Nacionais (PIB real e per capita), PME, PNAD Contínua (Desocupação e Índice de Gini) e INPC.",
   },
   BCB: {
-    bg: "bg-amber-50",
+    bg: "bg-amber-50 hover:bg-amber-100",
     text: "text-amber-900",
     border: "border-amber-300",
-    nomeCompleto: "Banco Central do Brasil",
+    nomeCompleto: "Banco Central do Brasil (SGS / Estatísticas Fiscais)",
+    url: "https://www.bcb.gov.br/estatisticas/estatisticasfiscais",
+    descricao:
+      "Dívida Bruta do Governo Geral (DBGG em % do PIB), Taxa Selic, Juro Real ex-ante/ex-post e Resultado Nominal.",
   },
   TN: {
-    bg: "bg-yellow-50",
+    bg: "bg-yellow-50 hover:bg-yellow-100",
     text: "text-yellow-900",
     border: "border-yellow-400",
-    nomeCompleto: "Secretaria do Tesouro Nacional",
+    nomeCompleto: "Secretaria do Tesouro Nacional (Transparente)",
+    url: "https://www.tesourotransparente.gov.br",
+    descricao:
+      "Resultado Primário do Governo Central, Carga Tributária Bruta (32,40% do PIB em 2025) e Boletins Fiscais.",
   },
   INPE: {
-    bg: "bg-emerald-50",
+    bg: "bg-emerald-50 hover:bg-emerald-100",
     text: "text-emerald-800",
     border: "border-emerald-300",
-    nomeCompleto: "Instituto Nacional de Pesquisas Espaciais (PRODES/DETER)",
+    nomeCompleto: "Instituto Nacional de Pesquisas Espaciais (TerraBrasilis / PRODES)",
+    url: "https://terrabrasilis.dpi.inpe.br",
+    descricao:
+      "Monitoramento orbital da Amazônia Legal (série histórica PRODES 1988–2026 e alertas DETER em tempo real).",
   },
   STF: {
-    bg: "bg-rose-50",
+    bg: "bg-rose-50 hover:bg-rose-100",
     text: "text-rose-800",
     border: "border-rose-300",
-    nomeCompleto: "Supremo Tribunal Federal",
+    nomeCompleto: "Supremo Tribunal Federal (Portal de Jurisprudência e Processos)",
+    url: "https://portal.stf.jus.br",
+    descricao:
+      "Acórdãos da 1ª Turma e Plenário (AP 470, Trama Golpista 2025, Orçamento Secreto 2026, Inquérito Banco Master, HC 193.726 e HC 164.493).",
   },
   STJ: {
-    bg: "bg-indigo-50",
+    bg: "bg-indigo-50 hover:bg-indigo-100",
     text: "text-indigo-800",
     border: "border-indigo-300",
-    nomeCompleto: "Superior Tribunal de Justiça",
+    nomeCompleto: "Superior Tribunal de Justiça (Consulta Processual)",
+    url: "https://www.stj.jus.br",
+    descricao:
+      "Julgamentos da 5ª Turma (RHC sobre anulação de quebras de sigilo bancário/fiscal por incompetência de foro na Alerj).",
   },
   TSE: {
-    bg: "bg-sky-50",
+    bg: "bg-sky-50 hover:bg-sky-100",
     text: "text-sky-800",
     border: "border-sky-300",
-    nomeCompleto: "Tribunal Superior Eleitoral",
+    nomeCompleto: "Tribunal Superior Eleitoral (Resultados e DivulgaCandContas)",
+    url: "https://resultados.tse.jus.br",
+    descricao:
+      "Apuração oficial do 1º e 2º turno de 2026, Fundo Eleitoral (FEFC), Fundo Partidário, AIJEs de inelegibilidade e multas.",
   },
   DIEESE: {
-    bg: "bg-teal-50",
+    bg: "bg-teal-50 hover:bg-teal-100",
     text: "text-teal-800",
     border: "border-teal-300",
     nomeCompleto: "Departamento Intersindical de Estatística e Estudos Socioeconômicos",
+    url: "https://www.dieese.org.br",
+    descricao:
+      "Série histórica do Salário Mínimo Nominal vs. Necessário, Pesquisa da Cesta Básica e ganho real pelo INPC.",
   },
   CGU: {
-    bg: "bg-orange-50",
+    bg: "bg-orange-50 hover:bg-orange-100",
     text: "text-orange-800",
     border: "border-orange-300",
-    nomeCompleto: "Controladoria-Geral da União",
+    nomeCompleto: "Controladoria-Geral da União / Portal da Transparência",
+    url: "https://portaldatransparencia.gov.br",
+    descricao:
+      "Auditorias de desinvestimentos (Refinaria RLAM), execução de emendas parlamentares e gastos globais com diárias e passagens.",
   },
   MCTI: {
-    bg: "bg-blue-50",
+    bg: "bg-blue-50 hover:bg-blue-100",
     text: "text-blue-900",
     border: "border-blue-300",
     nomeCompleto: "Ministério da Ciência, Tecnologia e Inovação / FNDCT",
+    url: "https://www.gov.br/mcti/pt-br",
+    descricao:
+      "Execução orçamentária do FNDCT, bolsas científicas CNPq e reversão da liquidação da estatal de semicondutores CEITEC.",
   },
   MDIC: {
-    bg: "bg-emerald-50",
+    bg: "bg-emerald-50 hover:bg-emerald-100",
     text: "text-emerald-900",
     border: "border-emerald-300",
-    nomeCompleto: "Ministério do Desenvolvimento, Indústria, Comércio e Serviços",
+    nomeCompleto: "Ministério do Desenvolvimento, Indústria, Comércio e Serviços (ComexStat)",
+    url: "https://www.gov.br/mdic/pt-br",
+    descricao:
+      "Balança comercial, negociações tarifárias internacionais, Nova Indústria Brasil e abertura de +300 mercados externos.",
+  },
+  LUPA: {
+    bg: "bg-purple-50 hover:bg-purple-100",
+    text: "text-purple-900",
+    border: "border-purple-300",
+    nomeCompleto: "Agência Lupa (Rede Internacional de Fact-Checking — IFCN)",
+    url: "https://lupa.uol.com.br",
+    descricao:
+      "Checagem independente em tempo real dos debates presidenciais de 2026 (Band, Globo e sabatinas) e verificação de dados públicos.",
+  },
+  AOSFATOS: {
+    bg: "bg-fuchsia-50 hover:bg-fuchsia-100",
+    text: "text-fuchsia-900",
+    border: "border-fuchsia-300",
+    nomeCompleto: "Aos Fatos (Agência Signatária do Código de Princípios da IFCN)",
+    url: "https://www.aosfatos.org",
+    descricao:
+      "Auditoria factual de discursos, programas de governo e declarações dos candidatos no 1º e 2º turno das Eleições 2026.",
   },
 };
 
 function SourceBadge({ source }: { source: SourceBadgeType }) {
   const style = SOURCE_STYLES[source];
   return (
-    <span
-      title={`Fonte Oficial: ${style.nomeCompleto}`}
-      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-bold tracking-wider border ${style.bg} ${style.text} ${style.border}`}
+    <a
+      href={style.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={`Fonte Oficial Auditada: ${style.nomeCompleto}\n${style.descricao}\nClique para abrir o portal oficial (${style.url})`}
+      className={`group inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-bold tracking-wider border ${style.bg} ${style.text} ${style.border} transition-all duration-150 hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 cursor-pointer`}
     >
-      [{source}]
-    </span>
+      <span>[{source}]</span>
+      <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity print:hidden shrink-0" />
+    </a>
   );
 }
 
@@ -770,6 +1107,9 @@ export default function ObservatorioRepublicaPage() {
   const [dossierFilter, setDossierFilter] = useState<
     "todos" | "PL" | "metodologico"
   >("todos");
+  const [factCheckFilter, setFactCheckFilter] = useState<
+    "todos" | "FALSO" | "ENGANOSO" | "VERDADEIRO"
+  >("todos");
 
   // Estados da Calculadora / Simulador da Equação da Dívida Pública
   // Fórmula: Δd_t = ((r - g) / (1 + g)) * d_{t-1} - p_t
@@ -849,6 +1189,16 @@ export default function ObservatorioRepublicaPage() {
     });
   }, [dossierFilter, searchQuery]);
 
+  const filteredFactChecks = useMemo(() => {
+    return DEBATE_FACT_CHECKS.filter((item) => {
+      if (factCheckFilter === "todos") return true;
+      if (factCheckFilter === "FALSO") return item.veredito === "FALSO";
+      if (factCheckFilter === "ENGANOSO")
+        return item.veredito === "ENGANOSO" || item.veredito === "IMPRECISO";
+      return item.veredito === "VERDADEIRO";
+    });
+  }, [factCheckFilter]);
+
   const handleNavigateTab = (tabId: TabId) => {
     setActiveTab(tabId);
     if (typeof window !== "undefined") {
@@ -863,6 +1213,7 @@ export default function ObservatorioRepublicaPage() {
         simulador: "simulador-divida",
         modulo3: "modulo-3",
         modulo4: "modulo-4",
+        modulo5: "modulo-5",
       };
 
       const targetId = idMap[tabId];
@@ -882,6 +1233,7 @@ export default function ObservatorioRepublicaPage() {
       { id: "simulador-divida", tab: "simulador" },
       { id: "modulo-3", tab: "modulo3" },
       { id: "modulo-4", tab: "modulo4" },
+      { id: "modulo-5", tab: "modulo5" },
     ];
 
     const handleScroll = () => {
@@ -910,6 +1262,7 @@ export default function ObservatorioRepublicaPage() {
   const handlePrintDossier = () => {
     setActiveTab("todos");
     setDossierFilter("todos");
+    setFactCheckFilter("todos");
     setSearchQuery("");
     if (typeof window !== "undefined") {
       setTimeout(() => {
@@ -954,6 +1307,12 @@ export default function ObservatorioRepublicaPage() {
       label: "04 // RAIO-X DO PL & STF",
       shortLabel: "PL / STF",
       icon: Scale,
+    },
+    {
+      id: "modulo5" as TabId,
+      label: "05 // DEBATES, MENTIRAS & NOTÍCIAS",
+      shortLabel: "Debates",
+      icon: Activity,
     },
   ];
 
@@ -1030,7 +1389,19 @@ export default function ObservatorioRepublicaPage() {
             </div>
           </div>
 
-          <div className="flex items-center shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
+            <a
+              href="/instagram-posts.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Abrir Gerador de Cards e Carrossel para Instagram (Foco em Eleitores Indecisos)"
+              className="touch-manipulation select-none active:scale-95 inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-2 sm:py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-display font-bold text-xs sm:text-sm uppercase tracking-wider border-2 border-zinc-900 shadow-[2px_2px_0px_#18181b] sm:shadow-[4px_4px_0px_#18181b] active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer"
+            >
+              <Instagram className="w-4 h-4 stroke-[2.5] shrink-0 text-yellow-300" />
+              <span className="hidden lg:inline">Cards p/ Instagram</span>
+              <span className="lg:hidden font-mono font-extrabold">INSTA</span>
+            </a>
+
             <button
               onClick={handlePrintDossier}
               type="button"
@@ -2864,6 +3235,477 @@ export default function ObservatorioRepublicaPage() {
             })}
           </div>
         </section>
+
+        {/* ===================================================================
+            MÓDULO 5: CREDIBILIDADE DOS CANDIDATOS, DEBATES (QUEM MENTIU VS.
+            QUEM NÃO MENTIU) E ÚLTIMAS NOTÍCIAS (OUTUBRO DE 2026)
+        =================================================================== */}
+        <section
+          id="modulo-5"
+          className="scroll-mt-20 sm:scroll-mt-24 space-y-6 sm:space-y-8 print:block"
+        >
+          {/* Cabeçalho do Módulo 5 */}
+          <div className="border-b-2 border-zinc-900 pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-purple-950 font-bold bg-purple-100 px-3 py-1 rounded-md border border-purple-400 mb-2">
+                <Activity className="w-3.5 h-3.5 text-purple-700" />
+                MÓDULO 05 // AUDITORIA DE CREDIBILIDADE, DEBATES & NOTÍCIAS (OUT/2026)
+              </div>
+              <h2 className="text-xl sm:text-3xl font-display font-bold text-zinc-950 uppercase tracking-tight">
+                Credibilidade dos Candidatos, Quem Mentiu nos Debates & Reta Final 2026
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-zinc-600 max-w-md font-mono">
+              Verificação factual independente do Debate do 2º Turno (Band — 18/10/2026), índice de precisão estatística e radar atualizado das pesquisas e notícias de outubro de 2026.
+            </p>
+          </div>
+
+          {/* 5.1 TERMÔMETRO DE CREDIBILIDADE E CONSISTÊNCIA DOS CANDIDATOS */}
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <h3 className="text-base sm:text-lg font-display font-bold text-zinc-950 uppercase tracking-wide flex items-center gap-2">
+                <Scale className="w-5 h-5 text-emerald-700 shrink-0" />
+                5.1 Índice de Credibilidade Factual e Consistência de Gestão (Lula vs. Flávio Bolsonaro)
+              </h3>
+              <div className="flex items-center gap-1.5">
+                <SourceBadge source="LUPA" />
+                <SourceBadge source="AOSFATOS" />
+                <SourceBadge source="TSE" />
+                <SourceBadge source="IBGE" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 print-cols-2 gap-6">
+              {CANDIDATE_CREDIBILITY.map((prof) => {
+                const isLula = prof.id === "cred-lula";
+                return (
+                  <div
+                    key={prof.id}
+                    className={`rounded-3xl bg-white border-2 border-zinc-900 p-4 sm:p-6 shadow-[3px_3px_0px_#18181b] sm:shadow-[6px_6px_0px_#18181b] flex flex-col justify-between space-y-5 print-avoid-break ${
+                      isLula
+                        ? "border-t-8 border-t-emerald-600"
+                        : "border-t-8 border-t-rose-600"
+                    }`}
+                  >
+                    <div className="space-y-4">
+                      {/* Topo do Card de Credibilidade */}
+                      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-zinc-200 pb-3.5">
+                        <div>
+                          <span
+                            className={`inline-block text-[10px] font-mono font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded border ${
+                              isLula
+                                ? "bg-emerald-100 text-emerald-900 border-emerald-400"
+                                : "bg-rose-100 text-rose-900 border-rose-400"
+                            }`}
+                          >
+                            {prof.partido}
+                          </span>
+                          <h4 className="text-lg sm:text-xl font-display font-bold text-zinc-950 uppercase mt-1">
+                            {prof.candidato}
+                          </h4>
+                          <p className="text-xs text-zinc-600 font-medium">
+                            {prof.cargoAtual}
+                          </p>
+                        </div>
+
+                        <div className="bg-zinc-900 text-white rounded-2xl px-3.5 py-2 text-right font-mono shrink-0">
+                          <div className="text-[10px] text-yellow-300 uppercase font-bold">
+                            1º Turno Oficial [TSE]
+                          </div>
+                          <div className="text-sm sm:text-base font-extrabold text-white">
+                            {prof.resultado1TurnoTSE}
+                          </div>
+                          <div className="text-[10px] text-zinc-300">
+                            {prof.votos1TurnoTSE}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Barra de Aderência Factual nos Debates */}
+                      <div className="bg-zinc-50 rounded-2xl p-3.5 border border-zinc-200 space-y-2">
+                        <div className="flex items-center justify-between text-xs font-mono">
+                          <span className="font-bold text-zinc-700 uppercase">
+                            Taxa de Precisão Factual nos Debates:
+                          </span>
+                          <span
+                            className={`text-sm font-extrabold ${
+                              isLula ? "text-emerald-700" : "text-rose-700"
+                            }`}
+                          >
+                            {prof.indicePrecisaoDebates}%
+                          </span>
+                        </div>
+                        <div className="w-full h-3.5 bg-zinc-200 rounded-lg overflow-hidden border border-zinc-300 p-0.5">
+                          <div
+                            className={`h-full rounded-sm ${
+                              isLula ? "bg-emerald-600" : "bg-rose-600"
+                            }`}
+                            style={{ width: `${prof.indicePrecisaoDebates}%` }}
+                          />
+                        </div>
+                        <div className="text-[11px] font-mono text-zinc-600">
+                          {prof.indicePrecisaoLabel}
+                        </div>
+
+                        {/* Mini Placar da Checagem (10 falas auditadas) */}
+                        <div className="grid grid-cols-3 gap-2 pt-1.5 text-center font-mono text-[11px]">
+                          <div className="bg-emerald-50 border border-emerald-300 rounded-xl py-1.5 px-2">
+                            <span className="block text-sm font-extrabold text-emerald-800">
+                              {prof.placarChecagem.verdadeiro}
+                            </span>
+                            <span className="text-[10px] text-emerald-900 font-bold uppercase">
+                              ✅ Verdadeiras
+                            </span>
+                          </div>
+                          <div className="bg-amber-50 border border-amber-300 rounded-xl py-1.5 px-2">
+                            <span className="block text-sm font-extrabold text-amber-800">
+                              {prof.placarChecagem.impreciso}
+                            </span>
+                            <span className="text-[10px] text-amber-900 font-bold uppercase">
+                              ⚠️ Imprecisas
+                            </span>
+                          </div>
+                          <div className="bg-rose-50 border border-rose-300 rounded-xl py-1.5 px-2">
+                            <span className="block text-sm font-extrabold text-rose-800">
+                              {prof.placarChecagem.falsoEnganoso}
+                            </span>
+                            <span className="text-[10px] text-rose-900 font-bold uppercase">
+                              ❌ Falsas/Engan.
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Pilares de Credibilidade */}
+                      <div className="space-y-2">
+                        <div className="text-xs font-mono font-bold uppercase text-emerald-800">
+                          ✅ Pontos de Credibilidade e Consistência Comprovada:
+                        </div>
+                        <ul className="space-y-1.5 text-xs text-zinc-700">
+                          {prof.pilaresCredibilidade.map((pilar, i) => (
+                            <li
+                              key={i}
+                              className="p-2.5 rounded-xl bg-emerald-50/60 border border-emerald-200 leading-relaxed"
+                            >
+                              {pilar}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Passivos e Desgastes de Credibilidade */}
+                      <div className="space-y-2">
+                        <div className="text-xs font-mono font-bold uppercase text-rose-800">
+                          ⚠️ Passivos de Credibilidade, Deslizes e Contradições:
+                        </div>
+                        <ul className="space-y-1.5 text-xs text-zinc-700">
+                          {prof.passivosCredibilidade.map((passivo, i) => (
+                            <li
+                              key={i}
+                              className="p-2.5 rounded-xl bg-rose-50/60 border border-rose-200 leading-relaxed"
+                            >
+                              {passivo}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="pt-3 border-t border-zinc-200 flex items-center justify-between gap-2">
+                      <span className="text-[11px] font-mono text-zinc-500 uppercase">
+                        Fontes da Auditoria:
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {prof.fontes.map((f) => (
+                          <SourceBadge key={f} source={f} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 5.2 QUEM MENTIU E QUEM NÃO MENTIU NOS DEBATES (FACT-CHECKING OFICIAL) */}
+          <div className="rounded-3xl bg-white border-2 border-zinc-900 p-4 sm:p-6 shadow-[4px_4px_0px_#18181b] space-y-5">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-zinc-200 pb-4">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase text-rose-800 bg-rose-50 border border-rose-300 px-2.5 py-0.5 rounded">
+                  Detector de Mentiras • Debate da Band (18/10/2026) & Sabatinas
+                </div>
+                <h3 className="text-lg sm:text-xl font-display font-bold text-zinc-950 uppercase">
+                  5.2 Resultado dos Debates: Quem Mentiu vs. Quem Falou a Verdade
+                </h3>
+                <p className="text-xs text-zinc-600">
+                  Checagem cruzada de <strong>Agência Lupa, Aos Fatos, Estadão Verifica e Fato ou Fake</strong> confrontada diretamente com as bases do IBGE, BCB, CGU e STF:
+                </p>
+              </div>
+
+              {/* Botões de Filtro por Veredito */}
+              <div className="flex flex-wrap gap-1.5 print:hidden">
+                <button
+                  type="button"
+                  onClick={() => setFactCheckFilter("todos")}
+                  className={`touch-manipulation select-none active:scale-95 px-3 py-2 rounded-xl text-xs font-mono font-bold border transition cursor-pointer ${
+                    factCheckFilter === "todos"
+                      ? "bg-zinc-900 text-yellow-300 border-zinc-900"
+                      : "bg-zinc-100 text-zinc-700 border-zinc-300 hover:border-zinc-900"
+                  }`}
+                >
+                  TODAS ({DEBATE_FACT_CHECKS.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFactCheckFilter("FALSO")}
+                  className={`touch-manipulation select-none active:scale-95 px-3 py-2 rounded-xl text-xs font-mono font-bold border transition cursor-pointer ${
+                    factCheckFilter === "FALSO"
+                      ? "bg-rose-600 text-white border-zinc-900"
+                      : "bg-rose-50 text-rose-800 border-rose-300 hover:border-rose-600"
+                  }`}
+                >
+                  ❌ FALSO / MENTIRA
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFactCheckFilter("ENGANOSO")}
+                  className={`touch-manipulation select-none active:scale-95 px-3 py-2 rounded-xl text-xs font-mono font-bold border transition cursor-pointer ${
+                    factCheckFilter === "ENGANOSO"
+                      ? "bg-amber-400 text-zinc-950 border-zinc-900"
+                      : "bg-amber-50 text-amber-900 border-amber-300 hover:border-amber-600"
+                  }`}
+                >
+                  ⚠️ ENGANOSO / IMPRECISO
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFactCheckFilter("VERDADEIRO")}
+                  className={`touch-manipulation select-none active:scale-95 px-3 py-2 rounded-xl text-xs font-mono font-bold border transition cursor-pointer ${
+                    factCheckFilter === "VERDADEIRO"
+                      ? "bg-emerald-600 text-white border-zinc-900"
+                      : "bg-emerald-50 text-emerald-800 border-emerald-300 hover:border-emerald-600"
+                  }`}
+                >
+                  ✅ VERDADEIRO
+                </button>
+              </div>
+            </div>
+
+            {/* Grid de Cards de Checagem */}
+            <div className="grid grid-cols-1 md:grid-cols-2 print-cols-2 gap-4">
+              {filteredFactChecks.map((fc) => {
+                const badgeStyles =
+                  fc.veredito === "FALSO"
+                    ? "bg-rose-600 text-white border-zinc-900"
+                    : fc.veredito === "VERDADEIRO"
+                    ? "bg-emerald-600 text-white border-zinc-900"
+                    : "bg-amber-400 text-zinc-950 border-zinc-900";
+
+                const cardBorder =
+                  fc.veredito === "FALSO"
+                    ? "border-rose-300 bg-rose-50/30"
+                    : fc.veredito === "VERDADEIRO"
+                    ? "border-emerald-300 bg-emerald-50/30"
+                    : "border-amber-300 bg-amber-50/30";
+
+                return (
+                  <div
+                    key={fc.id}
+                    className={`rounded-2xl border-2 p-4 flex flex-col justify-between space-y-3 print-avoid-break ${cardBorder}`}
+                  >
+                    <div className="space-y-2.5">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="px-2 py-0.5 rounded bg-zinc-900 text-yellow-300 font-mono text-[10px] font-bold">
+                            {fc.candidato}
+                          </span>
+                          <span className="text-[10px] font-mono text-zinc-500">
+                            {fc.eventoData}
+                          </span>
+                        </div>
+                        <span
+                          className={`px-2.5 py-0.5 rounded-md font-mono text-[11px] font-extrabold uppercase border ${badgeStyles}`}
+                        >
+                          {fc.veredito === "FALSO"
+                            ? "❌ FALSO / MENTIRA"
+                            : fc.veredito === "VERDADEIRO"
+                            ? "✅ VERDADEIRO"
+                            : `⚠️ ${fc.veredito}`}
+                        </span>
+                      </div>
+
+                      {/* Frase dita no debate */}
+                      <blockquote className="p-3 rounded-xl bg-white border border-zinc-300 text-xs sm:text-sm font-display font-bold text-zinc-900 italic leading-snug">
+                        {fc.declaracao}
+                      </blockquote>
+
+                      {/* Resumo do Veredito */}
+                      <div className="text-xs font-bold text-zinc-900 leading-snug">
+                        🔎 Veredito: {fc.resumoVeredito}
+                      </div>
+
+                      {/* Explicação Técnica */}
+                      <p className="text-xs text-zinc-700 leading-relaxed">
+                        {fc.auditoriaTecnica}
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-zinc-200/80 flex items-center justify-between gap-2">
+                      <span className="text-[10px] font-mono font-bold text-zinc-500">
+                        {fc.protocolo}
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {fc.fontes.map((s) => (
+                          <SourceBadge key={s} source={s} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 5.3 RADAR DE ÚLTIMAS NOTÍCIAS E PESQUISAS DO 2º TURNO (OUTUBRO 2026) */}
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <h3 className="text-base sm:text-lg font-display font-bold text-zinc-950 uppercase tracking-wide flex items-center gap-2">
+                <Flame className="w-5 h-5 text-amber-600 shrink-0" />
+                5.3 Radar de Últimas Notícias e Pesquisas da Reta Final (Outubro/2026)
+              </h3>
+              <span className="text-xs font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-300 px-3 py-1 rounded-lg">
+                ATUALIZADO EM 22/10/2026 • VÉSPERA DO 2º TURNO (25/10)
+              </span>
+            </div>
+
+            {/* Painel Rápido de Pesquisas de Outubro/2026 */}
+            <div className="rounded-3xl bg-zinc-950 text-white border-2 border-zinc-900 p-4 sm:p-6 shadow-[4px_4px_0px_#059669] space-y-4 print-avoid-break">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-zinc-800 pb-3">
+                <div>
+                  <span className="text-[10px] font-mono font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-yellow-400 text-zinc-950">
+                    TERMÔMETRO ELEITORAL // OUTUBRO DE 2026
+                  </span>
+                  <h4 className="text-base sm:text-lg font-display font-bold uppercase text-white mt-1">
+                    Resultado do 1º Turno (TSE) e Pesquisas do 2º Turno (21 e 22/10/2026)
+                  </h4>
+                </div>
+                <span className="text-xs font-mono text-zinc-400">
+                  Cenário de empate técnico dentro da margem de erro em todos os institutos
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 print-cols-4 gap-3 text-xs font-mono">
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700 space-y-1">
+                  <div className="text-[10px] text-sky-400 font-bold uppercase">
+                    1º Turno Oficial [TSE — 04/10]
+                  </div>
+                  <div className="text-sm font-extrabold text-white">
+                    Flávio 47,03% vs. Lula 45,16%
+                  </div>
+                  <div className="text-[11px] text-zinc-400">
+                    Diferença de 1,87 p.p. (56,10 mi a 53,87 mi de votos válidos)
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700 space-y-1">
+                  <div className="text-[10px] text-yellow-300 font-bold uppercase">
+                    Quaest / Globo [21/10/2026]
+                  </div>
+                  <div className="text-sm font-extrabold text-white">
+                    Flávio 45% vs. Lula 44% (Totais)
+                  </div>
+                  <div className="text-[11px] text-zinc-400">
+                    Votos válidos: ~50,5% a 49,4% (Empate técnico • Margem: 2 p.p.)
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700 space-y-1">
+                  <div className="text-[10px] text-emerald-400 font-bold uppercase">
+                    PoderData / Aya [22/10/2026]
+                  </div>
+                  <div className="text-sm font-extrabold text-white">
+                    Flávio 51% vs. Lula 49% (Válidos)
+                  </div>
+                  <div className="text-[11px] text-zinc-400">
+                    Votos totais: 49% a 48% (Empate técnico • Margem: 1,6 p.p.)
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700 space-y-1">
+                  <div className="text-[10px] text-amber-400 font-bold uppercase">
+                    Indexa / Broadcast [22/10/2026]
+                  </div>
+                  <div className="text-sm font-extrabold text-white">
+                    Flávio 50,6% vs. Lula 49,4%
+                  </div>
+                  <div className="text-[11px] text-zinc-400">
+                    Votos totais: 45,2% a 44,0% (Empate técnico • Margem: 2,2 p.p.)
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Cards das Últimas Notícias de Outubro de 2026 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 print-cols-2 gap-4">
+              {OCTOBER_2026_NEWS.map((news) => {
+                const tagStyle =
+                  news.destaqueCor === "emerald"
+                    ? "bg-emerald-100 text-emerald-900 border-emerald-400"
+                    : news.destaqueCor === "amber"
+                    ? "bg-amber-100 text-amber-950 border-amber-400"
+                    : news.destaqueCor === "blue"
+                    ? "bg-blue-100 text-blue-900 border-blue-400"
+                    : "bg-rose-100 text-rose-900 border-rose-400";
+
+                return (
+                  <article
+                    key={news.id}
+                    className="rounded-3xl bg-white border-2 border-zinc-900 p-4 sm:p-5 shadow-[3px_3px_0px_#18181b] flex flex-col justify-between space-y-3 print-avoid-break"
+                  >
+                    <div className="space-y-2.5">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-[11px] font-mono font-bold text-zinc-500">
+                          {news.data}
+                        </span>
+                        <span
+                          className={`text-[10px] font-mono font-extrabold uppercase px-2.5 py-0.5 rounded border ${tagStyle}`}
+                        >
+                          {news.categoria}
+                        </span>
+                      </div>
+
+                      <h4 className="text-base sm:text-lg font-display font-bold text-zinc-950 leading-snug">
+                        {news.manchete}
+                      </h4>
+
+                      <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed">
+                        {news.resumo}
+                      </p>
+
+                      <div className="p-3 rounded-2xl bg-zinc-50 border border-zinc-200 text-xs text-zinc-800">
+                        <strong className="font-mono uppercase text-zinc-950 block mb-0.5">
+                          📌 O que isso significa para o eleitor indeciso:
+                        </strong>
+                        {news.impactoEleitoral}
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-zinc-200 flex items-center justify-between gap-2">
+                      <span className="text-[10px] font-mono text-zinc-500 uppercase">
+                        Referências da Notícia:
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {news.fontes.map((f) => (
+                          <SourceBadge key={f} source={f} />
+                        ))}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* =====================================================================
@@ -2871,9 +3713,9 @@ export default function ObservatorioRepublicaPage() {
       ===================================================================== */}
       <nav
         aria-label="Menu Rápido Mobile"
-        className="md:hidden print:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t-2 border-zinc-900 px-2 pt-1.5 pb-[max(10px,env(safe-area-inset-bottom))] shadow-[0_-4px_16px_rgba(0,0,0,0.08)]"
+        className="md:hidden print:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t-2 border-zinc-900 px-1.5 pt-1.5 pb-[max(10px,env(safe-area-inset-bottom))] shadow-[0_-4px_16px_rgba(0,0,0,0.08)]"
       >
-        <div className="grid grid-cols-6 gap-1 max-w-md mx-auto">
+        <div className="grid grid-cols-7 gap-0.5 max-w-md mx-auto">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -2977,19 +3819,118 @@ export default function ObservatorioRepublicaPage() {
             </div>
           </div>
 
+          {/* =================================================================
+              BANNER DO KIT INSTAGRAM PARA ELEITORES INDECISOS
+          ================================================================= */}
+          <div className="print:hidden rounded-2xl border-2 border-zinc-900 bg-gradient-to-r from-emerald-950 via-zinc-900 to-blue-950 p-4 sm:p-6 text-white shadow-[4px_4px_0px_#18181b] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="space-y-1.5 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-md bg-yellow-400 text-zinc-950 font-mono font-extrabold text-[11px] uppercase tracking-wider">
+                <Share2 className="w-3.5 h-3.5" />
+                Ferramenta de Comunicação Cívica
+              </div>
+              <h4 className="text-base sm:text-lg font-display font-bold uppercase tracking-tight text-white">
+                Quer compartilhar esses dados no Instagram para quem ainda está indeciso?
+              </h4>
+              <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                Preparamos um <strong>Card Único de Resumo em Alta Definição (PNG 1080×1350)</strong> com os 4 pilares do portal, checagem dos debates e o link direto <strong>https://qual-voto.vercel.app</strong> pronto para postar no Feed ou nos Stories.
+              </p>
+            </div>
+            <a
+              href="/instagram-posts.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="touch-manipulation select-none active:scale-95 shrink-0 inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-display font-bold text-xs sm:text-sm uppercase tracking-wider border-2 border-white shadow-[3px_3px_0px_#059669] transition-all cursor-pointer"
+            >
+              <Instagram className="w-4 h-4 stroke-[2.5]" />
+              Abrir Gerador de Posts p/ Instagram
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+
+          {/* =================================================================
+              DIRETÓRIO COMPLETO DE LINKS E REFERÊNCIAS OFICIAIS AUDITÁVEIS
+          ================================================================= */}
+          <div className="pt-2 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <h4 className="text-xs sm:text-sm font-display font-bold text-zinc-950 uppercase tracking-wider flex items-center gap-2">
+                <ExternalLink className="w-4 h-4 text-emerald-700 shrink-0" />
+                Links Diretos das Fontes Primárias Oficiais (Clique para Auditar)
+              </h4>
+              <span className="text-[11px] font-mono text-zinc-500">
+                Todas as tags [FONTE] ao longo do portal também são links clicáveis
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 print-cols-3 gap-2.5">
+              {(Object.keys(SOURCE_STYLES) as SourceBadgeType[]).map((key) => {
+                const item = SOURCE_STYLES[key];
+                return (
+                  <a
+                    key={key}
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex flex-col justify-between p-3 rounded-xl border border-zinc-200 hover:border-zinc-900 bg-zinc-50/70 hover:bg-white transition-all shadow-xs hover:shadow-[2px_2px_0px_#18181b]"
+                  >
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${item.bg} ${item.text} ${item.border}`}
+                        >
+                          [{key}]
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-700 group-hover:underline">
+                          Acessar Portal
+                          <ExternalLink className="w-3 h-3" />
+                        </span>
+                      </div>
+                      <div className="text-xs font-bold text-zinc-900 leading-snug">
+                        {item.nomeCompleto}
+                      </div>
+                      <p className="text-[11px] text-zinc-600 leading-relaxed">
+                        {item.descricao}
+                      </p>
+                    </div>
+                    <div className="mt-2 pt-1.5 border-t border-zinc-200/80 text-[10px] font-mono text-zinc-500 truncate">
+                      {item.url}
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="pt-4 border-t border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-zinc-500 text-center sm:text-left">
             <span>
-              Observatório Quantitativo da República (2003–2026) • Arquitetura
-              Urbana Cívica Brasileira (Mobile-First, Desktop & PDF A4)
+              Observatório Quantitativo da República (2003–2026) •{" "}
+              <a
+                href="https://qual-voto.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-bold text-emerald-700 hover:underline"
+              >
+                https://qual-voto.vercel.app
+              </a>
             </span>
-            <button
-              onClick={handlePrintDossier}
-              type="button"
-              className="touch-manipulation select-none active:scale-95 print:hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-yellow-300 font-mono font-bold text-xs uppercase tracking-wider border border-zinc-950 cursor-pointer transition"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              Exportar Relatório Integral (PDF A4)
-            </button>
+            <div className="flex flex-wrap items-center justify-center gap-2 print:hidden">
+              <a
+                href="/instagram-posts.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="touch-manipulation select-none active:scale-95 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-mono font-bold text-xs uppercase tracking-wider border border-zinc-950 cursor-pointer transition"
+              >
+                <Instagram className="w-3.5 h-3.5 text-yellow-300" />
+                Kit Instagram (Eleitor Indeciso)
+              </a>
+              <button
+                onClick={handlePrintDossier}
+                type="button"
+                className="touch-manipulation select-none active:scale-95 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-yellow-300 font-mono font-bold text-xs uppercase tracking-wider border border-zinc-950 cursor-pointer transition"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                Exportar Relatório Integral (PDF A4)
+              </button>
+            </div>
             <span className="hidden print:inline font-bold text-zinc-800">
               Dossiê Oficial Impresso Integralmente • Fontes Auditadas: IBGE • BCB • TN • INPE • STF • STJ • TSE
             </span>

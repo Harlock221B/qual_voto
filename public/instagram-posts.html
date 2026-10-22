@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post Instagram — Resumo e Link do Observatório (2003–2026)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background-color: #f4f4f0;
+      background-image: radial-gradient(#d4d4d8 1px, transparent 1px);
+      background-size: 20px 20px;
+      color: #18181b;
+    }
+    .font-display { font-family: var(--font-display); }
+    .font-mono { font-family: var(--font-mono); }
+
+    .urban-grid-bg {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, rgba(24, 24, 27, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(24, 24, 27, 0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+  </style>
+</head>
+<body class="min-h-screen py-6 px-3 sm:px-6 flex flex-col items-center justify-center">
+
+  <!-- BARRA DE CONTROLE RÁPIDO -->
+  <div class="w-full max-w-xl mb-5 bg-white border-2 border-zinc-900 rounded-2xl p-3.5 shadow-[4px_4px_0px_#18181b] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+    <div class="flex-1">
+      <label for="siteUrlInput" class="block text-[10px] font-mono font-bold uppercase text-zinc-600 mb-1">
+        Link do seu site que aparece no Post:
+      </label>
+      <input
+        id="siteUrlInput"
+        type="text"
+        value="https://qual-voto.vercel.app"
+        oninput="updateSiteUrl(this.value)"
+        placeholder="Ex: https://qual-voto.vercel.app"
+        class="w-full px-3 py-1.5 rounded-lg border-2 border-zinc-300 focus:border-zinc-900 font-mono text-xs font-bold text-zinc-900 outline-none"
+      />
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <button
+        onclick="downloadPostImage()"
+        id="btnDownload"
+        class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-display font-bold text-xs uppercase tracking-wider border-2 border-zinc-900 shadow-[3px_3px_0px_#18181b] cursor-pointer transition"
+      >
+        ⬇ Baixar Imagem p/ Insta (HD)
+      </button>
+      <button
+        onclick="copyInstagramText()"
+        id="btnCopyText"
+        class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-display font-bold text-xs uppercase tracking-wider border-2 border-zinc-900 shadow-[3px_3px_0px_#18181b] cursor-pointer transition"
+      >
+        📋 Copiar Legenda + Link
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       CARD ÚNICO DE RESUMO PARA O INSTAGRAM (VISUALIZAÇÃO FIEL E ALINHADA)
+  ========================================================================== -->
+  <article
+    id="instaPostCard"
+    class="w-full max-w-xl urban-grid-bg border-[3px] border-zinc-900 rounded-3xl shadow-[8px_8px_0px_#18181b] p-5 sm:p-7 flex flex-col justify-between space-y-5"
+  >
+    <!-- TOPO: BANDEIRA URBANA + CHAMADA PARA INDECISOS -->
+    <div class="space-y-3.5">
+      <div class="h-2.5 w-full bg-gradient-to-r from-emerald-600 via-yellow-400 to-blue-700 rounded-full"></div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <!-- Selo com Bandeira SVG (Sem bug de emoji) -->
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-900 text-yellow-300 font-mono text-[11px] font-extrabold uppercase tracking-wider leading-none">
+          <svg class="w-4 h-3 shrink-0" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="28" height="20" rx="3" fill="#059669"/>
+            <path d="M14 2L25 10L14 18L3 10L14 2Z" fill="#FACC15"/>
+            <circle cx="14" cy="10" r="4.5" fill="#1D4ED8"/>
+            <path d="M9.8 9.2C11.8 8 16.2 8.5 18.2 10.8" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span>GUIA PARA ELEITORES INDECISOS</span>
+        </div>
+
+        <div class="inline-flex items-center px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-400 font-mono text-[11px] font-extrabold text-emerald-800 uppercase leading-none">
+          <span>DADOS OFICIAIS 2003–2026</span>
+        </div>
+      </div>
+
+      <h1 class="text-2xl sm:text-3xl font-display font-bold uppercase text-zinc-950 leading-tight tracking-tight">
+        AINDA NÃO SABE EM QUEM VOTAR EM
+        <span class="text-emerald-700 underline decoration-yellow-400 decoration-4 underline-offset-4">2026?</span>
+      </h1>
+
+      <p class="text-xs sm:text-sm text-zinc-700 leading-relaxed font-medium">
+        Saia da guerra de memes e correntes de WhatsApp. Construímos um <strong>portal público e auditável</strong> que coloca lado a lado os números reais de <strong>Lula (2003–2010 e 2023–2026)</strong> e <strong>Bolsonaro / Flávio Bolsonaro (2019–2022 e Plano 2026)</strong>.
+      </p>
+    </div>
+
+    <!-- CORPO: RESUMO DO QUE FOI FEITO NO PORTAL (4 PILARES PERFEITAMENTE ALINHADOS) -->
+    <div class="space-y-2.5">
+      <div class="text-[11px] font-mono font-extrabold uppercase tracking-wider text-zinc-500">
+        O QUE VOCÊ VAI ENCONTRAR NO LEVANTAMENTO COMPLETO:
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- Bloco 1 -->
+        <div class="p-3.5 rounded-2xl bg-emerald-50/90 border-2 border-emerald-700 flex flex-col justify-between space-y-1.5">
+          <div class="flex items-center justify-between gap-1.5">
+            <span class="inline-flex items-center px-2 py-1 rounded bg-emerald-200/90 text-[10px] font-mono font-extrabold uppercase text-emerald-950 leading-none whitespace-nowrap">
+              1. ECONOMIA E BOLSO
+            </span>
+            <span class="text-[10px] font-mono font-bold text-emerald-800 whitespace-nowrap">[IBGE / DIEESE]</span>
+          </div>
+          <div class="text-sm font-display font-bold text-zinc-950 leading-snug">
+            PIB, Emprego e Salário Mínimo
+          </div>
+          <p class="text-xs text-zinc-700 leading-relaxed">
+            PIB real (<strong>+37,3%</strong> e <strong>+9,2%</strong> em Lula vs. <strong>+5,6%</strong> em Bolsonaro), desemprego na mínima histórica de <strong>5,6%</strong> e ganho real do salário mínimo (<strong>+53,6%</strong> vs. <strong>+1,3%</strong>).
+          </p>
+        </div>
+
+        <!-- Bloco 2 -->
+        <div class="p-3.5 rounded-2xl bg-amber-50/90 border-2 border-amber-600 flex flex-col justify-between space-y-1.5">
+          <div class="flex items-center justify-between gap-1.5">
+            <span class="inline-flex items-center px-2 py-1 rounded bg-amber-200/90 text-[10px] font-mono font-extrabold uppercase text-amber-950 leading-none whitespace-nowrap">
+              2. OS DOIS RISCOS REAIS
+            </span>
+            <span class="text-[10px] font-mono font-bold text-amber-900 whitespace-nowrap">[BCB / STF]</span>
+          </div>
+          <div class="text-sm font-display font-bold text-zinc-950 leading-snug">
+            Risco Fiscal vs. Ruptura Penal
+          </div>
+          <p class="text-xs text-zinc-700 leading-relaxed">
+            Sem filtro: o salto da Dívida Pública para <strong>78,7% do PIB</strong> em Lula III vs. a condenação de Bolsonaro a <strong>27 anos e 3 meses no STF</strong> por tentativa de golpe.
+          </p>
+        </div>
+
+        <!-- Bloco 3 -->
+        <div class="p-3.5 rounded-2xl bg-blue-50/90 border-2 border-blue-700 flex flex-col justify-between space-y-1.5">
+          <div class="flex items-center justify-between gap-1.5">
+            <span class="inline-flex items-center px-2 py-1 rounded bg-blue-200/90 text-[10px] font-mono font-extrabold uppercase text-blue-950 leading-none whitespace-nowrap">
+              3. SOBERANIA NACIONAL
+            </span>
+            <span class="text-[10px] font-mono font-bold text-blue-800 whitespace-nowrap">[INPE / CGU]</span>
+          </div>
+          <div class="text-sm font-display font-bold text-zinc-950 leading-snug">
+            Petrobras, Ciência e Amazônia
+          </div>
+          <p class="text-xs text-zinc-700 leading-relaxed">
+            Desmatamento na menor taxa desde 1988 (<strong>3.335 km²</strong>), retomada da estatal de chips <strong>CEITEC</strong> e refino nacional vs. venda da RLAM abaixo do mercado.
+          </p>
+        </div>
+
+        <!-- Bloco 4 -->
+        <div class="p-3.5 rounded-2xl bg-rose-50/90 border-2 border-rose-600 flex flex-col justify-between space-y-1.5">
+          <div class="flex items-center justify-between gap-1.5">
+            <span class="inline-flex items-center px-2 py-1 rounded bg-rose-200/90 text-[10px] font-mono font-extrabold uppercase text-rose-950 leading-none whitespace-nowrap">
+              4. DEBATES & STF
+            </span>
+            <span class="text-[10px] font-mono font-bold text-rose-800 whitespace-nowrap">[LUPA / STF / TSE]</span>
+          </div>
+          <div class="text-sm font-display font-bold text-zinc-950 leading-snug">
+            Quem Mentiu nos Debates & Ficha Jurídica
+          </div>
+          <p class="text-xs text-zinc-700 leading-relaxed">
+            Checagem oficial de quem mentiu nos debates do 2º turno, índice de credibilidade, pesquisas de outubro/2026 e o raio-x dos R$ 900 mi de Fundo Eleitoral do PL.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAIXA DE DESTAQUE COM O LINK PARA ACESSAR O SITE -->
+    <div class="rounded-2xl bg-zinc-950 text-white border-2 border-zinc-900 p-4 sm:p-5 shadow-[4px_4px_0px_#059669] space-y-3.5">
+      <div class="space-y-2">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-yellow-400 text-zinc-950 font-mono text-[10px] font-extrabold uppercase tracking-wider leading-none">
+          <span>ACESSO PÚBLICO • GRATUITO E SEM PROPAGANDA</span>
+        </div>
+        <h2 class="text-base sm:text-lg font-display font-bold uppercase text-white leading-snug">
+          VEJA O COMPARATIVO COMPLETO, SIMULADOR DA DÍVIDA E BAIXE O DOSSIÊ EM PDF:
+        </h2>
+      </div>
+
+      <!-- Botão / Caixa Visual do Link do Site (Sem corte de texto) -->
+      <a
+        id="siteLinkAnchor"
+        href="https://qual-voto.vercel.app"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center justify-between gap-3 w-full px-4 py-3.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 border-2 border-white transition"
+      >
+        <div class="flex items-center gap-2.5 min-w-0">
+          <svg class="w-5 h-5 text-zinc-950 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <span id="displaySiteUrl" class="font-mono font-extrabold text-xs sm:text-base text-zinc-950 leading-normal break-all">
+            https://qual-voto.vercel.app
+          </span>
+        </div>
+        <span class="inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-zinc-950 text-yellow-300 font-mono font-bold text-xs uppercase leading-none shrink-0">
+          ACESSAR SITE ↗
+        </span>
+      </a>
+
+      <!-- Fontes Oficiais -->
+      <div class="pt-0.5 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[10px] font-mono">
+        <span class="text-zinc-400 uppercase">FONTES AUDITÁVEIS NO SITE:</span>
+        <span class="text-zinc-100 font-bold">IBGE • BCB • TESOURO • INPE • STF • STJ • TSE • DIEESE • CGU</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ATALHOS DAS FONTES OFICIAIS -->
+  <div class="w-full max-w-xl mt-5 bg-white border-2 border-zinc-900 rounded-2xl p-4 shadow-[4px_4px_0px_#18181b] space-y-2.5">
+    <div class="flex items-center justify-between">
+      <span class="text-xs font-display font-bold uppercase text-zinc-950">
+        🔗 Links Diretos das Fontes (Clique para conferir)
+      </span>
+      <a href="https://qual-voto.vercel.app" target="_blank" rel="noopener noreferrer" class="text-xs font-mono font-bold text-emerald-700 underline">
+        Abrir Portal Principal →
+      </a>
+    </div>
+    <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+      <a href="https://www.ibge.gov.br" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-300 font-bold hover:bg-blue-100">[IBGE] ↗</a>
+      <a href="https://www.bcb.gov.br" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-300 font-bold hover:bg-amber-100">[Banco Central] ↗</a>
+      <a href="https://www.tesourotransparente.gov.br" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-yellow-50 text-yellow-900 border border-yellow-400 font-bold hover:bg-yellow-100">[Tesouro Nacional] ↗</a>
+      <a href="https://terrabrasilis.dpi.inpe.br" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold hover:bg-emerald-100">[INPE Amazônia] ↗</a>
+      <a href="https://portal.stf.jus.br" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-800 border border-rose-300 font-bold hover:bg-rose-100">[STF] ↗</a>
+      <a href="https://divulgacandcontas.tse.jus.br" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-sky-50 text-sky-800 border border-sky-300 font-bold hover:bg-sky-100">[TSE] ↗</a>
+      <a href="https://www.dieese.org.br" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-teal-50 text-teal-800 border border-teal-300 font-bold hover:bg-teal-100">[DIEESE] ↗</a>
+      <a href="https://www.gov.br/cgu/pt-br" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-orange-50 text-orange-800 border border-orange-300 font-bold hover:bg-orange-100">[CGU] ↗</a>
+    </div>
+  </div>
+
+  <script>
+    function updateSiteUrl(val) {
+      const text = val.trim() || 'https://qual-voto.vercel.app';
+      document.getElementById('displaySiteUrl').textContent = text;
+      const href = text.startsWith('http') ? text : `https://${text}`;
+      document.getElementById('siteLinkAnchor').href = href;
+    }
+
+    // =========================================================================
+    // RENDERIZADOR NATIVO CANVAS 2D (1080x1350 HD) — ZERO CORTE OU DESALINHAMENTO
+    // =========================================================================
+    function drawRoundedRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function drawWrappedText(ctx, segments, x, y, maxWidth, lineHeight) {
+      // segments: [{ text: "...", bold: false, color: "#..." }]
+      const words = [];
+      segments.forEach(seg => {
+        const parts = seg.text.split(' ');
+        parts.forEach((w, idx) => {
+          if (w.length > 0) {
+            words.push({
+              word: w + (idx < parts.length - 1 ? ' ' : ''),
+              bold: seg.bold,
+              color: seg.color || '#3f3f46',
+              font: seg.font
+            });
+          }
+        });
+      });
+
+      let lines = [];
+      let currentLine = [];
+      let currentWidth = 0;
+
+      words.forEach(item => {
+        ctx.font = item.font || `${item.bold ? '700' : '500'} 21px "Plus Jakarta Sans", sans-serif`;
+        const w = ctx.measureText(item.word).width;
+        if (currentWidth + w > maxWidth && currentLine.length > 0) {
+          lines.push(currentLine);
+          currentLine = [item];
+          currentWidth = w;
+        } else {
+          currentLine.push(item);
+          currentWidth += w;
+        }
+      });
+      if (currentLine.length > 0) lines.push(currentLine);
+
+      lines.forEach((line, lineIdx) => {
+        let cursorX = x;
+        const cursorY = y + lineIdx * lineHeight;
+        line.forEach(item => {
+          ctx.font = item.font || `${item.bold ? '800' : '500'} 21px "Plus Jakarta Sans", sans-serif`;
+          ctx.fillStyle = item.color;
+          ctx.textBaseline = 'top';
+          ctx.fillText(item.word, cursorX, cursorY);
+          cursorX += ctx.measureText(item.word).width;
+        });
+      });
+
+      return y + lines.length * lineHeight;
+    }
+
+    async function downloadPostImage() {
+      const btn = document.getElementById('btnDownload');
+      const original = btn.innerHTML;
+      btn.innerHTML = '⏳ Gerando HD (1080x1350)...';
+
+      try {
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
+        }
+
+        const W = 1080;
+        const H = 1350;
+        const canvas = document.createElement('canvas');
+        canvas.width = W;
+        canvas.height = H;
+        const ctx = canvas.getContext('2d');
+
+        // 1. Fundo Branco Urbano com Grid Sutil
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.strokeStyle = 'rgba(24, 24, 27, 0.045)';
+        ctx.lineWidth = 1;
+        for (let gx = 0; gx < W; gx += 36) {
+          ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke();
+        }
+        for (let gy = 0; gy < H; gy += 36) {
+          ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
+        }
+
+        // Moldura Externa Cívica
+        drawRoundedRect(ctx, 24, 24, W - 48, H - 48, 36);
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = '#18181b';
+        ctx.stroke();
+
+        const padX = 64;
+        const innerW = W - padX * 2;
+
+        // 2. Barra Tricolor Superior (Verde, Amarelo, Azul)
+        const grad = ctx.createLinearGradient(padX, 0, padX + innerW, 0);
+        grad.addColorStop(0, '#059669');
+        grad.addColorStop(0.5, '#facc15');
+        grad.addColorStop(1, '#1d4ed8');
+        drawRoundedRect(ctx, padX, 62, innerW, 16, 8);
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        // 3. Badges Superiores (Alinhamento Vertical Matemático)
+        // Badge Esquerdo: Guia para Eleitores Indecisos
+        const b1W = 435;
+        const bH = 46;
+        const bY = 102;
+        drawRoundedRect(ctx, padX, bY, b1W, bH, 12);
+        ctx.fillStyle = '#18181b';
+        ctx.fill();
+
+        // Mini Bandeira do Brasil dentro do Badge
+        drawRoundedRect(ctx, padX + 16, bY + 11, 34, 24, 4);
+        ctx.fillStyle = '#059669';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(padX + 33, bY + 14);
+        ctx.lineTo(padX + 47, bY + 23);
+        ctx.lineTo(padX + 33, bY + 32);
+        ctx.lineTo(padX + 19, bY + 23);
+        ctx.closePath();
+        ctx.fillStyle = '#facc15';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(padX + 33, bY + 23, 5.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#1d4ed8';
+        ctx.fill();
+
+        ctx.font = '800 18px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#fde047';
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'left';
+        ctx.fillText('GUIA PARA ELEITORES INDECISOS', padX + 62, bY + bH / 2 + 1);
+
+        // Badge Direito: Dados Oficiais 2003–2026
+        const b2W = 310;
+        const b2X = padX + innerW - b2W;
+        drawRoundedRect(ctx, b2X, bY, b2W, bH, 12);
+        ctx.fillStyle = '#ecfdf5';
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#34d399';
+        ctx.stroke();
+
+        ctx.font = '800 18px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#065f46';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('DADOS OFICIAIS 2003–2026', b2X + b2W / 2, bY + bH / 2 + 1);
+
+        // 4. Título Principal
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.font = '700 50px "Space Grotesk", sans-serif';
+        ctx.fillStyle = '#09090b';
+        ctx.fillText('AINDA NÃO SABE EM QUEM VOTAR', padX, 174);
+        ctx.fillText('EM ', padX, 232);
+
+        const emW = ctx.measureText('EM ').width;
+        ctx.fillStyle = '#047857';
+        ctx.fillText('2026?', padX + emW, 232);
+        const yearW = ctx.measureText('2026?').width;
+        ctx.fillStyle = '#facc15';
+        ctx.fillRect(padX + emW, 288, yearW, 8);
+
+        // 5. Subtítulo Explicativo
+        drawWrappedText(
+          ctx,
+          [
+            { text: 'Saia da guerra de memes e correntes de WhatsApp. Construímos um ', bold: false, color: '#3f3f46', font: '500 23px "Plus Jakarta Sans", sans-serif' },
+            { text: 'portal público e auditável ', bold: true, color: '#18181b', font: '800 23px "Plus Jakarta Sans", sans-serif' },
+            { text: 'que coloca lado a lado os números reais de ', bold: false, color: '#3f3f46', font: '500 23px "Plus Jakarta Sans", sans-serif' },
+            { text: 'Lula (2003–2010 e 2023–2026) ', bold: true, color: '#18181b', font: '800 23px "Plus Jakarta Sans", sans-serif' },
+            { text: 'e ', bold: false, color: '#3f3f46', font: '500 23px "Plus Jakarta Sans", sans-serif' },
+            { text: 'Bolsonaro / Flávio Bolsonaro (2019–2022 e Plano 2026).', bold: true, color: '#18181b', font: '800 23px "Plus Jakarta Sans", sans-serif' }
+          ],
+          padX,
+          312,
+          innerW,
+          33
+        );
+
+        // 6. Rótulo de Seção
+        ctx.font = '800 18px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#71717a';
+        ctx.textBaseline = 'top';
+        ctx.fillText('O QUE VOCÊ VAI ENCONTRAR NO LEVANTAMENTO COMPLETO:', padX, 430);
+
+        // 7. Grid 2x2 dos 4 Pilares
+        const cards = [
+          {
+            x: padX, y: 465,
+            bg: '#ecfdf5', border: '#047857',
+            pillBg: '#a7f3d0', pillText: '#064e3b', pillLabel: '1. ECONOMIA E BOLSO',
+            source: '[IBGE / DIEESE]', sourceColor: '#065f46',
+            title: 'PIB, Emprego e Salário Mínimo',
+            body: [
+              { text: 'PIB real (', bold: false },
+              { text: '+37,3% ', bold: true },
+              { text: 'e ', bold: false },
+              { text: '+9,2% ', bold: true },
+              { text: 'em Lula vs. ', bold: false },
+              { text: '+5,6% ', bold: true },
+              { text: 'em Bolsonaro), desemprego na mínima histórica de ', bold: false },
+              { text: '5,6% ', bold: true },
+              { text: 'e ganho real do salário mínimo (', bold: false },
+              { text: '+53,6% ', bold: true },
+              { text: 'vs. ', bold: false },
+              { text: '+1,3%).', bold: true }
+            ]
+          },
+          {
+            x: padX + 486, y: 465,
+            bg: '#fffbeb', border: '#d97706',
+            pillBg: '#fde68a', pillText: '#78350f', pillLabel: '2. OS DOIS RISCOS REAIS',
+            source: '[BCB / STF]', sourceColor: '#92400e',
+            title: 'Risco Fiscal vs. Ruptura Penal',
+            body: [
+              { text: 'Sem filtro: o salto da Dívida Pública para ', bold: false },
+              { text: '78,7% do PIB ', bold: true },
+              { text: 'em Lula III vs. a condenação de Bolsonaro a ', bold: false },
+              { text: '27 anos e 3 meses no STF ', bold: true },
+              { text: 'por tentativa de golpe.', bold: false }
+            ]
+          },
+          {
+            x: padX, y: 725,
+            bg: '#eff6ff', border: '#1d4ed8',
+            pillBg: '#bfdbfe', pillText: '#1e3a8a', pillLabel: '3. SOBERANIA NACIONAL',
+            source: '[INPE / CGU]', sourceColor: '#1e40af',
+            title: 'Petrobras, Ciência e Amazônia',
+            body: [
+              { text: 'Desmatamento na menor taxa desde 1988 (', bold: false },
+              { text: '3.335 km²', bold: true },
+              { text: '), retomada da estatal de chips ', bold: false },
+              { text: 'CEITEC ', bold: true },
+              { text: 'e refino nacional vs. venda da RLAM abaixo do mercado.', bold: false }
+            ]
+          },
+          {
+            x: padX + 486, y: 725,
+            bg: '#fff1f2', border: '#e11d48',
+            pillBg: '#fecdd3', pillText: '#881337', pillLabel: '4. DEBATES & STF',
+            source: '[LUPA / STF / TSE]', sourceColor: '#9f1239',
+            title: 'Quem Mentiu nos Debates & STF',
+            body: [
+              { text: 'Checagem de ', bold: false },
+              { text: 'quem mentiu nos debates ', bold: true },
+              { text: 'do 2º turno, índice de credibilidade, pesquisas e os ', bold: false },
+              { text: 'R$ 900 mi ', bold: true },
+              { text: 'de Fundo Eleitoral do PL.', bold: false }
+            ]
+          }
+        ];
+
+        const cW = 466;
+        const cH = 240;
+
+        cards.forEach(c => {
+          drawRoundedRect(ctx, c.x, c.y, cW, cH, 24);
+          ctx.fillStyle = c.bg;
+          ctx.fill();
+          ctx.lineWidth = 3.5;
+          ctx.strokeStyle = c.border;
+          ctx.stroke();
+
+          // Pill Interna perfeitamente centralizada
+          ctx.font = '800 15px "JetBrains Mono", monospace';
+          const pillW = ctx.measureText(c.pillLabel).width + 24;
+          const pillH = 32;
+          drawRoundedRect(ctx, c.x + 22, c.y + 20, pillW, pillH, 8);
+          ctx.fillStyle = c.pillBg;
+          ctx.fill();
+
+          ctx.fillStyle = c.pillText;
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(c.pillLabel, c.x + 34, c.y + 20 + pillH / 2 + 1);
+
+          // Fonte à direita sem nunca colidir
+          ctx.font = '800 15px "JetBrains Mono", monospace';
+          ctx.fillStyle = c.sourceColor;
+          ctx.textAlign = 'right';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(c.source, c.x + cW - 22, c.y + 20 + pillH / 2 + 1);
+
+          // Título do Card
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'top';
+          ctx.font = '700 25px "Space Grotesk", sans-serif';
+          ctx.fillStyle = '#09090b';
+          ctx.fillText(c.title, c.x + 22, c.y + 66);
+
+          // Texto do Card
+          drawWrappedText(
+            ctx,
+            c.body.map(b => ({
+              text: b.text,
+              bold: b.bold,
+              color: b.bold ? '#09090b' : '#3f3f46',
+              font: `${b.bold ? '800' : '500'} 20px "Plus Jakarta Sans", sans-serif`
+            })),
+            c.x + 22,
+            c.y + 104,
+            cW - 44,
+            28
+          );
+        });
+
+        // 8. Bloco Escuro Inferior (Call to Action + Link do Site)
+        const ctaY = 990;
+        const ctaH = 298;
+        // Sombra verde
+        drawRoundedRect(ctx, padX + 8, ctaY + 8, innerW, ctaH, 28);
+        ctx.fillStyle = '#059669';
+        ctx.fill();
+
+        drawRoundedRect(ctx, padX, ctaY, innerW, ctaH, 28);
+        ctx.fillStyle = '#09090b';
+        ctx.fill();
+
+        // Pill Amarela de Acesso Público
+        const topPillW = 490;
+        const topPillH = 34;
+        drawRoundedRect(ctx, padX + 32, ctaY + 26, topPillW, topPillH, 8);
+        ctx.fillStyle = '#facc15';
+        ctx.fill();
+
+        ctx.font = '800 15px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#09090b';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('ACESSO PÚBLICO • GRATUITO E SEM PROPAGANDA', padX + 32 + topPillW / 2, ctaY + 26 + topPillH / 2 + 1);
+
+        // Chamada Principal Branca
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.font = '700 28px "Space Grotesk", sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText('VEJA O COMPARATIVO COMPLETO, SIMULADOR DA', padX + 32, ctaY + 74);
+        ctx.fillText('DÍVIDA E BAIXE O DOSSIÊ EM PDF:', padX + 32, ctaY + 108);
+
+        // Botão Amarelo Grande do Link (Zero corte!)
+        const btnX = padX + 32;
+        const btnY = ctaY + 154;
+        const btnW = innerW - 64;
+        const btnH = 78;
+
+        drawRoundedRect(ctx, btnX, btnY, btnW, btnH, 18);
+        ctx.fillStyle = '#facc15';
+        ctx.fill();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#ffffff';
+        ctx.stroke();
+
+        // Ícone de Globo Vetorial
+        const gx = btnX + 36;
+        const gy = btnY + btnH / 2;
+        ctx.beginPath();
+        ctx.arc(gx, gy, 15, 0, Math.PI * 2);
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = '#09090b';
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(gx - 15, gy); ctx.lineTo(gx + 15, gy);
+        ctx.moveTo(gx, gy - 15); ctx.lineTo(gx, gy + 15);
+        ctx.stroke();
+
+        // Texto da URL perfeitamente centralizado
+        const rawUrl = (document.getElementById('siteUrlInput').value || 'https://qual-voto.vercel.app').trim();
+        ctx.font = '800 25px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#09090b';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(rawUrl, btnX + 66, gy + 1);
+
+        // Sub-botão preto "ACESSAR SITE ↗"
+        const subW = 220;
+        const subH = 48;
+        const subX = btnX + btnW - subW - 18;
+        const subY = btnY + (btnH - subH) / 2;
+        drawRoundedRect(ctx, subX, subY, subW, subH, 12);
+        ctx.fillStyle = '#09090b';
+        ctx.fill();
+
+        ctx.font = '800 18px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#fde047';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('ACESSAR SITE ↗', subX + subW / 2, subY + subH / 2 + 1);
+
+        // Rodapé de Fontes dentro do Bloco Escuro
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.font = '700 15px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#a1a1aa';
+        ctx.fillText('FONTES AUDITÁVEIS:', padX + 32, ctaY + 262);
+
+        ctx.font = '800 15px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText('IBGE • BCB • TESOURO • INPE • STF • STJ • TSE • DIEESE • CGU', padX + 215, ctaY + 262);
+
+        // Dispara o download do PNG perfeitamente alinhado
+        const link = document.createElement('a');
+        link.download = 'post-instagram-observatorio-2026.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } finally {
+        btn.innerHTML = original;
+      }
+    }
+
+    function copyInstagramText() {
+      const siteUrl = document.getElementById('siteUrlInput').value.trim() || 'https://qual-voto.vercel.app';
+      const caption = `Ainda não sabe em quem votar em 2026? 🇧🇷📊
+
+Saia da guerra de memes e veja os números oficiais auditados (2003–2026). Construímos o Observatório Quantitativo da República comparando os governos Lula e Bolsonaro com base apenas em dados do IBGE, Banco Central, Tesouro Nacional, INPE, STF e TSE:
+
+✅ Economia e Bolso: Crescimento do PIB (+37,3% e +9,2% vs. +5,6%), desemprego na mínima histórica (5,6%) e valorização real do salário mínimo (+53,6% vs. +1,3%).
+⚠️ Riscos Reais dos Dois Lados: O alerta fiscal da Dívida Pública (78,7% do PIB) em Lula III vs. a condenação de 27 anos e 3 meses no STF por tentativa de golpe e os inquéritos de Flávio Bolsonaro.
+🌳 Soberania e Patrimônio: Menor desmatamento na Amazônia desde 1988 (3.335 km²), Petrobras e retomada da indústria nacional.
+🔎 NOVO — Quem Mentiu nos Debates & Reta Final 2026: Índice de credibilidade dos candidatos, checagem oficial do Debate da Band (Lupa / Aos Fatos), pesquisas atualizadas de outubro/2026 e o raio-x dos mais de R$ 900 milhões de Fundo Eleitoral do PL.
+
+🔗 ACESSE O SITE COMPLETO, SIMULE A DÍVIDA E BAIXE O DOSSIÊ EM PDF:
+👉 ${siteUrl}
+
+#Eleicoes2026 #Brasil #VotoConsciente #DadosOficiais #IBGE #Economia`;
+
+      navigator.clipboard.writeText(caption);
+      const btn = document.getElementById('btnCopyText');
+      const original = btn.innerHTML;
+      btn.innerHTML = '✅ Texto + Link Copiados!';
+      setTimeout(() => { btn.innerHTML = original; }, 2200);
+    }
+  </script>
+</body>
+</html>
