@@ -574,6 +574,7 @@ interface ElectionNewsItem {
   impactoEleitoral: string;
   destaqueCor: "emerald" | "amber" | "blue" | "rose";
   fontes: SourceBadgeType[];
+  linksReferencia: Array<{ nome: string; url: string }>;
 }
 
 const CANDIDATE_CREDIBILITY: CandidateCredibilityProfile[] = [
@@ -593,7 +594,7 @@ const CANDIDATE_CREDIBILITY: CandidateCredibilityProfile[] = [
     },
     pilaresCredibilidade: [
       "Lastro Empírico Auditável: Os indicadores centrais citados na campanha (desemprego na mínima histórica de 5,6%, Índice de Gini em 0,491, ganho real do salário mínimo e menor desmatamento desde 1988 no PRODES) são integralmente confirmados pelo IBGE e pelo INPE.",
-      "Defesa de Checagem em Tempo Real: A campanha apoiou formalmente a petição pública com mais de 1 milhão de assinaturas pela implementação de fact-checking ao vivo nos debates televisivos do 2º turno.",
+      "Defesa de Checagem Ao Vivo e Desafio de Sigilos (22–23/10): Apoiou a petição com mais de 1 milhão de assinaturas por fact-checking em tempo real na TV Globo e assinou termo no TSE para abertura simultânea de sigilos bancário, fiscal e telefônico.",
       "Previsibilidade Institucional e Diplomática: Cumprimento integral das regras do calendário eleitoral, respeito às decisões do STF/TSE e interlocução ativa com EUA, União Europeia e BRICS.",
     ],
     passivosCredibilidade: [
@@ -617,13 +618,13 @@ const CANDIDATE_CREDIBILITY: CandidateCredibilityProfile[] = [
       falsoEnganoso: 5,
     },
     pilaresCredibilidade: [
-      "Tração Eleitoral e Coerência Ideológica: Venceu o 1º turno com 47,03% dos votos válidos (vantagem de 2,22 milhões de votos sobre Lula), mantendo discurso coeso de oposição fiscal ao governo, endurecimento penal e defesa da anistia a Jair Bolsonaro.",
-      "Capacidade de Mobilização Digital: Lidera o engajamento orgânico nas redes e consolidou a transferência de capital político do bolsonarismo em torno de sua candidatura em 2026.",
+      "Tração Eleitoral e Coerência Ideológica: Venceu o 1º turno com 47,03% dos votos válidos (vantagem de 2,22 milhões de votos sobre Lula), lidera no Sul, Centro-Oeste e segmento evangélico (>55%) e mantém discurso coeso de oposição fiscal e endurecimento penal.",
+      "Adesão Formal ao Termo de Sigilos no TSE (22/10): Assinou o protocolo conjunto de abertura de sigilos no TSE após o confronto televisivo, buscando neutralizar o desgaste eleitoral sobre suas movimentações financeiras.",
     ],
     passivosCredibilidade: [
       "Repetição de Desinformação Desmentida nos Debates: No Debate da Band (18/10/2026), insistiu na afirmação falsa de que Lula e Janja teriam gasto 'R$ 7 bilhões em viagens' (valor que corresponde a todas as diárias e passagens de centenas de milhares de servidores, policiais e militares de todo o Estado brasileiro) e distorceu regras do Código Penal (Art. 75).",
       "Baixa Entrega Legislativa vs. Discurso Antissistema: Teve 0 projetos de autoria individual sancionados como lei em quase 8 anos de Senado, enquanto seu partido (PL) absorveu mais de R$ 900 milhões de Fundo Eleitoral em 2026.",
-      "Passivo Investigativo Ativo no STF: Responde ao inquérito aberto em set/2026 no STF (Rel. Min. Flávio Dino) sobre negociação de R$ 134 milhões no caso Banco Master / Filme Dark Horse (com R$ 61 milhões enviados a fundo nos EUA), além de ter tido o caso das Rachadinhas (R$ 6,1 mi) arquivado apenas por anulação formal de foro.",
+      "Passivo Investigativo Ativo no STF e Alerta de André Mendonça: Responde ao inquérito aberto em set/2026 no STF (Rel. Min. Flávio Dino) sobre negociação de R$ 134 milhões no caso Banco Master / Filme Dark Horse (com R$ 61 milhões enviados a fundo nos EUA), contexto no qual o Min. André Mendonça (TSE) lembrou em 22/10 que abrir contas pessoais não substitui investigações sobre uso de terceiros.",
     ],
     fontes: ["TSE", "STF", "LUPA", "AOSFATOS", "CGU"],
   },
@@ -747,55 +748,109 @@ const DEBATE_FACT_CHECKS: DebateFactCheckItem[] = [
 const OCTOBER_2026_NEWS: ElectionNewsItem[] = [
   {
     id: "news-1",
-    data: "22 OUT 2026 • PESQUISAS DO 2º TURNO",
-    categoria: "EMPATE TÉCNICO EXTREMO",
+    data: "23 OUT 2026 • DEBATE DECISIVO NA GLOBO (HOJE, 21H20)",
+    categoria: "REGRA ANTIDEBOCHE & CHECAGEM",
     manchete:
-      "Quaest, PoderData e Indexa apontam empate técnico absoluto a 3 dias da votação (25/10)",
+      "Último debate presidencial na TV Globo impõe 'Regra Antideboche', trava de palco e pressão de 1 milhão por checagem",
     resumo:
-      "As rodadas divulgadas entre 21 e 22 de outubro de 2026 mostram a disputa mais acirrada desde 1989: na Quaest/Globo, Flávio Bolsonaro tem 45% e Lula 44% dos votos totais (~50,5% a 49,4% nos válidos, margem de 2 p.p.). No PoderData (22/10), o placar é de 51% a 49% nos válidos (49% a 48% nos totais, margem de 1,6 p.p.), e na Indexa/Broadcast é de 50,6% a 49,4%.",
+      "O confronto final entre Lula (PT) e Flávio Bolsonaro (PL) acontece nesta sexta-feira (23/10) às 21h20 nos Estúdios Globo (RJ), mediado por César Tralli em 4 blocos (1º bloco com regiões sorteadas ao vivo e infraestrutura/exportação; 2º e 3º blocos com temas no telão como Dívida Pública, Endividamento, Inteligência Artificial, Ensino Integral e Meio Ambiente; 4º bloco de confronto direto). Para impedir as cenas do debate da Band (onde houve aproximação física e caretas nas costas do adversário), a Globo determinou que apenas o candidato com a palavra pode circular pelo palco, enquanto o oponente deve permanecer no púlpito.",
     impactoEleitoral:
-      "Com cerca de 90% do eleitorado já decidido segundo a Quaest, os ~5% a 8% de eleitores indecisos ou que cogitam voto branco/nulo decidirão matematicamente a Presidência da República no domingo (25/10).",
-    destaqueCor: "amber",
-    fontes: ["TSE", "LUPA"],
+      "Com mais de 1 milhão de assinaturas cobrando checagem de fatos ao vivo e Flávio Bolsonaro orientado a adotar tom 'menos Marçal' enquanto Lula foca em evitar improvisos, o debate de hoje é a última oportunidade de conquistar os ~4% de indecisos antes de domingo (25/10).",
+    destaqueCor: "emerald",
+    fontes: ["LUPA", "AOSFATOS", "TSE"],
+    linksReferencia: [
+      { nome: "G1 / Eleições 2026 (Regras do Debate)", url: "https://g1.globo.com/politica/eleicoes/" },
+      { nome: "Poder360 (Bastidores e Formato)", url: "https://www.poder360.com.br/eleicoes/" },
+      { nome: "Agência Lupa (Fact-Checking Ao Vivo)", url: "https://lupa.uol.com.br" },
+    ],
   },
   {
     id: "news-2",
-    data: "22 OUT 2026 • MOBILIZAÇÃO CÍVICA",
-    categoria: "FACT-CHECKING AO VIVO",
+    data: "22–23 OUT 2026 • DUELO DE SIGILOS NO TSE",
+    categoria: "DECISÃO MIN. ANDRÉ MENDONÇA",
     manchete:
-      "Petição por checagem de fatos em tempo real no Debate da Globo (23/10) ultrapassa 1 milhão de assinaturas",
+      "Lula e Flávio protocolam acordo de abertura de sigilos no TSE; André Mendonça decide que candidatos podem abrir contas por ato próprio",
     resumo:
-      "Após o alto volume de números falsos ou distorcidos no debate da Band (18/10), um abaixo-assinado nacional superou 1 milhão de subscrições cobrando verificação factual ao vivo no último debate presidencial desta sexta-feira (23/10, às 21h20), mediado por César Tralli nos Estúdios Globo.",
+      "Após o desafio mútuo em rede nacional sobre movimentações financeiras de familiares e empresas (envolvendo o caso Banco Master / Filme Dark Horse de R$ 134 milhões e acusações cruzadas), as campanhas de Lula e Flávio Bolsonaro assinaram termo conjunto no TSE autorizando a abertura total e simultânea dos sigilos bancário, fiscal e telefônico. O vice-presidente do TSE e ministro do STF, André Mendonça, decidiu que não cabe à Justiça Eleitoral mediar a quebra: os candidatos podem divulgar seus dados 'por ato próprio, como e quando entenderem pertinentes', mas ressaltou que a exibição voluntária de extratos 'não substitui investigações oficiais, pois recursos ilícitos frequentemente transitam por terceiros (laranjas)'.",
     impactoEleitoral:
-      "A pressão pública por checagem ao vivo reflete o cansaço do eleitor moderado com a guerra de desinformação e eleva o peso de dossiês baseados em dados primários oficiais.",
-    destaqueCor: "emerald",
-    fontes: ["LUPA", "AOSFATOS"],
+      "A decisão de André Mendonça devolveu a responsabilidade diretamente aos candidatos a 48 horas da votação e destacou um ponto técnico crucial para o eleitor: contas pessoais abertas voluntariamente não anulam inquéritos formais do STF e da PF sobre fundos no exterior ou interpostas pessoas.",
+    destaqueCor: "rose",
+    fontes: ["TSE", "STF", "CGU"],
+    linksReferencia: [
+      { nome: "TSE — Portal Oficial", url: "https://www.tse.jus.br" },
+      { nome: "Agência Brasil / EBC (Decisão Mendonça)", url: "https://agenciabrasil.ebc.com.br/politica" },
+      { nome: "UOL Eleições 2026", url: "https://noticias.uol.com.br/eleicoes/" },
+    ],
   },
   {
     id: "news-3",
-    data: "18–22 OUT 2026 • PAUTAS DECISIVAS",
-    categoria: "ECONOMIA, SEGURANÇA & STF",
+    data: "23 OUT 2026 • BATERIA DE PESQUISAS DE SEXTA-FEIRA",
+    categoria: "EMPATE TÉCNICO VOTO A VOTO",
     manchete:
-      "Fim da Escala 6x1, PEC da Segurança Pública e Inquérito do Banco Master dominam a reta final",
+      "Ipespe, Vox Brasil, Real Time Big Data, Alfa e AtlasIntel divulgam novas rodadas em 23/10 antes de Datafolha e Quaest",
     resumo:
-      "Nos últimos dias de campanha, Lula concentrou foco na defesa do fim da escala de trabalho 6x1, na isenção de IR e na queda do desemprego (5,6%), enquanto Flávio Bolsonaro apostou na pauta de segurança pública, mas precisou responder na imprensa e nos debates sobre o avanço do inquérito no STF (Caso Banco Master / Filme Dark Horse — R$ 134 milhões).",
+      "Cinco pesquisas registradas no TSE e publicadas nesta sexta-feira (23/10) confirmam acirramento histórico: na Ipespe/Abrapel, Flávio Bolsonaro tem 50,5% contra 49,5% de Lula nos votos válidos; na Vox Brasil (presencial, TSE BR-03259/2026), Lula lidera numericamente com 50,6% ante 49,4% de Flávio; na AtlasIntel, Flávio marca 51,1% a 48,9%; já Real Time Big Data (TSE BR-09670/2026) e Alfa Inteligência (TSE BR-08496/2026) apontam 52% para Flávio e 48% para Lula. As rodadas presenciais finais do Datafolha e da Quaest serão divulgadas neste sábado (24/10).",
     impactoEleitoral:
-      "O contraste final opõe a agenda trabalhista e social de Lula (com o desafio fiscal de 2027) à pauta conservadora de Flávio Bolsonaro (pressionada pelas condenações do pai e de deputados do PL no STF).",
-    destaqueCor: "blue",
-    fontes: ["STF", "IBGE", "DIEESE"],
+      "A divergência milimétrica entre pesquisas presenciais (onde Lula empata ou lidera por décimos) e levantamentos telefônicos/painel (onde Flávio abre 1 a 4 pontos) comprova que a taxa de abstenção no domingo (25/10) definirá o eleito.",
+    destaqueCor: "amber",
+    fontes: ["TSE", "IBGE"],
+    linksReferencia: [
+      { nome: "TSE — Consulta PesqEle (BR-03259 / BR-09670)", url: "https://www.tse.jus.br/eleicoes/pesquisas-eleitorais" },
+      { nome: "JOTA — Agregador de Pesquisas 2026", url: "https://www.jota.info/eleicoes" },
+      { nome: "Exame — Radar Eleitoral", url: "https://exame.com/brasil/" },
+    ],
   },
   {
     id: "news-4",
-    data: "04 OUT 2026 • RESULTADO OFICIAL 1º TURNO",
-    categoria: "APURAÇÃO OFICIAL TSE",
+    data: "22–23 OUT 2026 • DEMOGRAFIA E REGIÕES DECISIVAS",
+    categoria: "RAIO-X DO ELEITORADO",
     manchete:
-      "1º Turno terminou com diferença de apenas 1,87 p.p. entre Flávio Bolsonaro (47,03%) e Lula (45,16%)",
+      "Dois Brasis nas urnas: Nordeste, até 2 salários e 60+ sustentam Lula; Sul, Centro-Oeste e evangélicos (>55%) impulsionam Flávio",
     resumo:
-      "Segundo a totalização oficial do Tribunal Superior Eleitoral (119.300.788 votos válidos), Flávio Bolsonaro (PL) recebeu 56.104.268 votos (47,03%) e Luiz Inácio Lula da Silva (PT) obteve 53.876.617 votos (45,16%). Votos brancos somaram 2.300.781 (1,84%) e nulos 3.674.149 (2,93%), além da renovação da Câmara com o PL elegendo a maior bancada (121 deputados).",
+      "O cruzamento demográfico das pesquisas de 21 a 23 de outubro revela onde cada campanha concentra forças nas últimas 48 horas: Lula mantém ampla dianteira no Nordeste, entre trabalhadores que ganham até 2 salários mínimos e eleitores com 60 anos ou mais. Flávio Bolsonaro abre vantagem expressiva no Sul, no Centro-Oeste, nas faixas de renda acima de 5 salários mínimos e entre eleitores evangélicos (superando 55%). Com 90% dos eleitores já convictos segundo a Quaest, as duas campanhas concentram agenda final no Sudeste (SP, MG e RJ).",
     impactoEleitoral:
-      "Os 5,97 milhões de brasileiros que votaram branco/nulo e os eleitores da 3ª via tornaram-se o público-alvo central das duas campanhas para o 2º turno em 25 de outubro.",
-    destaqueCor: "rose",
+      "O Sudeste funciona como o fiel da balança nacional: qualquer oscilação de 1 ponto percentual nas regiões metropolitanas de São Paulo, Belo Horizonte e Rio de Janeiro após o debate de hoje decide matematicamente o pleito.",
+    destaqueCor: "blue",
+    fontes: ["IBGE", "DIEESE", "TSE"],
+    linksReferencia: [
+      { nome: "IBGE — Estatísticas Sociais e Demográficas", url: "https://www.ibge.gov.br" },
+      { nome: "Congresso em Foco (Análise Regional)", url: "https://congressoemfoco.uol.com.br" },
+    ],
+  },
+  {
+    id: "news-5",
+    data: "18–23 OUT 2026 • PAUTAS EM CONFRONTO",
+    categoria: "ECONOMIA, DÍVIDA & STF",
+    manchete:
+      "Fim da Escala 6x1 e Pleno Emprego (5,6%) vs. Alerta da Dívida (78,7% do PIB), PEC da Segurança e Inquérito Banco Master",
+    resumo:
+      "O debate programático da semana final cristalizou dois eixos: Lula aposta na defesa do fim da jornada 6x1, na isenção de IR e na menor taxa de desemprego da história (5,6%), mas enfrenta críticas sobre o salto da Dívida Bruta (78,7% do PIB) e a Carga Tributária recorde (32,40%). Flávio Bolsonaro explora a pauta de segurança pública e o aperto fiscal, mas precisa contornar a condenação de Jair Bolsonaro a 27 anos e 3 meses no STF, as condenações do Orçamento Secreto no PL e o inquérito ativo no STF sobre os R$ 134 milhões do caso Banco Master / Filme Dark Horse.",
+    impactoEleitoral:
+      "Para o eleitor indeciso, a escolha resume-se a ponderar qual risco é administrável entre 2027 e 2030: a necessidade de reforma fiscal em um cenário de crescimento do emprego ou o risco de crise institucional crônica entre Executivo e STF.",
+    destaqueCor: "emerald",
+    fontes: ["BCB", "TN", "STF", "DIEESE"],
+    linksReferencia: [
+      { nome: "Banco Central — Estatísticas Fiscais (DBGG)", url: "https://www.bcb.gov.br/estatisticas/estatisticasfiscais" },
+      { nome: "Portal STF — Jurisprudência e Inquéritos", url: "https://portal.stf.jus.br" },
+      { nome: "DIEESE — Mercado de Trabalho e Renda", url: "https://www.dieese.org.br" },
+    ],
+  },
+  {
+    id: "news-6",
+    data: "04 OUT 2026 • RESULTADO OFICIAL AUDITADO DO 1º TURNO",
+    categoria: "TOTALIZAÇÃO OFICIAL TSE",
+    manchete:
+      "1º Turno terminou com diferença de apenas 1,87 p.p. entre Flávio Bolsonaro (47,03%) e Lula (45,16%) e quase 6 milhões de brancos/nulos",
+    resumo:
+      "Segundo a totalização oficial do Tribunal Superior Eleitoral (119.300.788 votos válidos), Flávio Bolsonaro (PL) recebeu 56.104.268 votos (47,03%) e Luiz Inácio Lula da Silva (PT) obteve 53.876.617 votos (45,16%) — uma diferença de 2.227.651 votos. Votos em branco somaram 2.300.781 (1,84%) e nulos 3.674.149 (2,93%), enquanto o PL consolidou a maior bancada da Câmara (121 deputados federais eleitos).",
+    impactoEleitoral:
+      "Os 5.974.930 brasileiros que votaram em branco ou nulo no 1º turno superam em quase três vezes a diferença de votos entre os dois candidatos, tornando a conversão do eleitor indeciso decisiva neste domingo (25/10).",
+    destaqueCor: "amber",
     fontes: ["TSE"],
+    linksReferencia: [
+      { nome: "TSE — Resultados Oficiais de 2026", url: "https://resultados.tse.jus.br" },
+      { nome: "TSE — DivulgaCandContas (Fundo Eleitoral)", url: "https://divulgacandcontas.tse.jus.br" },
+    ],
   },
 ];
 
@@ -3577,7 +3632,7 @@ export default function ObservatorioRepublicaPage() {
                 5.3 Radar de Últimas Notícias e Pesquisas da Reta Final (Outubro/2026)
               </h3>
               <span className="text-xs font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-300 px-3 py-1 rounded-lg">
-                ATUALIZADO EM 22/10/2026 • VÉSPERA DO 2º TURNO (25/10)
+                ATUALIZADO EM 23/10/2026 • DIA DO DEBATE NA GLOBO & A 48H DO 2º TURNO (25/10)
               </span>
             </div>
 
@@ -3586,21 +3641,27 @@ export default function ObservatorioRepublicaPage() {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-zinc-800 pb-3">
                 <div>
                   <span className="text-[10px] font-mono font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-yellow-400 text-zinc-950">
-                    TERMÔMETRO ELEITORAL // OUTUBRO DE 2026
+                    TERMÔMETRO ELEITORAL // ATUALIZADO EM 23 DE OUTUBRO DE 2026
                   </span>
                   <h4 className="text-base sm:text-lg font-display font-bold uppercase text-white mt-1">
-                    Resultado do 1º Turno (TSE) e Pesquisas do 2º Turno (21 e 22/10/2026)
+                    1º Turno Oficial (TSE) e Pesquisas Registradas do 2º Turno (21 a 23/10/2026)
                   </h4>
                 </div>
-                <span className="text-xs font-mono text-zinc-400">
-                  Cenário de empate técnico dentro da margem de erro em todos os institutos
-                </span>
+                <a
+                  href="https://www.tse.jus.br/eleicoes/pesquisas-eleitorais"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-mono text-yellow-300 hover:underline"
+                >
+                  Auditar Registros no TSE (PesqEle)
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 print-cols-4 gap-3 text-xs font-mono">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 print-cols-3 gap-3 text-xs font-mono">
                 <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700 space-y-1">
                   <div className="text-[10px] text-sky-400 font-bold uppercase">
-                    1º Turno Oficial [TSE — 04/10]
+                    1º Turno Oficial [TSE — 04/10/2026]
                   </div>
                   <div className="text-sm font-extrabold text-white">
                     Flávio 47,03% vs. Lula 45,16%
@@ -3611,38 +3672,62 @@ export default function ObservatorioRepublicaPage() {
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700 space-y-1">
-                  <div className="text-[10px] text-yellow-300 font-bold uppercase">
-                    Quaest / Globo [21/10/2026]
+                  <div className="text-[10px] text-emerald-400 font-bold uppercase">
+                    Vox Brasil [23/10 • TSE BR-03259/2026]
                   </div>
                   <div className="text-sm font-extrabold text-white">
-                    Flávio 45% vs. Lula 44% (Totais)
+                    Lula 50,6% vs. Flávio 49,4% (Válidos)
                   </div>
                   <div className="text-[11px] text-zinc-400">
-                    Votos válidos: ~50,5% a 49,4% (Empate técnico • Margem: 2 p.p.)
+                    Presencial (2.100 entrevistas): Lula 45,4% a 44,3% nos totais
                   </div>
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700 space-y-1">
-                  <div className="text-[10px] text-emerald-400 font-bold uppercase">
-                    PoderData / Aya [22/10/2026]
+                  <div className="text-[10px] text-yellow-300 font-bold uppercase">
+                    Ipespe / Abrapel [23/10/2026]
                   </div>
                   <div className="text-sm font-extrabold text-white">
-                    Flávio 51% vs. Lula 49% (Válidos)
+                    Flávio 50,5% vs. Lula 49,5% (Válidos)
                   </div>
                   <div className="text-[11px] text-zinc-400">
-                    Votos totais: 49% a 48% (Empate técnico • Margem: 1,6 p.p.)
+                    Empate técnico absoluto no limite de 0,5 p.p. (1.500 entrevistas)
                   </div>
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700 space-y-1">
                   <div className="text-[10px] text-amber-400 font-bold uppercase">
-                    Indexa / Broadcast [22/10/2026]
+                    Quaest / Globo [21/10] & PoderData [22/10]
                   </div>
                   <div className="text-sm font-extrabold text-white">
-                    Flávio 50,6% vs. Lula 49,4%
+                    Quaest: 45% a 44% | PoderData: 51% a 49%
                   </div>
                   <div className="text-[11px] text-zinc-400">
-                    Votos totais: 45,2% a 44,0% (Empate técnico • Margem: 2,2 p.p.)
+                    Empate técnico dentro da margem; finais Datafolha/Quaest saem em 24/10
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700 space-y-1">
+                  <div className="text-[10px] text-purple-400 font-bold uppercase">
+                    AtlasIntel [Tracking Semana Final]
+                  </div>
+                  <div className="text-sm font-extrabold text-white">
+                    Flávio 51,1% vs. Lula 48,9% (Válidos)
+                  </div>
+                  <div className="text-[11px] text-zinc-400">
+                    Margem de erro de 1,0 p.p. • Alta polarização digital
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700 space-y-1">
+                  <div className="text-[10px] text-rose-400 font-bold uppercase">
+                    Real Time [BR-09670] & Alfa [BR-08496] (23/10)
+                  </div>
+                  <div className="text-sm font-extrabold text-white">
+                    Flávio 52,0% vs. Lula 48,0% (Válidos)
+                  </div>
+                  <div className="text-[11px] text-zinc-400">
+                    Amostras de 2.000 e 2.700 eleitores divulgadas em 23/10/2026
                   </div>
                 </div>
               </div>
@@ -3693,13 +3778,30 @@ export default function ObservatorioRepublicaPage() {
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t border-zinc-200 flex items-center justify-between gap-2">
-                      <span className="text-[10px] font-mono text-zinc-500 uppercase">
-                        Referências da Notícia:
-                      </span>
-                      <div className="flex flex-wrap gap-1">
-                        {news.fontes.map((f) => (
-                          <SourceBadge key={f} source={f} />
+                    <div className="pt-2.5 border-t border-zinc-200 space-y-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-[10px] font-mono font-bold text-zinc-500 uppercase">
+                          Fontes e Links da Notícia:
+                        </span>
+                        <div className="flex flex-wrap gap-1">
+                          {news.fontes.map((f) => (
+                            <SourceBadge key={f} source={f} />
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-1.5 print:hidden">
+                        {news.linksReferencia.map((ref) => (
+                          <a
+                            key={ref.url + ref.nome}
+                            href={ref.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-100 hover:bg-zinc-900 text-zinc-800 hover:text-yellow-300 border border-zinc-300 hover:border-zinc-900 font-mono text-[10px] font-bold transition"
+                          >
+                            <span>{ref.nome}</span>
+                            <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                          </a>
                         ))}
                       </div>
                     </div>
